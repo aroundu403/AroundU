@@ -1,5 +1,13 @@
 # AroundU
----
+**Team Members:**
+| Name | Role |
+| --- | --- |
+| George Ma | Product Manager |
+| Wei Wu | UI/UX Developer, Backend Developer |
+| Wenxin Zhang | Frontend Developer, Backend Developer |
+| John Wang | Frontend Developer, Deployment Developer |
+| Melody Zhang | Frontend Developer |
+| Vandy Zhang | Frontend Developer |
 
 **Project Summary**:
 
@@ -17,7 +25,7 @@ Our goal is to allow user(students) more easy to find events or activities aroun
 4. Manage events/activities: Event initiator is able to edit the event details, like change time and event size. 
 5. Interactive map-based interface: Display the events/activities in an interactive map-based interface. Allowing the user to interactive with the map element to preform verity of task like see, found, and join specific event or activity.  
 
----
+
 ## Repository Layout
 1.
 2.
