@@ -27,6 +27,6 @@ Our goal is to allow user(students) more easy to find events or activities aroun
 
 
 ## Repository Layout
-1.
-2.
-3.
+1. ~/report: all the weekly status report
+2. ～/src: the main code base
+3. ......
