@@ -1,6 +1,5 @@
 
-
-import 'package:aroundu/auth_service.dart';
+import 'package:aroundu/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,7 +11,7 @@ class HomePage extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          const Text("Home"),
+          const Text("You have signed in"),
           ElevatedButton(
             onPressed: () {
               context.read<AuthenticationService>().signOut();

@@ -1,5 +1,5 @@
 
-import 'package:aroundu/auth_service.dart';
+import 'package:aroundu/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

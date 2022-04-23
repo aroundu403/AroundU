@@ -2,14 +2,26 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
-import 'package:aroundu/auth_service.dart';
+import 'package:aroundu/auth/auth_service.dart';
 
+import 'auth/auth_wrapper.dart';
 import 'firebase_options.dart';
-import 'home_page.dart';
-import 'sign_in_page.dart';
 
 // whether to use local Firebase emulator
 const bool USE_FIRESTORE_EMULATOR = false;
+
+ThemeData THEME = ThemeData(
+  primaryColor: const Color.fromARGB(255, 92, 74, 210), // 主色
+  backgroundColor: const Color.fromARGB(255, 81, 65, 143), // 背景色
+  focusColor: const Color(0xff8DFFF2), // 撞色
+  highlightColor: const Color(0xffff1fa7), // 点缀色
+
+  textTheme: const TextTheme(
+      headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 92, 74, 210)),
+      headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+      bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
+  ),
+);
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,26 +51,10 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
+        theme: THEME,
         home: const AuthWrapper(),
       ),
     );
   }
 }
 
-// controller for showing which page
-class AuthWrapper extends StatelessWidget {
-  const AuthWrapper({ Key? key }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final firebaseUser = context.watch<User?>();
-    
-    if (firebaseUser != null) {
-      return HomePage();
-    }
-    return SignInPage();
-  }
-}
