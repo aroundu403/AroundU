@@ -9,17 +9,14 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-        <spark.version>3.2.2</spark.version>
+        <maven.compiler.source>13</maven.compiler.source>
+        <maven.compiler.target>13</maven.compiler.target>
+        <spark.version>3.2.1</spark.version>
+        <spark.scala.version>2.12.15</spark.scala.version>
+
     </properties>
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>com.sparkjava</groupId>
-                <artifactId>spark-core</artifactId>
-                <version>2.9.3</version>
-            </dependency>
             <dependency>
                 <groupId>com.google.cloud</groupId>
                 <artifactId>libraries-bom</artifactId>
@@ -27,6 +24,17 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+        <dependencies>
+
+            <dependency>
+                <groupId>com.sparkjava</groupId>
+                <artifactId>spark-core</artifactId>
+                <version>2.9.3</version>
+            </dependency>
+
         <dependency>
             <groupId> org.apache.cassandra</groupId>
             <artifactId>cassandra-all</artifactId>
@@ -109,7 +117,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    </dependencyManagement>
 <build>
     <plugins>
         <plugin>
