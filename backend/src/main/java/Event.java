@@ -19,7 +19,7 @@ public class Event {
     private String address;
     private String title;
     private String type;
-    private String[] participants;
+    private long[] participants;
 
     private Timestamp start_time;
     private Timestamp end_time;
@@ -27,7 +27,7 @@ public class Event {
     private Timestamp deleted_at;
     private Timestamp updated_at;
 
-    public Event(String[] participants, long id, String event_code, String event_name, String description, long creator_id, boolean isPublic, String location_name, float latitude, float longitude, int max_participants, int curr_participants, long photoID, String address, String title, String type, Timestamp start_time, Timestamp end_time, Timestamp created_at, Timestamp deleted_at, Timestamp updated_at) {
+    public Event(long[] participants, long id, String event_code, String event_name, String description, long creator_id, boolean isPublic, String location_name, float latitude, float longitude, int max_participants, int curr_participants, long photoID, String address, String title, String type, Timestamp start_time, Timestamp end_time, Timestamp created_at, Timestamp deleted_at, Timestamp updated_at) {
         this.id = id;
         this.event_code = event_code;
         this.event_name = event_name;
@@ -147,11 +147,11 @@ public class Event {
         return address;
     }
 
-    public String[] getParticipants() {
+    public long[] getParticipants() {
         return participants;
     }
 
-    public void setParticipants(String[] participants) {
+    public void setParticipants(long[] participants) {
         this.participants = participants;
     }
 
