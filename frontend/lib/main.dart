@@ -11,6 +11,7 @@ import 'firebase_options.dart';
 // whether to use local Firebase emulator
 const bool USE_FIRESTORE_EMULATOR = false;
 
+// define app color theme
 ThemeData THEME = ThemeData(
   primaryColor: const Color.fromARGB(255, 92, 74, 210), // 主色
   backgroundColor: const Color.fromARGB(255, 81, 65, 143), // 背景色
@@ -29,14 +30,17 @@ Future<void> main() async {
   // load the config file
   await dotenv.load(fileName: ".env");
   
+  // initalize firebase with platform sepcific config
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  // whether to use emulator for local testing
   if (USE_FIRESTORE_EMULATOR) {
     await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
   }
 
+  // start flutter application
   runApp(const MyApp());
 }
 
