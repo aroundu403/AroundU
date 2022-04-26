@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 typedef OAuthSignIn = void Function();
 
@@ -83,11 +82,9 @@ class _AuthGateState extends State<AuthGate> {
     super.initState();
     if (kIsWeb) {
       authButtons = {
-        Buttons.Google: _signInWithGoogle,
       };
     } else {
       authButtons = {
-        if (!Platform.isMacOS) Buttons.Google: _signInWithGoogle,
       };
     }
   }
@@ -387,32 +384,32 @@ class _AuthGateState extends State<AuthGate> {
     }
   }
 
-  Future<void> _signInWithGoogle() async {
-    setIsLoading();
-    try {
-      // Trigger the authentication flow
-      final googleUser = await GoogleSignIn().signIn();
+  // Future<void> _signInWithGoogle() async {
+  //   setIsLoading();
+  //   try {
+  //     // Trigger the authentication flow
+  //     final googleUser = await GoogleSignIn().signIn();
 
-      // Obtain the auth details from the request
-      final googleAuth = await googleUser?.authentication;
+  //     // Obtain the auth details from the request
+  //     final googleAuth = await googleUser?.authentication;
 
-      if (googleAuth != null) {
-        // Create a new credential
-        final credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken,
-          idToken: googleAuth.idToken,
-        );
+  //     if (googleAuth != null) {
+  //       // Create a new credential
+  //       final credential = GoogleAuthProvider.credential(
+  //         accessToken: googleAuth.accessToken,
+  //         idToken: googleAuth.idToken,
+  //       );
 
-        // Once signed in, return the UserCredential
-        await _auth.signInWithCredential(credential);
-      }
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        error = '${e.message}';
-      });
-    } finally {
-      setIsLoading();
-    }
-  }
+  //       // Once signed in, return the UserCredential
+  //       await _auth.signInWithCredential(credential);
+  //     }
+  //   } on FirebaseAuthException catch (e) {
+  //     setState(() {
+  //       error = '${e.message}';
+  //     });
+  //   } finally {
+  //     setIsLoading();
+  //   }
+  // }
   
 }
