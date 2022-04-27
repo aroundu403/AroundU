@@ -5,3 +5,24 @@ out/
 
 # Mac
 .DS_Store
+
+frontend/.env
+
+## Flutter generated file
+frontend/bin/cache/
+frontend/bin/internal/bootstrap.bat
+frontend/bin/internal/bootstrap.sh
+frontend/bin/mingit/
+frontend/dev/benchmarks/mega_gallery/
+frontend/dev/bots/.recipe_deps
+frontend/dev/bots/android_tools/
+frontend/dev/devicelab/ABresults*.json
+frontend/dev/docs/doc/
+frontend/dev/docs/flutter.docs.zip
+frontend/dev/docs/lib/
+frontend/dev/docs/pubspec.yaml
+frontend/dev/integration_tests/**/xcuserdata
+frontend/dev/integration_tests/**/Pods
+frontend/packages/flutter/coverage/
+frontend/version
+frontend/analysis_benchmark.json
