@@ -26,3 +26,5 @@ frontend/dev/integration_tests/**/Pods
 frontend/packages/flutter/coverage/
 frontend/version
 frontend/analysis_benchmark.json
+
+backend/target/
