@@ -5,4 +5,7 @@ out/
 
 # Mac
 .DS_Store
+
 *.env
+
+/backend/target/
