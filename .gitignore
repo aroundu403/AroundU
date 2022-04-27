@@ -6,6 +6,7 @@ out/
 # Mac
 .DS_Store
 
+## frontend environment variables
 frontend/.env
 
 ## Flutter generated file
@@ -27,4 +28,6 @@ frontend/packages/flutter/coverage/
 frontend/version
 frontend/analysis_benchmark.json
 
+## backend generated file
 backend/target/
+
