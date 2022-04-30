@@ -5,3 +5,10 @@ out/
 
 # Mac
 .DS_Store
+
+## frontend environment variables
+frontend/.env
+
+## backend generated file
+backend/target/
+

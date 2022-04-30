@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "489182630814",
+    "project_id": "aroundu-403",
+    "storage_bucket": "aroundu-403.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:489182630814:android:b76322ff2585163f40fc8f",
+        "android_client_info": {
+          "package_name": "com.example.frontend"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "489182630814-blcvpt78se33pmf31mcgugavlhp2tcfr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDctICIrd3DBb7FVu1YyrDJ9md7Nv4YHwQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "489182630814-blcvpt78se33pmf31mcgugavlhp2tcfr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
