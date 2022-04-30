@@ -34,7 +34,7 @@ public class QueryAndDecryptData {
     String dbPass = System.getenv("DB_PASS"); // e.g. "mysupersecretpassword"
     String dbName = System.getenv("DB_NAME"); // e.g. "votes_db"
     String instanceConnectionName =
-        System.getenv("INSTANCE_CONNECTION_NAME"); // e.g. "project-name:region:instance-name"
+            System.getenv("INSTANCE_CONNECTION_NAME"); // e.g. "project-name:region:instance-name"
     System.out.println(dbName);
     String kmsUri = System.getenv("CLOUD_KMS_URI"); // e.g. "gcp-kms://projects/...path/to/key
     // Tink uses the "gcp-kms://" prefix for paths to keys stored in Google Cloud KMS. For more

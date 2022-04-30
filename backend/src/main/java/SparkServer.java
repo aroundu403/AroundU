@@ -1,9 +1,18 @@
 import static spark.Spark.*;
 import com.google.gson.Gson;
+import javax.sql.DataSource;
 
 public class SparkServer {
     public static void main(String[] args) {
         Gson gson = new Gson();
+        String dbUser = System.getenv("DB_USER"); // e.g. "root", "mysql"
+        String dbPass = System.getenv("DB_PASS"); // e.g. "mysupersecretpassword"
+        String dbName = System.getenv("DB_NAME"); // e.g. "votes_db"
+        String instanceConnectionName =
+                System.getenv("INSTANCE_CONNECTION_NAME"); // e.g. "project-name:region:instance-name"
+        String kmsUri = System.getenv("CLOUD_KMS_URI");
+        DataSource pool =
+                CloudSqlConnectionPool.createConnectionPool(dbUser, dbPass, dbName, instanceConnectionName);
 
 
         get("/hello", (req, res) -> "Hello World");
@@ -14,8 +23,8 @@ public class SparkServer {
             int id = Integer.parseInt(request.queryParams("id"));
             if (id == 1) return "event 1";
             else {
-                return  "event not exist";
             }
+            return null;
         });
         init();
     }
