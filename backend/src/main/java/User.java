@@ -2,13 +2,22 @@ import java.sql.Timestamp;
 import java.util.Arrays;
 
 public class User {
-    private final long id;
-    private final Timestamp register_time;
-    private final String email;
-    private String user_name;
-    private String description;
+    public long id;
+    public Timestamp register_time;
+    public String email;
+    public String user_name;
+    public String description;
     // private String password;
-    private long[] event_ids;
+    public long[] event_ids;
+
+    public User() {
+        this.id = 0;
+        this.user_name = "";
+        this.email = "";
+        this.description = "";
+        this.event_ids = null;
+        this.register_time = new Timestamp(System.currentTimeMillis());
+    }
 
     public User(long id, String user_name, String email, String description, long[] event_ids, Timestamp register_time) {
         this.id = id;
@@ -35,6 +44,10 @@ public class User {
         return email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -55,4 +68,15 @@ public class User {
         return register_time;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", register_time=" + register_time +
+                ", email='" + email + '\'' +
+                ", user_name='" + user_name + '\'' +
+                ", description='" + description + '\'' +
+                ", event_ids=" + Arrays.toString(event_ids) +
+                '}';
+    }
 }
