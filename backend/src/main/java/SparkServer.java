@@ -19,9 +19,6 @@ public class SparkServer {
         String instanceConnectionName =
                 System.getenv("INSTANCE_CONNECTION_NAME"); // e.g. "project-name:region:instance-name"
         String kmsUri = System.getenv("CLOUD_KMS_URI");
-        System.out.println(instanceConnectionName);
-        System.out.println(dbName);
-        System.out.println(dbPass);
         DataSource pool =
                 CloudSqlConnectionPool.createConnectionPool(dbUser, dbPass, dbName, instanceConnectionName);
 
