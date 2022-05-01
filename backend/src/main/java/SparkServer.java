@@ -1,16 +1,27 @@
 import static spark.Spark.*;
+
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+import com.google.gson.annotations.SerializedName;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import javax.sql.DataSource;
+import java.lang.reflect.Type;
 import java.sql.Array;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class SparkServer {
     public static void main(String[] args) {
         Gson gson = new Gson();
+        JSONParser parser = new JSONParser();
+
         String dbUser = System.getenv("DB_USER"); // e.g. "root", "mysql"
         String dbPass = System.getenv("DB_PASS"); // e.g. "mysupersecretpassword"
         String dbName = System.getenv("DB_NAME"); // e.g. "votes_db"
@@ -29,11 +40,33 @@ public class SparkServer {
             int id = Integer.parseInt(request.queryParams("id"));
             if (id == 1) {
                 ArrayList<User> users = UserController.getUsers(pool);
-                FormatResponse result = new FormatResponse();
-                result.code = 200;
-                result.message = "Success";
-                result.userData = (ArrayList<User>) users;
-                return gson.toJson(result);
+//                FormatResponse result = new FormatResponse();
+//                result.code = 200;
+//                result.message = "Success";
+//                result.userData = (ArrayList<User>) users;
+//                return gson.toJson(result);
+
+//                JsonObject jo = new JsonObject();
+//                JSONObject usersObj = (JSONObject) parser.parse(gson.toJson(users));
+//                System.out.println(usersObj.toJSONString());
+//                return gson.toJson(users);
+//                jo.addProperty("data", usersObj.toJSONString());
+//                jo.addProperty("code", 200);
+//                jo.addProperty("message", "Success");
+//                return jo;
+
+//                FormatResponse resp = new FormatResponse(200, "Success");
+//                JsonElement je = gson.toJsonTree(resp);
+
+                JsonObject jo = new JsonObject();
+                String element = gson.toJson(
+                        users,
+                        new TypeToken<ArrayList<User>>() {}.getType());
+                System.out.println(element);
+                jo.addProperty("code", 200);
+                jo.addProperty("message", "Success");
+                jo.addProperty("data", element);
+                return gson.toJson(jo);
             }
             else {
                 return "not workings";

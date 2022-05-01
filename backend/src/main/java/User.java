@@ -1,7 +1,10 @@
+import com.google.gson.annotations.SerializedName;
+
 import java.sql.Timestamp;
 import java.util.Arrays;
 
 public class User {
+
     public long id;
     public Timestamp register_time;
     public String email;
