@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 typedef OAuthSignIn = void Function();
 
@@ -82,9 +83,11 @@ class _AuthGateState extends State<AuthGate> {
     super.initState();
     if (kIsWeb) {
       authButtons = {
+        Buttons.Google: _signInWithGoogle,
       };
     } else {
       authButtons = {
+        if (!Platform.isMacOS) Buttons.Google: _signInWithGoogle,
       };
     }
   }
@@ -189,18 +192,38 @@ class _AuthGateState extends State<AuthGate> {
                             ],
                             ),
                           const SizedBox(height: 20),
+                          // gradient submit button
                           SizedBox(
                             width: double.infinity,
                             height: 50,
                             child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                primary: Theme.of(context).primaryColor, // background
-                                onPrimary: Colors.white, // foreground
-                              ),
                               onPressed: isLoading ? null : _emailAndPassword,
-                              child: isLoading
-                                  ? const CircularProgressIndicator.adaptive()
-                                  : Text(mode.label),
+                              style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.zero,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20))
+                              ),
+                              child: Ink(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: const FractionalOffset(0.3, 0.0),
+                                    colors: [Theme.of(context).primaryColor, Theme.of(context).focusColor]
+                                  ),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  child: isLoading ? 
+                                    const CircularProgressIndicator.adaptive() : 
+                                    Text(
+                                      mode.label, 
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold
+                                      )
+                                    )
+                                ),
+                              ),
                             ),
                           ),
                           // forget password link
@@ -261,21 +284,6 @@ class _AuthGateState extends State<AuthGate> {
                               ],
                             ),
                           ),
-                          const SizedBox(height: 10),
-                          RichText(
-                            text: TextSpan(
-                              style: Theme.of(context).textTheme.bodyText1,
-                              children: [
-                                const TextSpan(text: 'Or '),
-                                TextSpan(
-                                  text: 'continue as guest',
-                                  style: const TextStyle(color: Colors.blue),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = _anonymousAuth,
-                                ),
-                              ],
-                            ),
-                          ),
                         ],
                       ),
                     ),
@@ -330,24 +338,6 @@ class _AuthGateState extends State<AuthGate> {
     }
   }
 
-  Future<void> _anonymousAuth() async {
-    setIsLoading();
-
-    try {
-      await _auth.signInAnonymously();
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        error = '${e.message}';
-      });
-    } catch (e) {
-      setState(() {
-        error = '$e';
-      });
-    } finally {
-      setIsLoading();
-    }
-  }
-
   Future<void> _emailAndPassword() async {
     if (formKey.currentState?.validate() ?? false) {
       setIsLoading();
@@ -384,32 +374,32 @@ class _AuthGateState extends State<AuthGate> {
     }
   }
 
-  // Future<void> _signInWithGoogle() async {
-  //   setIsLoading();
-  //   try {
-  //     // Trigger the authentication flow
-  //     final googleUser = await GoogleSignIn().signIn();
+  Future<void> _signInWithGoogle() async {
+    setIsLoading();
+    try {
+      // Trigger the authentication flow
+      final googleUser = await GoogleSignIn().signIn();
 
-  //     // Obtain the auth details from the request
-  //     final googleAuth = await googleUser?.authentication;
+      // Obtain the auth details from the request
+      final googleAuth = await googleUser?.authentication;
 
-  //     if (googleAuth != null) {
-  //       // Create a new credential
-  //       final credential = GoogleAuthProvider.credential(
-  //         accessToken: googleAuth.accessToken,
-  //         idToken: googleAuth.idToken,
-  //       );
+      if (googleAuth != null) {
+        // Create a new credential
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
 
-  //       // Once signed in, return the UserCredential
-  //       await _auth.signInWithCredential(credential);
-  //     }
-  //   } on FirebaseAuthException catch (e) {
-  //     setState(() {
-  //       error = '${e.message}';
-  //     });
-  //   } finally {
-  //     setIsLoading();
-  //   }
-  // }
+        // Once signed in, return the UserCredential
+        await _auth.signInWithCredential(credential);
+      }
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        error = '${e.message}';
+      });
+    } finally {
+      setIsLoading();
+    }
+  }
   
 }
