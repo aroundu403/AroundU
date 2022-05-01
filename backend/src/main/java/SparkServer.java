@@ -1,21 +1,12 @@
 import static spark.Spark.*;
 
-import com.google.common.reflect.TypeToken;
+import DAO.User;
+import DTO.DataResponse;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import com.google.gson.annotations.SerializedName;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-
 import javax.sql.DataSource;
-import java.lang.reflect.Type;
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class SparkServer {
     public static void main(String[] args) {
@@ -28,6 +19,9 @@ public class SparkServer {
         String instanceConnectionName =
                 System.getenv("INSTANCE_CONNECTION_NAME"); // e.g. "project-name:region:instance-name"
         String kmsUri = System.getenv("CLOUD_KMS_URI");
+        System.out.println(instanceConnectionName);
+        System.out.println(dbName);
+        System.out.println(dbPass);
         DataSource pool =
                 CloudSqlConnectionPool.createConnectionPool(dbUser, dbPass, dbName, instanceConnectionName);
 
@@ -59,14 +53,11 @@ public class SparkServer {
 //                JsonElement je = gson.toJsonTree(resp);
 
                 JsonObject jo = new JsonObject();
-                String element = gson.toJson(
-                        users,
-                        new TypeToken<ArrayList<User>>() {}.getType());
-                System.out.println(element);
-                jo.addProperty("code", 200);
-                jo.addProperty("message", "Success");
-                jo.addProperty("data", element);
-                return gson.toJson(jo);
+//                String element = Gson.toJson(
+//                        users);
+//                System.out.println(element);
+                DataResponse resp = new DataResponse(200, "Success", users);
+                return gson.toJson(resp);
             }
             else {
                 return "not workings";

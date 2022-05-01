@@ -1,8 +1,11 @@
+package DAO;
 import com.google.gson.annotations.SerializedName;
+import lombok.Data;
 
 import java.sql.Timestamp;
 import java.util.Arrays;
 
+@Data
 public class User {
 
     public long id;

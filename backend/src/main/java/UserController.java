@@ -2,6 +2,7 @@ import javax.sql.DataSource;
 import java.sql.*;
 import java.sql.Timestamp;
 import java.util.*;
+import DAO.User;
 
 // This class will perform user related operations, such as inserting a new user,
 // getting user data
