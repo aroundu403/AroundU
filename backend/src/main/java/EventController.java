@@ -1,5 +1,7 @@
 // This class will control the event modules with database
 
+import DAO.Event;
+
 import javax.sql.DataSource;
 import java.util.*;
 

@@ -31,28 +31,6 @@ public class SparkServer {
             int id = Integer.parseInt(request.queryParams("id"));
             if (id == 1) {
                 ArrayList<User> users = UserController.getUsers(pool);
-//                FormatResponse result = new FormatResponse();
-//                result.code = 200;
-//                result.message = "Success";
-//                result.userData = (ArrayList<User>) users;
-//                return gson.toJson(result);
-
-//                JsonObject jo = new JsonObject();
-//                JSONObject usersObj = (JSONObject) parser.parse(gson.toJson(users));
-//                System.out.println(usersObj.toJSONString());
-//                return gson.toJson(users);
-//                jo.addProperty("data", usersObj.toJSONString());
-//                jo.addProperty("code", 200);
-//                jo.addProperty("message", "Success");
-//                return jo;
-
-//                FormatResponse resp = new FormatResponse(200, "Success");
-//                JsonElement je = gson.toJsonTree(resp);
-
-                JsonObject jo = new JsonObject();
-//                String element = Gson.toJson(
-//                        users);
-//                System.out.println(element);
                 DataResponse resp = new DataResponse(200, "Success", users);
                 return gson.toJson(resp);
             }
