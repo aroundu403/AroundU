@@ -1,20 +1,14 @@
 import com.google.gson.Gson;
-import jdk.jshell.spi.ExecutionControl;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.NotImplementedException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import static org.junit.Assert.assertEquals;
 
-@Slf4j
 public class UserControllerTest {
 
     Gson gson = new Gson();
@@ -34,9 +28,6 @@ public class UserControllerTest {
         String instanceConnectionName =
                 System.getenv("INSTANCE_CONNECTION_NAME");
         // String kmsUri = System.getenv("CLOUD_KMS_URI");   // for data encryption
-
-        log.info(instanceConnectionName);
-        log.info(dbUser);
 
         pool = CloudSqlConnectionPool.createConnectionPool(dbUser, dbPass, dbName, instanceConnectionName);
 

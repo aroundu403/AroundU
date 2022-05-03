@@ -30,7 +30,6 @@ jobs:
     - name: Build with Maven
       run: mvn package --file pom.xml
       env:
-        credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
         DB_USER: '${{ secrets.DB_USER }}'
         DB_PASS: ${{ secrets.DB_PASS }}
         DB_NAME: ${{ secrets.DB_NAME }}
