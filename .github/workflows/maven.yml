@@ -12,9 +12,8 @@ jobs:
     defaults:
       run:
         working-directory: backend
-
     runs-on: ubuntu-latest
-
+    environment: backend
     steps:
     - uses: actions/checkout@v3
     - id: 'auth'
