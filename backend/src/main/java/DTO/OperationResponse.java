@@ -7,7 +7,7 @@ public class OperationResponse {
     private int code;
     private String message;
 
-    public OperationResponse(int code, String message, Object data) {
+    public OperationResponse(int code, String message) {
         this.code = code;
         this.message = message;
     }

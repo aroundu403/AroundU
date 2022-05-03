@@ -2,6 +2,7 @@ import static spark.Spark.*;
 
 import DAO.User;
 import DTO.DataResponse;
+import DTO.OperationResponse;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.json.simple.parser.JSONParser;
@@ -11,32 +12,31 @@ import java.util.ArrayList;
 public class SparkServer {
     public static void main(String[] args) {
         Gson gson = new Gson();
-        JSONParser parser = new JSONParser();
 
-        String dbUser = System.getenv("DB_USER"); // e.g. "root", "mysql"
-        String dbPass = System.getenv("DB_PASS"); // e.g. "mysupersecretpassword"
-        String dbName = System.getenv("DB_NAME"); // e.g. "votes_db"
+        String dbUser = System.getenv("DB_USER");
+        String dbPass = System.getenv("DB_PASS");
+        String dbName = System.getenv("DB_NAME");
         String instanceConnectionName =
-                System.getenv("INSTANCE_CONNECTION_NAME"); // e.g. "project-name:region:instance-name"
-        String kmsUri = System.getenv("CLOUD_KMS_URI");
+                System.getenv("INSTANCE_CONNECTION_NAME");
+        // String kmsUri = System.getenv("CLOUD_KMS_URI");   // for data encryption
         DataSource pool =
                 CloudSqlConnectionPool.createConnectionPool(dbUser, dbPass, dbName, instanceConnectionName);
 
 
         get("/hello", (req, res) -> "Hello World");
 
-
-        // http://localhost:4567/event?id=1
-        get("/event", (request, response) -> {
-            int id = Integer.parseInt(request.queryParams("id"));
-            if (id == 1) {
-                ArrayList<User> users = UserController.getUsers(pool);
-                DataResponse resp = new DataResponse(200, "Success", users);
-                return gson.toJson(resp);
-            }
-            else {
-                return "not workings";
-            }
+    // http://localhost:4567/user/:id
+    get(
+        "/event",
+        (request, response) -> {
+          String id = request.queryParams("id");
+          if (UserController.isUserExist(pool, id)) {
+            User user = UserController.getUser(pool, id);
+            DataResponse resp = new DataResponse(200, "Success", user);
+            return gson.toJson(resp);
+          } else {
+            return gson.toJson(new OperationResponse(400, "User not exist"));
+          }
         });
         init();
     }

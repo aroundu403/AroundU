@@ -42,7 +42,7 @@ public class UserController {
 
 
     /**
-     * Return an user based on given user_id
+     * Return one user based on given user_id
      * @param pool used for database connection
      * @param user_id unique representation of a user
      * @return a user object or null if this user is not found

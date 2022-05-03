@@ -37,17 +37,5 @@ public class CloudSqlConnectionPool {
     DataSource pool = new HikariDataSource(config);
     return pool;
   }
-
-//  public static void createTable(DataSource pool, String tableName) throws SQLException {
-//    // Safely attempt to create the table schema.
-//    try (Connection conn = pool.getConnection()) {
-//      String stmt = String.format("CREATE TABLE IF NOT EXISTS %s ( "
-//          + "vote_id SERIAL NOT NULL, time_cast timestamp NOT NULL, team CHAR(6) NOT NULL,"
-//          + "voter_email VARBINARY(255), PRIMARY KEY (vote_id) );", tableName);
-//      try (PreparedStatement createTableStatement = conn.prepareStatement(stmt);) {
-//        createTableStatement.execute();
-//      }
-//    }
-//  }
 }
 // [END cloud_sql_mysql_cse_db]
