@@ -1,36 +1,7 @@
-import 'package:aroundu/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-ThemeData THEME = ThemeData(
-  primaryColor: const Color.fromARGB(255, 92, 74, 210), // 主色
-  backgroundColor: const Color.fromARGB(255, 81, 65, 143), // 背景色
-  focusColor: const Color(0xff8DFFF2), // 撞色
-  highlightColor: const Color(0xffff1fa7), // 点缀色
-
-  textTheme: const TextTheme(
-    headline1: TextStyle(
-        fontSize: 72.0,
-        fontWeight: FontWeight.bold,
-        color: Color.fromARGB(255, 92, 74, 210)),
-    headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
-    bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
-  ),
-  visualDensity: VisualDensity.adaptivePlatformDensity,
-);
-
-class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: THEME,
-      home: ListViewHome(),
-    );
-  }
-}
+import '../auth/auth_service.dart';
 
 class ListViewHome extends StatelessWidget {
   final List<String> images = [
@@ -149,7 +120,7 @@ class ListViewHome extends StatelessWidget {
             Container(
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     gradient: LinearGradient(
                   begin: Alignment.topRight,
                   end: Alignment.bottomLeft,
@@ -160,10 +131,10 @@ class ListViewHome extends StatelessWidget {
                 )),
                 child: SingleChildScrollView(
                     child: Column(children: [
-                  Padding(padding: const EdgeInsets.all(30)),
+                  const Padding(padding: EdgeInsets.all(30)),
                   const Text("Event List",
                       style: TextStyle(
-                          color: const Color.fromARGB(255, 81, 65, 143),
+                          color: Color.fromARGB(255, 81, 65, 143),
                           fontWeight: FontWeight.bold,
                           fontStyle: FontStyle.italic,
                           fontSize: 36)),
@@ -372,9 +343,9 @@ class ListViewHome extends StatelessWidget {
                       //                 fontSize: 20)),
                       //       ]),
                       const Center(
-                          child: const Text('No Events Posted Currently',
+                          child: Text('No Events Posted Currently',
                               style: TextStyle(
-                                  color: const Color.fromARGB(255, 81, 65, 143),
+                                  color: Color.fromARGB(255, 81, 65, 143),
                                   fontStyle: FontStyle.italic,
                                   fontSize: 20))),
                   ElevatedButton(
