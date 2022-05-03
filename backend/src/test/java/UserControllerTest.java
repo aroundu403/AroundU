@@ -1,5 +1,6 @@
 import com.google.gson.Gson;
 import jdk.jshell.spi.ExecutionControl;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.NotImplementedException;
 import org.junit.After;
 import org.junit.Before;
@@ -13,6 +14,7 @@ import java.sql.SQLException;
 
 import static org.junit.Assert.assertEquals;
 
+@Slf4j
 public class UserControllerTest {
 
     Gson gson = new Gson();
@@ -34,6 +36,8 @@ public class UserControllerTest {
      */
     @Before
     public void initializeDatabaseContent() throws SQLException {
+        log.info(instanceConnectionName);
+        log.info(dbUser);
         try (Connection conn = pool.getConnection()) {
           String stmt = "INSERT INTO users (user_id, user_name, email, description, register_time) VALUES" +
                     "(\"test111\", \"TEST1\",\"test1@gmail.com\", \"I am TEST1\", \"2020-01-01 01:01:01\")," +
