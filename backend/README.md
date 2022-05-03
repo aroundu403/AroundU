@@ -18,7 +18,5 @@ SparkServer
 2. Add environment variable such as database password. Contact @John if you don't know the secret strings
 3. run SparkServer
 
-### Dependences:
-Lombok:
-Lombok is an annotation based library that simplify writing boilerplate code such as setter/getter.
+
 
