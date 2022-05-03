@@ -10,16 +10,12 @@ public class EventController {
 
     private final String TABLE_NAME = "events";
 
-    public static long createEvent(DataSource pool, String event_code, String event_name, String description,
-                                   long host_id, boolean isPublic, String location_name, float latitude, float longitude,
-                                   int max_participants, int curr_num_participants, String photoID, String address,
-                                   String title, String start_time, String end_time, String created_at,
-                                   String deleted_at, String updated_at) {
+    public static long createEvent(DataSource pool, Event event) {
 
         throw new NotImplementedException();
     }
 
-    public static Event getEvent(DataSource pool, long event_id) {
+    public static Event getEventByID(DataSource pool, long event_id) {
         throw new NotImplementedException();
     }
 

@@ -11,32 +11,32 @@ public class UserController {
     private static final String TABLE_NAME = "users";
 
 
-    /**
-     * Returns a list of all users in the database.
-     * @param pool used for database connection
-     * @return a list of user object
-     * @throws SQLException
-     */
-    public static ArrayList<User> getUsers(DataSource pool) throws SQLException {
-        ArrayList<User> users = new ArrayList<>();
-        try (Connection conn = pool.getConnection()) {
-            String stmt = String.format(
-                    "SELECT user_name, email, description FROM %s",
-                    TABLE_NAME);
-            try(PreparedStatement getUsersStmt = conn.prepareStatement(stmt)) {
-                ResultSet userResults = getUsersStmt.executeQuery();
-                while (userResults.next()) {
-                    User user = new User();
-                    user.user_name = userResults.getString(1);
-                    user.email = userResults.getString(2);
-                    user.description = userResults.getString(3);
-                    users.add(user);
-                }
-                userResults.close();
-                return users;
-            }
-        }
-    }
+//    /**
+//     * Returns a list of all users in the database.
+//     * @param pool used for database connection
+//     * @return a list of user object
+//     * @throws SQLException
+//     */
+//    public static ArrayList<User> getUsers(DataSource pool) throws SQLException {
+//        ArrayList<User> users = new ArrayList<>();
+//        try (Connection conn = pool.getConnection()) {
+//            String stmt = String.format(
+//                    "SELECT user_name, email, description FROM %s",
+//                    TABLE_NAME);
+//            try(PreparedStatement getUsersStmt = conn.prepareStatement(stmt)) {
+//                ResultSet userResults = getUsersStmt.executeQuery();
+//                while (userResults.next()) {
+//                    User user = new User();
+//                    user.user_name = userResults.getString(1);
+//                    user.email = userResults.getString(2);
+//                    user.description = userResults.getString(3);
+//                    users.add(user);
+//                }
+//                userResults.close();
+//                return users;
+//            }
+//        }
+//    }
 
 
     /**
@@ -70,22 +70,19 @@ public class UserController {
     /**
      * Add a user to the users Table based on given information
      * @param pool used for database connection
-     * @param user_id unique representation of a user
-     * @param user_name user'sname
-     * @param email user's email
-     * @param description user description
+     * @param user object that represent a user with relevnat information
      * @return returns true if insert successfully, returns false otherwise
      */
-    public static boolean addUser(DataSource pool, String user_id, String user_name, String email, String description) {
+    public static boolean addUser(DataSource pool, User user) {
         try (Connection conn = pool.getConnection()) {
             String stmt = String.format(
                     "INSERT INTO %s (user_id, user_name, email, description, register_time) VALUES (?, ?, ?, ?, ?);",
                     TABLE_NAME);
             try(PreparedStatement addUserStmt = conn.prepareStatement(stmt)) {
-                addUserStmt.setString(1, user_id);
-                addUserStmt.setString(2, user_name);
-                addUserStmt.setString(3, email);
-                addUserStmt.setString(4, description);
+                addUserStmt.setString(1, user.user_id);
+                addUserStmt.setString(2, user.user_name);
+                addUserStmt.setString(3, user.email);
+                addUserStmt.setString(4, user.description);
                 addUserStmt.setString(5, String.valueOf(new Timestamp(System.currentTimeMillis())));
                 addUserStmt.executeUpdate();
                 return true;

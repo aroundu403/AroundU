@@ -31,6 +31,6 @@ jobs:
       run: mvn package --file pom.xml
       env:
         DB_USER: '${{ secrets.DB_USER }}'
-        DB_PASS: ${{ secrets.DB_PASS }}
-        DB_NAME: ${{ secrets.DB_NAME }}
+        DB_PASS: '${{ secrets.DB_PASS }}'
+        DB_NAME: '${{ secrets.DB_NAME }}'
         INSTANCE_CONNECTION_NAME: '${{ secrets.INSTANCE_CONNECTION_NAME }}'

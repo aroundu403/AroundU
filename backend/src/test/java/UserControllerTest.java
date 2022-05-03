@@ -1,4 +1,4 @@
-import com.google.gson.Gson;
+import DAO.User;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -7,14 +7,19 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.Assert.*;
 
 public class UserControllerTest {
 
-    Gson gson = new Gson();
+    int cardinality = 0;
+    String dbUser = System.getenv("DB_USER");
+    String dbPass = System.getenv("DB_PASS");
+    String dbName = System.getenv("DB_NAME");
+    String instanceConnectionName =
+            System.getenv("INSTANCE_CONNECTION_NAME");
 
-    int cardinatity = 0;
-    DataSource pool;
+    DataSource pool = CloudSqlConnectionPool.createConnectionPool(dbUser, dbPass, dbName, instanceConnectionName);
 
 
     /**
@@ -22,14 +27,7 @@ public class UserControllerTest {
      */
     @Before
     public void initializeDatabaseContent() throws SQLException {
-        String dbUser = System.getenv("DB_USER");
-        String dbPass = System.getenv("DB_PASS");
-        String dbName = System.getenv("DB_NAME");
-        String instanceConnectionName =
-                System.getenv("INSTANCE_CONNECTION_NAME");
-        // String kmsUri = System.getenv("CLOUD_KMS_URI");   // for data encryption
 
-        pool = CloudSqlConnectionPool.createConnectionPool(dbUser, dbPass, dbName, instanceConnectionName);
 
         try (Connection conn = pool.getConnection()) {
           String stmt = "INSERT INTO users (user_id, user_name, email, description, register_time) VALUES" +
@@ -42,7 +40,7 @@ public class UserControllerTest {
           PreparedStatement countStmt = conn.prepareStatement("SELECT COUNT(user_id) FROM users;");
           ResultSet countResult = countStmt.executeQuery();
           countResult.next();
-          cardinatity = countResult.getInt(1);
+          cardinality = countResult.getInt(1);
           countResult.close();
         }
     }
@@ -63,7 +61,8 @@ public class UserControllerTest {
 
     @Test
     public void testAddUser() throws SQLException {
-        UserController.addUser(pool, "test333", "Test3", "test3@gmail.com", "I am TEST3");
+        UserController.addUser(pool, new User("test333", "Test3", "test3@gmail.com",
+                "I am TEST3"));
         int newCardinality = -1;
         try (Connection conn = pool.getConnection()) {
             PreparedStatement countStmt = conn.prepareStatement("SELECT COUNT(user_id) FROM users;");
@@ -72,24 +71,48 @@ public class UserControllerTest {
             newCardinality = countResult.getInt(1);
             countResult.close();
         }
-        assertEquals("Cardinality doesn't match!", cardinatity+1, newCardinality);
+        assertEquals("Cardinality doesn't match!", cardinality+1, newCardinality);
     }
 
-//
-//    @Test
-//    public void testGetUsers() {}
-//
-//
-//    @Test
-//    public void testGetUser() {}
-//
-//
-//    @Test
-//    public void testTestAddUser() {}
-//
-//    @Test
-//    public void testUpdateUserDescription() {}
-//
-//    @Test
-//    public void testIsUserExist() {}
+
+    /**
+     * Test getUser by userID
+     * @throws SQLException
+     */
+    @Test
+    public void testGetUser() throws SQLException {
+        User resultUser = UserController.getUser(pool, "test111");
+        assertEquals("User_name doesn't match!", "TEST1", resultUser.user_name);
+    }
+
+
+    /**
+     * Test updateUserDescription
+     * @throws SQLException
+     */
+    @Test
+    public void testUpdateUserDescription() throws SQLException {
+        UserController.updateUserDescription(pool, "test111", "Update Test111");
+        String newDescp;
+        try (Connection conn = pool.getConnection()) {
+            PreparedStatement countStmt = conn.prepareStatement("SELECT description FROM users WHERE " +
+                    "user_id=\"test111\";");
+            ResultSet userResult = countStmt.executeQuery();
+            userResult.next();
+            newDescp = userResult.getString(1);
+            userResult.close();
+        }
+        assertEquals("Cardinality doesn't match!", "Update Test111", newDescp);
+    }
+
+    /**
+     * Test isUserExist
+     * @throws SQLException
+     */
+    @Test
+    public void testIsUserExist() throws SQLException {
+        assertTrue("Exist!", UserController.isUserExist(pool, "test111"));
+        assertFalse("Not Exist!", UserController.isUserExist(pool, "test999"));
+
+    }
 }

@@ -20,12 +20,11 @@ public class User {
         this.register_time = Timestamp.valueOf("2022-01-01 00:00:00");
     }
 
-    public User(String id, String user_name, String email, String description, Timestamp register_time) {
+    public User(String id, String user_name, String email, String description) {
         this.user_id = id;
         this.user_name = user_name;
         this.email = email;
         this.description = description;
-        this.register_time = register_time;
     }
 
     @Override
