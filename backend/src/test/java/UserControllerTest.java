@@ -34,10 +34,11 @@ public class UserControllerTest {
         String instanceConnectionName =
                 System.getenv("INSTANCE_CONNECTION_NAME");
         // String kmsUri = System.getenv("CLOUD_KMS_URI");   // for data encryption
-        pool = CloudSqlConnectionPool.createConnectionPool(dbUser, dbPass, dbName, instanceConnectionName);
 
         log.info(instanceConnectionName);
         log.info(dbUser);
+
+        pool = CloudSqlConnectionPool.createConnectionPool(dbUser, dbPass, dbName, instanceConnectionName);
 
         try (Connection conn = pool.getConnection()) {
           String stmt = "INSERT INTO users (user_id, user_name, email, description, register_time) VALUES" +
