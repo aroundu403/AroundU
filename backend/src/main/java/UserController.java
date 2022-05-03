@@ -9,9 +9,7 @@ import DAO.User;
 public class UserController {
 
     private static final String TABLE_NAME = "users";
-    public User addUser(DataSource pool) {
-        return null;
-    }
+
 
     /**
      * Returns a list of all users in the database.
@@ -89,7 +87,7 @@ public class UserController {
                 addUserStmt.setString(3, email);
                 addUserStmt.setString(4, description);
                 addUserStmt.setString(5, String.valueOf(new Timestamp(System.currentTimeMillis())));
-                addUserStmt.executeQuery();
+                addUserStmt.executeUpdate();
                 return true;
             }
         } catch (SQLException e){
@@ -112,7 +110,7 @@ public class UserController {
             try(PreparedStatement updateDescriptionStmt = conn.prepareStatement(stmt)) {
                 updateDescriptionStmt.setString(1, description);
                 updateDescriptionStmt.setString(2, user_id);
-                updateDescriptionStmt.executeQuery();
+                updateDescriptionStmt.executeUpdate();
                 return true;
             }
         } catch (SQLException e){
@@ -133,7 +131,6 @@ public class UserController {
                     TABLE_NAME);
             try(PreparedStatement isUserExistStmt = conn.prepareStatement(stmt)) {
                 isUserExistStmt.setString(1, user_id);
-                isUserExistStmt.executeQuery();
                 ResultSet userResult = isUserExistStmt.executeQuery();
                 if (userResult.next()) {
                     userResult.close();

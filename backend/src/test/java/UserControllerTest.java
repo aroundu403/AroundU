@@ -11,6 +11,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static org.junit.Assert.assertEquals;
+
 public class UserControllerTest {
 
     Gson gson = new Gson();
@@ -24,6 +26,8 @@ public class UserControllerTest {
     DataSource pool =
             CloudSqlConnectionPool.createConnectionPool(dbUser, dbPass, dbName, instanceConnectionName);
 
+    int cardinatity = 0;
+
 
     /**
      * Initialize the test data in database for each unit test
@@ -36,7 +40,13 @@ public class UserControllerTest {
                     "(\"test222\", \"TEST2\",\"test2@gmail.com\", \"I am TEST2\", \"2020-02-02 02:02:02\")";
 
           PreparedStatement initStmt = conn.prepareStatement(stmt);
-          initStmt.executeQuery();
+          initStmt.executeUpdate();
+
+          PreparedStatement countStmt = conn.prepareStatement("SELECT COUNT(user_id) FROM users;");
+          ResultSet countResult = countStmt.executeQuery();
+          countResult.next();
+          cardinatity = countResult.getInt(1);
+          countResult.close();
         }
     }
 
@@ -46,38 +56,43 @@ public class UserControllerTest {
     @After
     public void deleteTestDataFromDatabase() throws  SQLException {
         try (Connection conn = pool.getConnection()) {
-            String stmt = "DELETE FROM users WHERE user_id=\"test111\" or user_id=\"test222\"";
+      String stmt =
+          "DELETE FROM users WHERE user_id=\"test111\" or user_id=\"test222\" or user_id=\"test333\"";
             PreparedStatement deleteStmt = conn.prepareStatement(stmt);
-            deleteStmt.executeQuery();
+            deleteStmt.executeUpdate();
         }
     }
 
 
     @Test
     public void testAddUser() throws SQLException {
-        throw new NotImplementedException();
-//        try (Connection conn = pool.getConnection()) {
-//            String stmt = "INSERT INTO users (user_id, user_name, email, description, register_time) VALUES" +
-//                    "(\"test333\", \"TEST3\",\"test3@gmail.com\", \"I am TEST3\", \"2020-03-03 03:03:03\")";
-//            PreparedStatement testAddStmt = conn.prepareStatement(stmt);
-//        }
+        UserController.addUser(pool, "test333", "Test3", "test3@gmail.com", "I am TEST3");
+        int newCardinality = -1;
+        try (Connection conn = pool.getConnection()) {
+            PreparedStatement countStmt = conn.prepareStatement("SELECT COUNT(user_id) FROM users;");
+            ResultSet countResult = countStmt.executeQuery();
+            countResult.next();
+            newCardinality = countResult.getInt(1);
+            countResult.close();
+        }
+        assertEquals("Cardinality doesn't match!", cardinatity+1, newCardinality);
     }
 
-
-    @Test
-    public void testGetUsers() {}
-
-
-    @Test
-    public void testGetUser() {}
-
-
-    @Test
-    public void testTestAddUser() {}
-
-    @Test
-    public void testUpdateUserDescription() {}
-
-    @Test
-    public void testIsUserExist() {}
+//
+//    @Test
+//    public void testGetUsers() {}
+//
+//
+//    @Test
+//    public void testGetUser() {}
+//
+//
+//    @Test
+//    public void testTestAddUser() {}
+//
+//    @Test
+//    public void testUpdateUserDescription() {}
+//
+//    @Test
+//    public void testIsUserExist() {}
 }
