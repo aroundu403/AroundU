@@ -64,6 +64,10 @@ flutter:
 
   assets:
     - .env
+    - images/scenary.jpg
+    - images/scenary_red.jpg
+    - images/waterfall.jpg
+    - images/tree.jpg
 
 
   # To add assets to your application, add an assets section, like this:
