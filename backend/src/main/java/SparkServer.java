@@ -5,6 +5,7 @@ import DTO.DataResponse;
 import DTO.OperationResponse;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import javax.sql.DataSource;
 import java.util.ArrayList;
@@ -23,13 +24,12 @@ public class SparkServer {
                 CloudSqlConnectionPool.createConnectionPool(dbUser, dbPass, dbName, instanceConnectionName);
 
 
-        get("/hello", (req, res) -> "Hello World");
 
-    // http://localhost:4567/user/:id
+    // http://localhost:4567/user/aaa111
     get(
-        "/event",
+        "/user/:id",
         (request, response) -> {
-          String id = request.queryParams("id");
+          String id = request.params(":id");
           if (UserController.isUserExist(pool, id)) {
             User user = UserController.getUser(pool, id);
             DataResponse resp = new DataResponse(200, "Success", user);
