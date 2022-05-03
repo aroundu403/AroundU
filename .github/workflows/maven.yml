@@ -35,4 +35,4 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      run: mvn -DDB_USER=${{ secrets.DB_USER }} package --file pom.xml
+      run: mvn -DDB_USER= ${{ secrets.DB_USER }} -DINSTANCE_CONNECTION_NAME ${{ secrets.INSTANCE_CONNECTION_NAME }} package --file pom.xml
