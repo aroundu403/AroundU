@@ -19,16 +19,8 @@ public class UserControllerTest {
 
     Gson gson = new Gson();
 
-    String dbUser = System.getenv("DB_USER");
-    String dbPass = System.getenv("DB_PASS");
-    String dbName = System.getenv("DB_NAME");
-    String instanceConnectionName =
-            System.getenv("INSTANCE_CONNECTION_NAME");
-    // String kmsUri = System.getenv("CLOUD_KMS_URI");   // for data encryption
-    DataSource pool =
-            CloudSqlConnectionPool.createConnectionPool(dbUser, dbPass, dbName, instanceConnectionName);
-
     int cardinatity = 0;
+    DataSource pool;
 
 
     /**
@@ -36,8 +28,17 @@ public class UserControllerTest {
      */
     @Before
     public void initializeDatabaseContent() throws SQLException {
+        String dbUser = System.getenv("DB_USER");
+        String dbPass = System.getenv("DB_PASS");
+        String dbName = System.getenv("DB_NAME");
+        String instanceConnectionName =
+                System.getenv("INSTANCE_CONNECTION_NAME");
+        // String kmsUri = System.getenv("CLOUD_KMS_URI");   // for data encryption
+        pool = CloudSqlConnectionPool.createConnectionPool(dbUser, dbPass, dbName, instanceConnectionName);
+
         log.info(instanceConnectionName);
         log.info(dbUser);
+
         try (Connection conn = pool.getConnection()) {
           String stmt = "INSERT INTO users (user_id, user_name, email, description, register_time) VALUES" +
                     "(\"test111\", \"TEST1\",\"test1@gmail.com\", \"I am TEST1\", \"2020-01-01 01:01:01\")," +
