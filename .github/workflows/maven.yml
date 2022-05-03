@@ -6,11 +6,18 @@ name: Java CI with Maven
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
+env:
+  DB_USER: ${{ secrets.DB_USER }}
+  DB_PASS: ${{ secrets.DB_PASS }}
+  DB_NAME: ${{ secrets.DB_NAME }}
+  INSTANCE_CONNECTION_NAME: ${{ secrets.INSTANCE_CONNECTION_NAME}}
+  
 jobs:
   build:
+    defaults:
+      run:
+        working-directory: backend
 
     runs-on: ubuntu-latest
 
