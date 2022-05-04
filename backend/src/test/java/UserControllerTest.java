@@ -15,7 +15,8 @@ public class UserControllerTest {
     int cardinality = 0;
     String dbUser = System.getenv("DB_USER");
     String dbPass = System.getenv("DB_PASS");
-    String dbName = System.getenv("DB_TEST_NAME");
+    String dbName = System.getenv("DB_NAME");
+    String dbTestName = System.getenv("DB_TEST_NAME");
     String instanceConnectionName =
             System.getenv("INSTANCE_CONNECTION_NAME");
 
