@@ -20,7 +20,7 @@ public class UserControllerTest {
     String instanceConnectionName =
             System.getenv("INSTANCE_CONNECTION_NAME");
 
-    DataSource pool = CloudSqlConnectionPool.createConnectionPool(dbUser, dbPass, dbName, instanceConnectionName);
+    DataSource pool = CloudSqlConnectionPool.createConnectionPool(dbUser, dbPass, dbTestName, instanceConnectionName);
 
 
     /**
