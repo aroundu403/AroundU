@@ -1,19 +1,15 @@
 package DAO;
-
-import lombok.Data;
-
 import java.sql.Timestamp;
-import java.util.Arrays;
 
-@Data
+// Data representation of an event
 public class Event {
 
     public long event_id;
     public String event_code;
     public String event_name;
     public String description;
-    public long host_id;
-    public boolean isPublic;
+    public String host_id;
+    public int isPublic;  // 1 for public, 0 for private
     public String location_name;
     public float latitude;
     public float longitude;
@@ -22,7 +18,6 @@ public class Event {
 
     public String photoID;
     public String address;
-    public String title;
     //public String type;
 
     public Timestamp start_time;
@@ -31,9 +26,11 @@ public class Event {
     public Timestamp deleted_at;
     public Timestamp updated_at;
 
-    public Event(long id, String event_code, String event_name, String description, long creator_id, boolean isPublic,
+    public Event(){}
+
+    public Event(long id, String event_code, String event_name, String description, String creator_id, int isPublic,
                  String location_name, float latitude, float longitude, int max_participants, int curr_participants,
-                 String photoID, String address, String title, Timestamp start_time, Timestamp end_time,
+                 String photoID, String address, Timestamp start_time, Timestamp end_time,
                  Timestamp created_at, Timestamp deleted_at, Timestamp updated_at) {
 
         this.event_id = id;
@@ -49,7 +46,6 @@ public class Event {
         this.curr_num_participants = curr_participants;
         this.photoID = photoID;
         this.address = address;
-        this.title = title;
         this.start_time = start_time;
         this.end_time = end_time;
         this.created_at = created_at;
@@ -72,7 +68,6 @@ public class Event {
                 ", max_participants=" + max_participants +
                 ", photoID=" + photoID +
                 ", address='" + address + '\'' +
-                ", title='" + title + '\'' +
                 ", start_time=" + start_time +
                 ", end_time=" + end_time +
                 ", created_at=" + created_at +

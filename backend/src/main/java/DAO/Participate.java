@@ -1,10 +1,9 @@
 package DAO;
 
-import lombok.Data;
 import java.util.*;
 import java.sql.Timestamp;
 
-@Data
+// Data representation of an event participation
 public class Participate {
     public List<String> user_id;
     public List<Long> event_id;

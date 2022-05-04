@@ -27,8 +27,6 @@ public class UserControllerTest {
      */
     @Before
     public void initializeDatabaseContent() throws SQLException {
-
-
         try (Connection conn = pool.getConnection()) {
           String stmt = "INSERT INTO users (user_id, user_name, email, description, register_time) VALUES" +
                     "(\"test111\", \"TEST1\",\"test1@gmail.com\", \"I am TEST1\", \"2020-01-01 01:01:01\")," +

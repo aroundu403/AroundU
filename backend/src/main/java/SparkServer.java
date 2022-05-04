@@ -1,5 +1,6 @@
 import static spark.Spark.*;
 
+import DAO.Event;
 import DAO.User;
 import DTO.DataResponse;
 import DTO.OperationResponse;
@@ -25,13 +26,11 @@ public class SparkServer {
 
 
 
-    // http://localhost:4567/user/aaa111
-    get(
-        "/user/:id",
-        (request, response) -> {
-          String id = request.params(":id");
-          if (UserController.isUserExist(pool, id)) {
-            User user = UserController.getUser(pool, id);
+        // http://localhost:4567/user/aaa111
+        get("/user/:id", (request, response) -> {
+          String userID = request.params(":id");
+          if (UserController.isUserExist(pool, userID)) {
+            User user = UserController.getUser(pool, userID);
             DataResponse resp = new DataResponse(200, "Success", user);
             return gson.toJson(resp);
           } else {
@@ -39,6 +38,22 @@ public class SparkServer {
           }
         });
         init();
+
+        // http://localhost:4567/event/1
+        get("/event/:id", (request, response) -> {
+            String eventID = request.params(":id");
+            if (EventController.isEventExist(pool, Long.parseLong(eventID))) {
+                Event event = EventController.getEventByID(pool, Long.parseLong(eventID));
+                DataResponse resp = new DataResponse(200, "Success", event);
+                return gson.toJson(resp);
+            } else {
+                return gson.toJson(new OperationResponse(400, "Event not exist"));
+            }
+        });
+        init();
+
+
+
     }
 }
 //    get("/", (request, response) -> {

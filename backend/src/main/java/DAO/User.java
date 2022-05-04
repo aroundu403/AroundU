@@ -1,9 +1,8 @@
 package DAO;
-import lombok.Data;
 
 import java.sql.Timestamp;
 
-@Data
+// Data representation of a user
 public class User {
 
     public String user_id;

@@ -83,7 +83,7 @@ public class UserController {
                 addUserStmt.setString(2, user.user_name);
                 addUserStmt.setString(3, user.email);
                 addUserStmt.setString(4, user.description);
-                addUserStmt.setString(5, String.valueOf(new Timestamp(System.currentTimeMillis())));
+                addUserStmt.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
                 addUserStmt.executeUpdate();
                 return true;
             }
