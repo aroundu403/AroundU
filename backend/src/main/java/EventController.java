@@ -1,7 +1,6 @@
 // This class will control the event modules with database
 
 import DAO.Event;
-import DAO.User;
 import org.apache.commons.lang3.NotImplementedException;
 
 import javax.sql.DataSource;
@@ -60,7 +59,7 @@ public class EventController {
      * Retries and returns the event based on the given event_id
      * @param pool used for database connection
      * @param event_id the unique representation of an event
-     * @return the event asocciated with that id
+     * @return the event associated with that id
      * @throws SQLException
      */
     public static Event getEventByID(DataSource pool, long event_id) throws SQLException {
@@ -98,11 +97,23 @@ public class EventController {
         }
     }
 
+    /**
+     * Update the event details associated with that id
+     * @param pool used for database connection
+     * @param event the updated event
+     * @return the event_id of the updated event
+     */
     public static long updateEvent(DataSource pool, Event event ) {
         throw new NotImplementedException();
 
     }
 
+    /**
+     * Delete the event associated with that id
+     * @param pool used for database connection
+     * @param event_id the unique representation of an event
+     * @return true if that event is deleted successfully, returns false otherwise
+     */
     public static boolean deleteEvent(DataSource pool, long event_id) {
         throw new NotImplementedException();
     }
