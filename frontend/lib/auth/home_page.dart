@@ -200,161 +200,308 @@ class ListViewHome extends StatelessWidget {
                                         width: 1,
                                       ),
                                     ),
-                                    child: ListTile(
-                                        leading:
-                                            // CircleAvatar(
-                                            //   radius: 35,
-                                            //   backgroundImage: AssetImage(images[index]),
-                                            // ),
-                                            ClipRRect(
-                                          borderRadius: BorderRadius.circular(
-                                              10.0), //or 15.0
-                                          child: Container(
-                                              height: 130.0,
-                                              width: 80.0,
-                                              decoration: BoxDecoration(
-                                                image: DecorationImage(
-                                                    image: AssetImage(
-                                                        images[index]),
-                                                    fit: BoxFit.cover),
-                                              )
-                                              // Icon(Icons.volume_up, color: Colors.white, size: 50.0),
-
-                                              ),
-                                        ),
-                                        minVerticalPadding: 16,
-                                        title: Text(titles[index],
-                                            style: TextStyle(
-                                                color: const Color.fromARGB(
-                                                    255, 81, 65, 143),
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 18)),
-                                        subtitle: Column(children: [
+                                    child: Row(
+                                        // alignment: WrapAlignment.spaceAround,
+                                        children: [
                                           Padding(
-                                              padding: const EdgeInsets.all(3)),
-                                          Row(children: [
-                                            Icon(Icons.location_pin,
-                                                color: const Color.fromARGB(
-                                                    255, 81, 65, 143)),
-                                            Text(subtitles[index],
-                                                style: TextStyle(
-                                                    color: const Color.fromARGB(
-                                                        255, 81, 65, 143),
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 16))
-                                          ]),
-                                          // Row(children: [
-                                          //   CircleAvatar(
-                                          //     backgroundImage: AssetImage(images[index]),
-                                          //   )
-                                          // ]),
-                                          // GridView.count(
-                                          //   crossAxisCount: 5,
-                                          //   children: List.generate(5, (index) {
-                                          //     return Container(
-                                          //       child: Image.asset('images/tree.jpg'),
-                                          //     );
-                                          //   }),
-                                          // )
-                                          //Stack(
-                                          //alignment:new Alignment(x, y)
-                                          //children: <Widget>[
-                                          // new CircleAvatar(
-                                          //   backgroundImage:
-                                          //       AssetImage(images[index]),
+                                              padding: const EdgeInsets.all(8)),
+                                          // Spacer(),
+                                          // Spacer(
+                                          //   flex: 1,
                                           // ),
-                                          //size: 36.0,
-                                          //color: const Color.fromRGBO(
-                                          //218, 165, 32, 1.0)),
+                                          Expanded(
+                                              // flex: (int)1.5,
+                                              child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(
+                                                10.0), //or 15.0
+                                            child: Container(
+                                              // height: 80.0,
+                                              // width: 80.0,
+                                              // decoration: BoxDecoration(
+                                              //   image: DecorationImage(
+                                              //       image:
+                                              //           AssetImage(images[index]),
+                                              //       fit: BoxFit.cover),
+                                              // )
+                                              height: 90.0,
+                                              width: 90.0,
+                                              decoration: BoxDecoration(
+                                                  image: DecorationImage(
+                                                      image: AssetImage(
+                                                          images[index]),
+                                                      fit: BoxFit.fill)),
+                                              // Icon(Icons.volume_up, color: Colors.white, size: 50.0),
+                                            ),
+                                          )),
+                                          // Spacer(
+                                          //   flex: 1,
+                                          // ),
                                           Padding(
-                                              padding: const EdgeInsets.all(3)),
-                                          Container(
-                                              height: 45.0,
-                                              width: 300.0,
-                                              child: participants[index]
-                                                          .length >
-                                                      0
-                                                  ? Row(children: [
-                                                      Stack(
-                                                          //alignment:new Alignment(x, y)
-                                                          children: [
-                                                            CircleAvatar(
-                                                              radius: 20,
-                                                              backgroundImage:
-                                                                  AssetImage(
-                                                                      participants[
+                                              padding: const EdgeInsets.all(8)),
+                                          Expanded(
+                                              flex: 2,
+                                              child: Container(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 5),
+                                                  child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: <Widget>[
+                                                        Text(titles[index],
+                                                            style: TextStyle(
+                                                                color: const Color
+                                                                        .fromARGB(
+                                                                    255,
+                                                                    81,
+                                                                    65,
+                                                                    143),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize: 18)),
+                                                        Column(children: [
+                                                          Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(3)),
+                                                          Row(children: [
+                                                            Icon(
+                                                                Icons
+                                                                    .location_pin,
+                                                                color: const Color
+                                                                        .fromARGB(
+                                                                    255,
+                                                                    81,
+                                                                    65,
+                                                                    143)),
+                                                            Text(
+                                                                subtitles[
+                                                                    index],
+                                                                style: TextStyle(
+                                                                    color: const Color
+                                                                            .fromARGB(
+                                                                        255,
+                                                                        81,
+                                                                        65,
+                                                                        143),
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    fontSize:
+                                                                        16))
+                                                          ]),
+                                                          Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(3)),
+                                                          Container(
+                                                              height: 45.0,
+                                                              width: 300.0,
+                                                              child: participants[
                                                                               index]
-                                                                          [0]),
-                                                              //radius: 30,
-                                                            ),
-                                                            //List.generate(participants[index].length,(index2){
-                                                            for (int i = 1;
-                                                                i <
-                                                                    participants[
-                                                                            index]
-                                                                        .length;
-                                                                i++)
-                                                              new Positioned(
-                                                                left: 20.0,
-                                                                child:
-                                                                    new CircleAvatar(
-                                                                  radius: 20,
-                                                                  backgroundImage:
-                                                                      AssetImage(
-                                                                          participants[index]
-                                                                              [
-                                                                              i]),
-                                                                  //radius: 30,
-                                                                ),
-                                                              )
-                                                          ])
-                                                    ])
-                                                  // : Row(children: [
-                                                  //     CircleAvatar(
-                                                  //       radius: 15,
-                                                  //       backgroundImage: AssetImage(
-                                                  //           participants[index][0]),
-                                                  //     )
-                                                  //   ]),
-                                                  : Column(children: [
-                                                      Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(3)),
-                                                      const Text('text("")',
-                                                          textAlign:
-                                                              TextAlign.left,
-                                                          style: TextStyle(
-                                                              color: Color
-                                                                  .fromARGB(
-                                                                      255,
-                                                                      150,
-                                                                      149,
-                                                                      152),
-                                                              fontStyle:
-                                                                  FontStyle
-                                                                      .italic,
-                                                              fontSize: 12))
-                                                    ]))
+                                                                          .length >
+                                                                      0
+                                                                  ? Row(
+                                                                      children: [
+                                                                          Stack(
+                                                                              //alignment:new Alignment(x, y)
+                                                                              children: [
+                                                                                CircleAvatar(
+                                                                                  radius: 20,
+                                                                                  backgroundImage: AssetImage(participants[index][0]),
+                                                                                  //radius: 30,
+                                                                                ),
+                                                                                //List.generate(participants[index].length,(index2){
+                                                                                for (int i = 1; i < participants[index].length; i++)
+                                                                                  new Positioned(
+                                                                                    left: 20.0,
+                                                                                    child: new CircleAvatar(
+                                                                                      radius: 20,
+                                                                                      backgroundImage: AssetImage(participants[index][i]),
+                                                                                      //radius: 30,
+                                                                                    ),
+                                                                                  )
+                                                                              ])
+                                                                        ])
+                                                                  // : Row(children: [
+                                                                  //     CircleAvatar(
+                                                                  //       radius: 15,
+                                                                  //       backgroundImage: AssetImage(
+                                                                  //           participants[index][0]),
+                                                                  //     )
+                                                                  //   ]),
+                                                                  : Column(
+                                                                      children: [
+                                                                          Padding(
+                                                                              padding: const EdgeInsets.all(3)),
+                                                                          const Text(
+                                                                              'text("")',
+                                                                              textAlign: TextAlign.left,
+                                                                              style: TextStyle(color: Color.fromARGB(255, 150, 149, 152), fontStyle: FontStyle.italic, fontSize: 12))
+                                                                        ]))
+                                                        ])
+                                                      ])))
+                                        ])));
+                            // child: ListTile(
+                            //     // horizontalTitleGap: 16.0,
+                            //     leading:
+                            //         // CircleAvatar(
+                            //         //   radius: 35,
+                            //         //   backgroundImage: AssetImage(images[index]),
+                            //         // ),
+                            //         ClipRRect(
+                            //       borderRadius: BorderRadius.circular(
+                            //           10.0), //or 15.0
+                            //       child: Container(
+                            //           height: 80.0,
+                            //           width: 80.0,
+                            //           decoration: BoxDecoration(
+                            //             image: DecorationImage(
+                            //                 image: AssetImage(
+                            //                     images[index]),
+                            //                 fit: BoxFit.cover),
+                            //           )
+                            //           // Icon(Icons.volume_up, color: Colors.white, size: 50.0),
 
-                                          // ListView.builder(
-                                          //   controller: _controller,
-                                          //   physics: _physics,
-                                          //   // itemCount: images.length,
-                                          //   itemBuilder: (BuildContext, index2) {
-                                          //     return Container(
-                                          //         child: CircleAvatar(
-                                          //       backgroundImage: AssetImage(
-                                          //           participants[index][index2]),
-                                          //     ));
-                                          //   },
-                                          //   // padding: const EdgeInsets.all(8),
-                                          //   shrinkWrap: true,
-                                          //   scrollDirection: Axis.horizontal,
-                                          // )
-                                        ])
-                                        // subtitle: Text(subtitles[index]),
-                                        )));
+                            //           ),
+                            //     ),
+                            //     minVerticalPadding: 16,
+                            //     title: Text(titles[index],
+                            //         style: TextStyle(
+                            //             color: const Color.fromARGB(
+                            //                 255, 81, 65, 143),
+                            //             fontWeight: FontWeight.bold,
+                            //             fontSize: 18)),
+                            //     subtitle: Column(children: [
+                            //       Padding(
+                            //           padding: const EdgeInsets.all(3)),
+                            //       Row(children: [
+                            //         Icon(Icons.location_pin,
+                            //             color: const Color.fromARGB(
+                            //                 255, 81, 65, 143)),
+                            //         Text(subtitles[index],
+                            //             style: TextStyle(
+                            //                 color: const Color.fromARGB(
+                            //                     255, 81, 65, 143),
+                            //                 fontWeight: FontWeight.bold,
+                            //                 fontSize: 16))
+                            //       ]),
+                            // Row(children: [
+                            //   CircleAvatar(
+                            //     backgroundImage: AssetImage(images[index]),
+                            //   )
+                            // ]),
+                            // GridView.count(
+                            //   crossAxisCount: 5,
+                            //   children: List.generate(5, (index) {
+                            //     return Container(
+                            //       child: Image.asset('images/tree.jpg'),
+                            //     );
+                            //   }),
+                            // )
+                            //Stack(
+                            //alignment:new Alignment(x, y)
+                            //children: <Widget>[
+                            // new CircleAvatar(
+                            //   backgroundImage:
+                            //       AssetImage(images[index]),
+                            // ),
+                            //size: 36.0,
+                            //color: const Color.fromRGBO(
+                            //218, 165, 32, 1.0)),
+                            // Padding(
+                            //     padding: const EdgeInsets.all(3)),
+                            // Container(
+                            //     height: 45.0,
+                            //     width: 300.0,
+                            //     child: participants[index]
+                            //                 .length >
+                            //             0
+                            //         ? Row(children: [
+                            //             Stack(
+                            //                 //alignment:new Alignment(x, y)
+                            //                 children: [
+                            //                   CircleAvatar(
+                            //                     radius: 20,
+                            //                     backgroundImage:
+                            //                         AssetImage(
+                            //                             participants[
+                            //                                     index]
+                            //                                 [0]),
+                            //                     //radius: 30,
+                            //                   ),
+                            //                   //List.generate(participants[index].length,(index2){
+                            //                   for (int i = 1;
+                            //                       i <
+                            //                           participants[
+                            //                                   index]
+                            //                               .length;
+                            //                       i++)
+                            //                     new Positioned(
+                            //                       left: 20.0,
+                            //                       child:
+                            //                           new CircleAvatar(
+                            //                         radius: 20,
+                            //                         backgroundImage:
+                            //                             AssetImage(
+                            //                                 participants[index]
+                            //                                     [
+                            //                                     i]),
+                            //                         //radius: 30,
+                            //                       ),
+                            //                     )
+                            //                 ])
+                            //           ])
+                            //         // : Row(children: [
+                            //         //     CircleAvatar(
+                            //         //       radius: 15,
+                            //         //       backgroundImage: AssetImage(
+                            //         //           participants[index][0]),
+                            //         //     )
+                            //         //   ]),
+                            //         : Column(children: [
+                            //             Padding(
+                            //                 padding:
+                            //                     const EdgeInsets
+                            //                         .all(3)),
+                            //             const Text('text("")',
+                            //                 textAlign:
+                            //                     TextAlign.left,
+                            //                 style: TextStyle(
+                            //                     color: Color
+                            //                         .fromARGB(
+                            //                             255,
+                            //                             150,
+                            //                             149,
+                            //                             152),
+                            //                     fontStyle:
+                            //                         FontStyle
+                            //                             .italic,
+                            //                     fontSize: 12))
+                            //           ]))
+
+                            // ListView.builder(
+                            //   controller: _controller,
+                            //   physics: _physics,
+                            //   // itemCount: images.length,
+                            //   itemBuilder: (BuildContext, index2) {
+                            //     return Container(
+                            //         child: CircleAvatar(
+                            //       backgroundImage: AssetImage(
+                            //           participants[index][index2]),
+                            //     ));
+                            //   },
+                            //   // padding: const EdgeInsets.all(8),
+                            //   shrinkWrap: true,
+                            //   scrollDirection: Axis.horizontal,
+                            // )
+                            // ])
+                            // // subtitle: Text(subtitles[index]),
+                            // )));
                           },
                           padding: const EdgeInsets.all(8),
                           shrinkWrap: true,
