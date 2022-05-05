@@ -101,11 +101,38 @@ public class EventController {
      * Update the event details associated with that id
      * @param pool used for database connection
      * @param event the updated event
-     * @return the event_id of the updated event
+     * @return the event_id of the updated event, or exception if error occurs
      */
-    public static long updateEvent(DataSource pool, Event event ) {
-        throw new NotImplementedException();
+    public static long updateEvent(DataSource pool, Event event) throws SQLException {
+        try (Connection conn = pool.getConnection()) {
+            String stmt = String.format(
+                    "UPDATE %s SET " + "event_id = ?, event_code = ?, event_name = ?, description = ?, host_id = ?, " +
+                            "isPublic = ?, location_name = ?, " +
+                            "latitude = ?, longitude = ?, start_time = ?, end_time = ?, max_participants = ?, " +
+                            "curr_num_participants = ?, photoID = ?, address = ?, created_at = ? " +
+                            "WHERE event_id = ?;", TABLE_NAME);
+            try(PreparedStatement updateEventStmt = conn.prepareStatement(stmt)) {
+                // event_id imutable
+                updateEventStmt.setString(2, event.event_code);
+                updateEventStmt.setString(3, event.event_name);
+                updateEventStmt.setString(4, event.description);
+                // host_id immutable    (or mutable?)
+                updateEventStmt.setInt(6, event.isPublic);
+                updateEventStmt.setString(7, event.location_name);
+                updateEventStmt.setFloat(8, event.latitude);
+                updateEventStmt.setFloat(9, event.longitude);
+                updateEventStmt.setTimestamp(10, event.start_time);
+                updateEventStmt.setTimestamp(11, event.end_time);
+                updateEventStmt.setInt(12, event.max_participants);
+                updateEventStmt.setInt(13, event.curr_num_participants);
+                updateEventStmt.setString(14, event.photoID);
+                updateEventStmt.setString(15, event.address);
+                // created_at not immutable
 
+                updateEventStmt.executeUpdate();
+                return event.event_id;
+            }
+        }
     }
 
     /**
