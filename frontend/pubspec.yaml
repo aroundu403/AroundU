@@ -65,7 +65,7 @@ flutter:
   uses-material-design: true
 
   assets:
-    - .env
+    - env
     - images/scenary.jpg
     - images/scenary_red.jpg
     - images/waterfall.jpg

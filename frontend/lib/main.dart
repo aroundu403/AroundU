@@ -29,7 +29,7 @@ ThemeData THEME = ThemeData(
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // load the config file
-  await dotenv.load(fileName: ".env");
+  await dotenv.load(fileName: "env");
   
   // initalize firebase with platform sepcific config
   await Firebase.initializeApp(

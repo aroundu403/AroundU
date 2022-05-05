@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
-const STYLE_STRING = 'mapbox://styles/george9977/cl2i6zq8t002714l2the0g89v';
+//const STYLE_STRING = 'mapbox://styles/george9977/cl2i6zq8t002714l2the0g89v';
+const STYLE_STRING = 'mapbox://styles/mapbox/streets-v11';
 
 class MapView extends StatefulWidget {
   const MapView({ Key? key }) : super(key: key);
@@ -16,7 +17,7 @@ class MapView extends StatefulWidget {
 }
 
 class _MapViewState extends State<MapView> {
-  late MapboxMapController _mapController;
+  MapboxMapController? _mapController;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +58,7 @@ class _MapViewState extends State<MapView> {
         
         // add a symbol when user clicks on the map
         onMapClick: (Point<double> point, LatLng coordinates) async {
-          await _mapController.addSymbol(
+          await _mapController!.addSymbol(
             SymbolOptions(
               iconImage: 'embassy-15',
               iconColor: '#006992',
@@ -72,7 +73,7 @@ class _MapViewState extends State<MapView> {
         child: const Icon(Icons.location_on_sharp),
         onPressed: () async {
           final location = await acquireCurrentLocation();
-          _mapController.animateCamera(CameraUpdate.newLatLng(location!));
+          _mapController!.animateCamera(CameraUpdate.newLatLng(location!));
         },
       ),
 
@@ -82,7 +83,7 @@ class _MapViewState extends State<MapView> {
 
   @override
   void dispose() {
-    _mapController.dispose();
+    _mapController!.dispose();
     super.dispose();
   }
 }

@@ -14,3 +14,14 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+## How to deploy web version to Firebase Hosting:
+Prerequisite:
+- Make sure you have the web supported version of Flutter 
+- Make sure you install `npm install -g firebase-tools`, login to Firebase by `firebase login`, 
+and set up hosting by running `firebase init hosting`
+- If you don't have access to Firebase project `aroundu-403`, contact John to give you permission.
+```
+flutter build web
+firebase deploy
+```
