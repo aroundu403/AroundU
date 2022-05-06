@@ -39,6 +39,8 @@ dependencies:
   flutter_signin_button: ^2.0.0
   google_sign_in: ^5.3.0
   flutter_dotenv: ^5.0.2
+  mapbox_gl: ^0.15.0
+  location: ^4.3.0
 
 dev_dependencies:
   flutter_test:
@@ -63,7 +65,7 @@ flutter:
   uses-material-design: true
 
   assets:
-    - .env
+    - env
     - images/scenary.jpg
     - images/scenary_red.jpg
     - images/waterfall.jpg

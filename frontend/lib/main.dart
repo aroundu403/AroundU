@@ -1,3 +1,4 @@
+import 'package:aroundu/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -28,7 +29,7 @@ ThemeData THEME = ThemeData(
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // load the config file
-  await dotenv.load(fileName: ".env");
+  await dotenv.load(fileName: "env");
   
   // initalize firebase with platform sepcific config
   await Firebase.initializeApp(
@@ -60,7 +61,8 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: THEME,
-        home: const AuthWrapper(),
+        home: const HomePage()
+        // const AuthWrapper(),
       ),
     );
   }
