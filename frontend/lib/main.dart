@@ -10,10 +10,10 @@ import 'auth/auth_wrapper.dart';
 import 'firebase_options.dart';
 
 // whether to use local Firebase emulator
-const bool USE_FIRESTORE_EMULATOR = false;
+const bool useFirebaseEmulator = false;
 
 // define app color theme
-ThemeData THEME = ThemeData(
+ThemeData theme = ThemeData(
   primaryColor: const Color.fromARGB(255, 92, 74, 210), // 主色
   backgroundColor: const Color.fromARGB(255, 81, 65, 143), // 背景色
   focusColor: const Color(0xff8DFFF2), // 撞色
@@ -37,7 +37,7 @@ Future<void> main() async {
   );
 
   // whether to use emulator for local testing
-  if (USE_FIRESTORE_EMULATOR) {
+  if (useFirebaseEmulator) {
     await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
   }
 
@@ -60,9 +60,8 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
-        theme: THEME,
-        home: const HomePage()
-        // const AuthWrapper(),
+        theme: theme,
+        home: const AuthWrapper(),
       ),
     );
   }

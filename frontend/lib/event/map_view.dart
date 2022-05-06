@@ -6,8 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
-//const STYLE_STRING = 'mapbox://styles/george9977/cl2i6zq8t002714l2the0g89v';
-const STYLE_STRING = 'mapbox://styles/mapbox/streets-v11';
+const styleString = 'mapbox://styles/mapbox/streets-v11';
 
 class MapView extends StatefulWidget {
   const MapView({ Key? key }) : super(key: key);
@@ -25,7 +24,7 @@ class _MapViewState extends State<MapView> {
     return Scaffold(
       body: MapboxMap(
         accessToken: dotenv.env['mapBoxAccessToken']!,
-        styleString: STYLE_STRING,
+        styleString: styleString,
         minMaxZoomPreference: const MinMaxZoomPreference(6.0, null),
 
         // Initial center of the map to UW
