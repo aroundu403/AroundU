@@ -2,6 +2,7 @@ import 'package:aroundu/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+// ignore: non_constant_identifier_names
 ThemeData THEME = ThemeData(
   primaryColor: const Color.fromARGB(255, 92, 74, 210), // 主色
   backgroundColor: const Color.fromARGB(255, 81, 65, 143), // 背景色
@@ -32,7 +33,9 @@ class HomePage extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class ListViewHome extends StatelessWidget {
+  ListViewHome({Key? key}) : super(key: key);
   final List<String> images = [
     "images/scenary.jpg",
     "images/scenary_red.jpg",
@@ -134,8 +137,8 @@ class ListViewHome extends StatelessWidget {
     ["images/tree.jpg", "images/tree.jpg", "images/tree.jpg"],
     []
   ];
-  ScrollController _controller = new ScrollController();
-  ScrollPhysics _physics = ClampingScrollPhysics();
+  final ScrollController _controller = ScrollController();
+  final ScrollPhysics _physics = const ClampingScrollPhysics();
 
   @override
   Widget build(BuildContext context) {
@@ -144,10 +147,11 @@ class ListViewHome extends StatelessWidget {
         body: Container(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 gradient: LinearGradient(
               begin: Alignment.topRight,
               end: Alignment.bottomLeft,
+              // ignore: prefer_const_literals_to_create_immutables
               colors: [
                 Color.fromARGB(255, 197, 240, 207),
                 Color.fromARGB(255, 163, 232, 236),
@@ -155,10 +159,10 @@ class ListViewHome extends StatelessWidget {
             )),
             child: SingleChildScrollView(
                 child: Column(children: [
-              Padding(padding: const EdgeInsets.all(30)),
+              const Padding(padding: EdgeInsets.all(30)),
               const Text("Event List",
                   style: TextStyle(
-                      color: const Color.fromARGB(255, 81, 65, 143),
+                      color: Color.fromARGB(255, 81, 65, 143),
                       fontWeight: FontWeight.bold,
                       fontStyle: FontStyle.italic,
                       fontSize: 36)),
@@ -167,19 +171,21 @@ class ListViewHome extends StatelessWidget {
                       controller: _controller,
                       physics: _physics,
                       itemCount: images.length,
-                      itemBuilder: (BuildContext, index) {
+                      // ignore: avoid_types_as_parameter_names
+                      itemBuilder: (buildContext, index) {
                         return Container(
-                            margin: EdgeInsets.all(8),
+                            margin: const EdgeInsets.all(8),
                             width: 343,
                             height: 130,
-                            decoration: new BoxDecoration(
+                            decoration: BoxDecoration(
                               boxShadow: [
                                 BoxShadow(
-                                  color: Color.fromARGB(255, 120, 117, 117)
-                                      .withOpacity(.5),
+                                  color:
+                                      const Color.fromARGB(255, 120, 117, 117)
+                                          .withOpacity(.5),
                                   blurRadius: 20.0, // soften the shadow
                                   spreadRadius: 0.0, //extend the shadow
-                                  offset: Offset(
+                                  offset: const Offset(
                                     5.0, // Move to right 10  horizontally
                                     8.0, // Move to bottom 10 Vertically
                                   ),
@@ -196,7 +202,7 @@ class ListViewHome extends StatelessWidget {
                                   ),
                                 ),
                                 child: Row(children: [
-                                  Padding(padding: const EdgeInsets.all(8)),
+                                  const Padding(padding: EdgeInsets.all(8)),
                                   Expanded(
                                       child: ClipRRect(
                                     borderRadius:
@@ -210,7 +216,7 @@ class ListViewHome extends StatelessWidget {
                                               fit: BoxFit.fill)),
                                     ),
                                   )),
-                                  Padding(padding: const EdgeInsets.all(8)),
+                                  const Padding(padding: EdgeInsets.all(8)),
                                   Expanded(
                                       flex: 2,
                                       child: Container(
@@ -223,51 +229,45 @@ class ListViewHome extends StatelessWidget {
                                               // mainAxisAlignment:
                                               //     MainAxisAlignment.end,
                                               children: <Widget>[
-                                                Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            5)),
+                                                const Padding(
+                                                    padding: EdgeInsets.all(5)),
                                                 Text(titles[index],
-                                                    style: TextStyle(
-                                                        color: const Color
-                                                                .fromARGB(
+                                                    style: const TextStyle(
+                                                        color: Color.fromARGB(
                                                             255, 81, 65, 143),
                                                         fontWeight:
                                                             FontWeight.bold,
                                                         fontSize: 18)),
                                                 Column(children: [
-                                                  Padding(
+                                                  const Padding(
                                                       padding:
-                                                          const EdgeInsets.all(
-                                                              3)),
+                                                          EdgeInsets.all(3)),
                                                   Row(children: [
-                                                    Icon(Icons.location_pin,
-                                                        color: const Color
-                                                                .fromARGB(
+                                                    const Icon(
+                                                        Icons.location_pin,
+                                                        color: Color.fromARGB(
                                                             255, 81, 65, 143)),
                                                     Text(subtitles[index],
-                                                        style: TextStyle(
-                                                            color: const Color
-                                                                    .fromARGB(
-                                                                255,
-                                                                81,
-                                                                65,
-                                                                143),
+                                                        style: const TextStyle(
+                                                            color:
+                                                                Color.fromARGB(
+                                                                    255,
+                                                                    81,
+                                                                    65,
+                                                                    143),
                                                             fontWeight:
                                                                 FontWeight.bold,
                                                             fontSize: 16))
                                                   ]),
-                                                  Padding(
+                                                  const Padding(
                                                       padding:
-                                                          const EdgeInsets.all(
-                                                              3)),
-                                                  Container(
+                                                          EdgeInsets.all(3)),
+                                                  SizedBox(
                                                       height: 45.0,
                                                       width: 300.0,
                                                       child: participants[index]
-                                                                  .length >
-                                                              0
-                                                          ? Container(
+                                                              .isNotEmpty
+                                                          ? SizedBox(
                                                               width: double
                                                                   .infinity,
                                                               height: 100,
@@ -297,28 +297,28 @@ class ListViewHome extends StatelessWidget {
                                                                           ),
                                                                         );
                                                                       }))
-                                                          : Column(children: [
-                                                              Padding(
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                          .all(3)),
-                                                              const Text(
-                                                                  'text("")',
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .left,
-                                                                  style: TextStyle(
-                                                                      color: Color.fromARGB(
-                                                                          255,
-                                                                          150,
-                                                                          149,
-                                                                          152),
-                                                                      fontStyle:
-                                                                          FontStyle
+                                                          : Column(
+                                                              children: const [
+                                                                  Padding(
+                                                                      padding:
+                                                                          EdgeInsets.all(
+                                                                              3)),
+                                                                  Text(
+                                                                      'text("")',
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .left,
+                                                                      style: TextStyle(
+                                                                          color: Color.fromARGB(
+                                                                              255,
+                                                                              150,
+                                                                              149,
+                                                                              152),
+                                                                          fontStyle: FontStyle
                                                                               .italic,
-                                                                      fontSize:
-                                                                          12))
-                                                            ]))
+                                                                          fontSize:
+                                                                              12))
+                                                                ]))
                                                 ])
                                               ])))
                                 ])));
@@ -328,9 +328,9 @@ class ListViewHome extends StatelessWidget {
                       scrollDirection: Axis.vertical,
                     )
                   : const Center(
-                      child: const Text('No Events Posted Currently',
+                      child: Text('No Events Posted Currently',
                           style: TextStyle(
-                              color: const Color.fromARGB(255, 81, 65, 143),
+                              color: Color.fromARGB(255, 81, 65, 143),
                               fontStyle: FontStyle.italic,
                               fontSize: 20))),
               ElevatedButton(
