@@ -97,7 +97,7 @@ public class SparkServer {
 
         // http://localhost:4567/event/guest?eventid=1&userid=aaa111
         // 为什么不行呀QAQ
-        post("/event/guest", (request, response) ->
+        post("event/guest", "application/json", (request, response) ->
         {
             String eventID = request.queryParams("eventid");
             String userID = request.queryParams("userid");
@@ -108,7 +108,7 @@ public class SparkServer {
                 if (event.max_participants >= event.curr_num_participants + 1) {
                     Timestamp curr = new Timestamp(System.currentTimeMillis());
                     // can only participate if the event isn't ended
-                    if (curr.compareTo(event.end_time) < 0) {
+                    if (curr.compareTo(Timestamp.valueOf(event.end_time)) < 0) {
                         if (ParticipateController.userParticipateEvent(pool, userID, Long.parseLong(eventID))){
                             DataResponse resp = new DataResponse(200, "Success", eventID);
                             return gson.toJson(resp);

@@ -23,7 +23,7 @@ public class EventController {
         try (Connection conn = pool.getConnection()) {
           String stmt = String.format(
                   "INSERT INTO %s (event_code, event_name, description, host_id, isPublic, location_name, latitude, " +
-                   "longitude, start_time, end_time, max_participants, curr_num_participants, photoID, address) " +
+                   "longitude, start_time, end_time, max_participants, curr_num_participants, photoID, address， created_at) " +
                           "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", TABLE_NAME);
           try(PreparedStatement createEventStmt = conn.prepareStatement(stmt)) {
               createEventStmt.setString(1, event.event_code);
@@ -34,13 +34,14 @@ public class EventController {
               createEventStmt.setString(6, event.location_name);
               createEventStmt.setFloat(7, event.latitude);
               createEventStmt.setFloat(8, event.longitude);
-              createEventStmt.setTimestamp(9, event.start_time);
-              createEventStmt.setTimestamp(10, event.end_time);
+              createEventStmt.setTimestamp(9, Timestamp.valueOf(event.start_time));
+              createEventStmt.setTimestamp(10, Timestamp.valueOf(event.end_time));
               createEventStmt.setInt(11, event.max_participants);
-              createEventStmt.setInt(121, event.curr_num_participants);
+              createEventStmt.setInt(12, event.curr_num_participants);
               createEventStmt.setString(13, event.photoID);
               createEventStmt.setString(14, event.address);
               createEventStmt.setTimestamp(15, new Timestamp(System.currentTimeMillis()));
+              System.out.println(stmt);
               createEventStmt.executeUpdate();
           }
           try (PreparedStatement getIDStmt = conn.prepareStatement("SELECT LAST_INSERT_ID() from events")) {
@@ -83,13 +84,13 @@ public class EventController {
                     event.location_name = eventResults.getString(7);
                     event.latitude = eventResults.getFloat(8);
                     event.longitude = eventResults.getFloat(9);
-                    event.start_time = eventResults.getTimestamp(10);
-                    event.end_time = eventResults.getTimestamp(11);
+                    event.start_time = String.valueOf(eventResults.getTimestamp(10));
+                    event.end_time = String.valueOf(eventResults.getTimestamp(11));
                     event.max_participants = eventResults.getInt(12);
                     event.curr_num_participants = eventResults.getInt(13);
                     event.photoID = eventResults.getString(14);
                     event.address = eventResults.getString(15);
-                    event.created_at = eventResults.getTimestamp(16);
+                    event.created_at = String.valueOf(eventResults.getTimestamp(16));
                 }
                 eventResults.close();
                 return event;
@@ -117,8 +118,8 @@ public class EventController {
                 updateEventStmt.setString(4, event.location_name);
                 updateEventStmt.setFloat(5, event.latitude);
                 updateEventStmt.setFloat(6, event.longitude);
-                updateEventStmt.setTimestamp(7, event.start_time);
-                updateEventStmt.setTimestamp(8, event.end_time);
+                updateEventStmt.setTimestamp(7, Timestamp.valueOf(event.start_time));
+                updateEventStmt.setTimestamp(8, Timestamp.valueOf(event.end_time));
                 updateEventStmt.setInt(9, event.max_participants);
                 updateEventStmt.setInt(10, event.curr_num_participants);
                 updateEventStmt.setString(11, event.photoID);
@@ -140,10 +141,11 @@ public class EventController {
     public static boolean deleteEvent(DataSource pool, long event_id){
         try (Connection conn = pool.getConnection()) {
             String stmt = String.format(
-                    "UPDATE %s SET  deleted_at = ? WHERE event_id = ?;", TABLE_NAME);
+                    "UPDATE %s SET deleted_at = ?, isDeleted = ? WHERE event_id = ?;", TABLE_NAME);
             try(PreparedStatement updateEventStmt = conn.prepareStatement(stmt)) {
                 updateEventStmt.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
-                updateEventStmt.setLong(2, event_id);
+                updateEventStmt.setInt(2, 1);
+                updateEventStmt.setLong(3, event_id);
                 updateEventStmt.executeUpdate();
                 return true;
             }
