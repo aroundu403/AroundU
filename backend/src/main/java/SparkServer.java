@@ -6,6 +6,7 @@ import DTO.DataResponse;
 import DTO.OperationResponse;
 import com.google.gson.Gson;
 import javax.sql.DataSource;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 public class SparkServer {
@@ -91,5 +92,39 @@ public class SparkServer {
 //        options("/", (request, response) -> {
 //        // Appease something
 //        });
+
+//        POST /event/guest
+
+        // http://localhost:4567/event/guest?eventid=1&userid=aaa111
+        // 为什么不行呀QAQ
+        post("/event/guest", (request, response) ->
+        {
+            String eventID = request.queryParams("eventid");
+            String userID = request.queryParams("userid");
+            System.out.println(userID);
+            if (EventController.isEventExist(pool, Long.parseLong(eventID))) {
+                Event event = EventController.getEventByID(pool, Long.parseLong(eventID));
+                // can only participate if event not filled
+                if (event.max_participants >= event.curr_num_participants + 1) {
+                    Timestamp curr = new Timestamp(System.currentTimeMillis());
+                    // can only participate if the event isn't ended
+                    if (curr.compareTo(event.end_time) < 0) {
+                        if (ParticipateController.userParticipateEvent(pool, userID, Long.parseLong(eventID))){
+                            DataResponse resp = new DataResponse(200, "Success", eventID);
+                            return gson.toJson(resp);
+                        }else{
+                            return gson.toJson(new OperationResponse(500, "SQL server error."));
+                        }
+                    }else{
+                        return gson.toJson(new OperationResponse(403, "The event is ended."));
+                    }
+                }else{
+                    return gson.toJson(new OperationResponse(402, "The event is filled."));
+                }
+            } else {
+                return gson.toJson(new OperationResponse(400, "Event not exist"));
+            }
+        });
+        init();
     }
 }
