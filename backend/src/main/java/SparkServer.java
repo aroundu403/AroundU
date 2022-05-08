@@ -5,9 +5,6 @@ import DAO.User;
 import DTO.DataResponse;
 import DTO.OperationResponse;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import javax.sql.DataSource;
 import java.util.ArrayList;
 
