@@ -34,6 +34,9 @@ public class SparkServer {
     get(
         "/user/:id",
         (request, response) -> {
+          // String token = request.headers("Authorization");
+          // FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
+          // String userID = decodedToken.getUid();
           String userID = request.params(":id");
           if (UserController.isUserExist(pool, userID)) {
             User user = UserController.getUser(pool, userID);
