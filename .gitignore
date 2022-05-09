@@ -6,3 +6,4 @@ out/
 # Mac
 .DS_Store
 *.env
+*env
