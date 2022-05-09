@@ -4,11 +4,13 @@ import DTO.DataResponse;
 import DTO.OperationResponse;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 import com.google.gson.Gson;
 
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.net.http.HttpRequest;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import com.google.firebase.FirebaseOptions;
@@ -36,6 +38,7 @@ public class SparkServer {
             .build();
     FirebaseApp defaultApp = FirebaseApp.initializeApp(options);
 
+
     /*
       --------------------------------------- USER RELATED -----------------------------------------------
     */
@@ -47,11 +50,7 @@ public class SparkServer {
     get(
         "/user",
         (request, response) -> {
-          String token = request.headers("Authorization");
-          token = token.split(" ")[1];
-          FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
-          String userID = decodedToken.getUid();
-          // String userID = request.params(":id");
+          String userID = getUserID(request.headers("Authorization"), defaultApp);
           if (UserController.isUserExist(pool, userID)) {
             User user = UserController.getUser(pool, userID);
             DataResponse resp = new DataResponse(200, "Success", user);
@@ -68,9 +67,9 @@ public class SparkServer {
     // need to add request body, please copy from the API doc
     // http://localhost:4567/user/ddd444
     post(
-        "/user/:id",
+        "/user",
         (request, response) -> {
-          String userID = request.params(":id");
+            String userID = getUserID(request.headers("Authorization"), defaultApp);
           User body = gson.fromJson(request.body(), User.class);
           if (!UserController.isUserExist(pool, userID)) {
             if (UserController.addUser(pool, body)) {
@@ -307,4 +306,12 @@ public class SparkServer {
 
     init();
   }
+
+
+  public static String getUserID (String token, FirebaseApp defaultApp) throws IOException, FirebaseAuthException {
+        token = token.split(" ")[1];
+        FirebaseToken decodedToken = FirebaseAuth.getInstance(defaultApp).verifyIdToken(token);
+        return decodedToken.getUid();
+  }
+
 }
