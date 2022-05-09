@@ -168,7 +168,7 @@ public class EventController {
     public static boolean isEventExist(DataSource pool, long event_id) {
         try (Connection conn = pool.getConnection()) {
             String stmt = String.format(
-                    "SELECT event_name FROM %s WHERE event_id = ?;",
+                    "SELECT event_name FROM %s WHERE (event_id = ?) AND (isDeleted != 1);",
                     TABLE_NAME);
             try(PreparedStatement isUserExistStmt = conn.prepareStatement(stmt)) {
                 isUserExistStmt.setLong(1, event_id);
