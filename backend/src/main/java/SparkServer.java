@@ -13,6 +13,7 @@ public class SparkServer {
     public static void main(String[] args) {
         Gson gson = new Gson();
 
+        // Database accessing preparation
         String dbUser = System.getenv("DB_USER");
         String dbPass = System.getenv("DB_PASS");
         String dbName = System.getenv("DB_NAME");
@@ -23,7 +24,15 @@ public class SparkServer {
                 CloudSqlConnectionPool.createConnectionPool(dbUser, dbPass, dbName, instanceConnectionName);
 
 
+        /*
+            --------------------------------------- USER RELATED -----------------------------------------------
+        */
+
+
+        // GET /user
+        // Show the user information by id
         // http://localhost:4567/user/aaa111
+
         get("/user/:id", (request, response) -> {
             String userID = request.params(":id");
             if (UserController.isUserExist(pool, userID)) {
@@ -36,7 +45,21 @@ public class SparkServer {
         });
         init();
 
+
+        // PUT /user
+        // for a user to register with email
+
+
+
+        /*
+             ------------------------------- EVENT / EVENT CREATORS RELATED -----------------------------------
+        */
+
+
+        // GET /event
+        // User check an event.
         // http://localhost:4567/event/1
+
         get("/event/:id", (request, response) -> {
             String eventID = request.params(":id");
             if (EventController.isEventExist(pool, Long.parseLong(eventID))) {
@@ -50,8 +73,12 @@ public class SparkServer {
         init();
 
 
-
+        // POST /event
         // Create a new event
+        // please use postman to test, dropbox select post
+        // need to add request body: please copy from the API doc
+        // http://localhost:4567/event
+
         post("/event", (request, response) ->
         {
             Event body = gson.fromJson(request.body(), Event.class);
@@ -67,7 +94,12 @@ public class SparkServer {
         init();
 
 
+        // PUT /event
         // Update an existed event
+        // please use postman to test, dropbox select put
+        // need to add request body: please copy from the API doc and make modification
+        // http://localhost:4567/event/aaa111
+
         put("/event/:id", (request, response) ->
         {
             String userID = request.params(":id");
@@ -84,17 +116,33 @@ public class SparkServer {
         });
         init();
 
-//
-//        delete("/", (request, response) -> {
-//        // Annihilate something
-//        });
-//
-//        options("/", (request, response) -> {
-//        // Appease something
-//        });
 
+        // DELETE /event
+        // Event creator delete a created event
+
+
+        // need to add later:
+        // VIEW /event
+        // show the “created event” list
+
+
+        /*
+            ------------------------------- EVENT PARTICIPANTS RELATED -----------------------------------
+
+        */
+
+
+        // need to add later:
+        // GET /event/guest
+        // show the “my event” list
+
+
+        // POST /event/guest
+        // Participate in an event
         // please use postman to test, dropbox select post
+        // make sure the event end time is in the future, or you will get error code 403
         // http://localhost:4567/event/guest?eventid=2&userid=aaa111
+
         post("event/guest", (request, response) ->
         {
             String eventID = request.queryParams("eventid");
@@ -127,8 +175,14 @@ public class SparkServer {
         init();
 
 
+
+        // DELETE /event/guest
+        // Quit an participated event
         // please use postman to test, dropbox select delete
+        // make sure the user have participated in this event before testing, or you will get error code 402
+        // make sure the event end time is in the future, or you will get error code 403
         // http://localhost:4567/event/guest?eventid=2&userid=aaa111
+
         delete("event/guest", (request, response) ->
         {
             String eventID = request.queryParams("eventid");
@@ -161,6 +215,20 @@ public class SparkServer {
             }
         });
         init();
+
+
+        /*
+            ------------------------------- EVENT LISTS/SEARCHING RELATED -----------------------------------
+        */
+
+
+        // GET /event/list
+        // Get id of events that are within 2 weeks as a list.
+
+        // GET /event/search
+        // Get id of events that satisfy the filter option as a list.
+
+
 
     }
 }
