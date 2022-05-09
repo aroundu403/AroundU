@@ -317,6 +317,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.1"
+<<<<<<< HEAD
   petitparser:
     dependency: transitive
     description:
@@ -324,6 +325,8 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.4.0"
+=======
+>>>>>>> sign-in
   plugin_platform_interface:
     dependency: transitive
     description:
@@ -406,6 +409,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.2"
+<<<<<<< HEAD
   xml:
     dependency: transitive
     description:
@@ -413,6 +417,8 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.3.1"
+=======
+>>>>>>> sign-in
 sdks:
   dart: ">=2.17.0-0 <3.0.0"
   flutter: ">=2.8.0"

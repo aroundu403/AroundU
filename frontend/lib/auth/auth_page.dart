@@ -405,7 +405,7 @@ class _AuthGateState extends State<AuthGate> {
   
   // sychronize user information with our backend database
   Future<void> _sychronizeUserInfo(User user) async{
-    String token = await user!.getIdToken();
+    String token = await user.getIdToken();
     if (token.isNotEmpty) {
       http.post(url, 
         headers: {
