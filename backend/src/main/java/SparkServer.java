@@ -93,15 +93,12 @@ public class SparkServer {
 //        // Appease something
 //        });
 
-//        POST /event/guest
-
+        // please use postman to test
         // http://localhost:4567/event/guest?eventid=1&userid=aaa111
-        // 为什么不行呀QAQ
-        post("event/guest", "application/json", (request, response) ->
+        post("event/guest", (request, response) ->
         {
             String eventID = request.queryParams("eventid");
             String userID = request.queryParams("userid");
-            System.out.println(userID);
             if (EventController.isEventExist(pool, Long.parseLong(eventID))) {
                 Event event = EventController.getEventByID(pool, Long.parseLong(eventID));
                 // can only participate if event not filled
@@ -111,6 +108,8 @@ public class SparkServer {
                     if (curr.compareTo(Timestamp.valueOf(event.end_time)) < 0) {
                         if (ParticipateController.userParticipateEvent(pool, userID, Long.parseLong(eventID))){
                             DataResponse resp = new DataResponse(200, "Success", eventID);
+                            event.curr_num_participants += 1;
+                            EventController.updateEvent(pool, event);
                             return gson.toJson(resp);
                         }else{
                             return gson.toJson(new OperationResponse(500, "SQL server error."));
