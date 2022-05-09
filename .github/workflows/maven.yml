@@ -13,6 +13,7 @@ jobs:
       run:
         working-directory: backend
     runs-on: ubuntu-latest
+    # this line is necessary to tell github that we are using backend
     environment: backend
     steps:
     - uses: actions/checkout@v3
@@ -28,8 +29,11 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
+      # this line will automatically build maven, and while building maven, maven test will run all the tests.
       run: mvn package --file pom.xml
       env:
+        # these are for storing database access information into github secret
+        # for github actions to directly access them.
         DB_USER: '${{ secrets.DB_USER }}'
         DB_PASS: '${{ secrets.DB_PASS }}'
         DB_NAME: '${{ secrets.DB_NAME }}'

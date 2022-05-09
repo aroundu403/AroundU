@@ -1,3 +1,8 @@
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import static org.junit.Assert.*;
 
 
 public class EventControllerTest {

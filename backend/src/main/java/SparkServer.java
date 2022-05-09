@@ -93,8 +93,8 @@ public class SparkServer {
 //        // Appease something
 //        });
 
-        // please use postman to test
-        // http://localhost:4567/event/guest?eventid=1&userid=aaa111
+        // please use postman to test, dropbox select post
+        // http://localhost:4567/event/guest?eventid=2&userid=aaa111
         post("event/guest", (request, response) ->
         {
             String eventID = request.queryParams("eventid");
@@ -125,5 +125,42 @@ public class SparkServer {
             }
         });
         init();
+
+
+        // please use postman to test, dropbox select delete
+        // http://localhost:4567/event/guest?eventid=2&userid=aaa111
+        delete("event/guest", (request, response) ->
+        {
+            String eventID = request.queryParams("eventid");
+            String userID = request.queryParams("userid");
+            // can only quit if event exists
+            if (EventController.isEventExist(pool, Long.parseLong(eventID))) {
+                Event event = EventController.getEventByID(pool, Long.parseLong(eventID));
+                // check if event have participants before searching it in participate table to avoid errors
+                if (event.curr_num_participants > 0 &&
+                        ParticipateController.getEventsByUser(pool, userID).contains(Long.parseLong(eventID))) {
+                    Timestamp curr = new Timestamp(System.currentTimeMillis());
+                    // can only quit if the event isn't ended
+                    if (curr.compareTo(Timestamp.valueOf(event.end_time)) < 0) {
+                        if (ParticipateController.userQuitEvent(pool, userID, Long.parseLong(eventID))){
+                            DataResponse resp = new DataResponse(200, "Success", eventID);
+                            event.curr_num_participants -= 1;
+                            EventController.updateEvent(pool, event);
+                            return gson.toJson(resp);
+                        }else{
+                            return gson.toJson(new OperationResponse(500, "SQL server error."));
+                        }
+                    }else{
+                        return gson.toJson(new OperationResponse(403, "The event is ended."));
+                    }
+                }else{
+                    return gson.toJson(new OperationResponse(402, "You are not in this event."));
+                }
+            } else {
+                return gson.toJson(new OperationResponse(400, "Event not exist"));
+            }
+        });
+        init();
+
     }
 }

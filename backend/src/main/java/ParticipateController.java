@@ -104,6 +104,29 @@ public class ParticipateController {
     } catch (SQLException e) {
             return false;
         }
-
     }
+
+    /**
+     * Remove a user from an event
+     * @param pool used for database connection
+     * @param user_id the unique representation of a user
+     * @param event_id the unique representation of a user
+     * @return true if that a user is removed from an event successfully, returns false otherwise
+     */
+
+    public static boolean userQuitEvent(DataSource pool, String user_id, long event_id) {
+        try (Connection conn = pool.getConnection()) {
+            String stmt = String.format(
+                    "DELETE FROM %s WHERE (user_id = ?) AND (event_id = ?);", TABLE_NAME);
+            try(PreparedStatement deleteEventStmt = conn.prepareStatement(stmt)) {
+                deleteEventStmt.setString(1, user_id);
+                deleteEventStmt.setLong(2, event_id);
+                deleteEventStmt.executeUpdate();
+                return true;
+            }
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
 }
