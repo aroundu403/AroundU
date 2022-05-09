@@ -1,3 +1,5 @@
+package DAL;
+
 import DAO.User;
 
 import javax.sql.DataSource;

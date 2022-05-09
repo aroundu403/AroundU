@@ -1,4 +1,4 @@
-// This class will control the participation modules with database
+package DAL; // This class will control the participation modules with database
 
 import javax.sql.DataSource;
 import java.sql.*;

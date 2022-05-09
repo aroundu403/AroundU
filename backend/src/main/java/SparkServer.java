@@ -1,3 +1,6 @@
+import DAL.EventController;
+import DAL.ParticipateController;
+import DAL.UserController;
 import DAO.Event;
 import DAO.User;
 import DTO.DataResponse;
@@ -38,7 +41,6 @@ public class SparkServer {
             .build();
     FirebaseApp defaultApp = FirebaseApp.initializeApp(options);
 
-
     /*
       --------------------------------------- USER RELATED -----------------------------------------------
     */
@@ -69,7 +71,7 @@ public class SparkServer {
     post(
         "/user",
         (request, response) -> {
-            String userID = getUserID(request.headers("Authorization"), defaultApp);
+          String userID = getUserID(request.headers("Authorization"), defaultApp);
           User body = gson.fromJson(request.body(), User.class);
           if (!UserController.isUserExist(pool, userID)) {
             if (UserController.addUser(pool, body)) {
@@ -128,12 +130,12 @@ public class SparkServer {
     // Update an existed event
     // please use postman to test, dropbox select put
     // need to add request body: please copy from the API doc and make modification
-    // http://localhost:4567/event/aaa111
+    // http://localhost:4567/event
 
     put(
-        "/event/:id",
+        "/event",
         (request, response) -> {
-          String userID = request.params(":id");
+          String userID = getUserID(request.headers("Authorization"), defaultApp);
           Event body = gson.fromJson(request.body(), Event.class);
           if (!userID.equals(body.host_id)) {
             return gson.toJson(
@@ -150,12 +152,12 @@ public class SparkServer {
 
     // DELETE /event
     // Event creator delete a created event
-    // http://localhost:4567/event/guest?eventid=3&userid=aaa111
+    // http://localhost:4567/event/guest?eventid=3
     delete(
         "/event",
         (request, response) -> {
           String eventID = request.queryParams("eventid");
-          String userID = request.queryParams("userid");
+          String userID = getUserID(request.headers("Authorization"), defaultApp);
           // can only delete if event exists
           if (EventController.isEventExist(pool, Long.parseLong(eventID))) {
             Event event = EventController.getEventByID(pool, Long.parseLong(eventID));
@@ -202,13 +204,13 @@ public class SparkServer {
     // Participate in an event
     // please use postman to test, dropbox select post
     // make sure the event end time is in the future, or you will get error code 403
-    // http://localhost:4567/event/guest?eventid=2&userid=aaa111
+    // http://localhost:4567/event/guest?eventid=2
 
     post(
         "/event/guest",
         (request, response) -> {
           String eventID = request.queryParams("eventid");
-          String userID = request.queryParams("userid");
+          String userID = getUserID(request.headers("Authorization"), defaultApp);
           if (EventController.isEventExist(pool, Long.parseLong(eventID))) {
             Event event = EventController.getEventByID(pool, Long.parseLong(eventID));
             // can only participate if event not filled
@@ -242,13 +244,13 @@ public class SparkServer {
     // make sure the user have participated in this event before testing, or you will get error code
     // 402
     // make sure the event end time is in the future, or you will get error code 403
-    // http://localhost:4567/event/guest?eventid=2&userid=aaa111
+    // http://localhost:4567/event/guest?eventid=2
 
     delete(
         "/event/guest",
         (request, response) -> {
           String eventID = request.queryParams("eventid");
-          String userID = request.queryParams("userid");
+          String userID = getUserID(request.headers("Authorization"), defaultApp);
           // can only quit if event exists
           if (EventController.isEventExist(pool, Long.parseLong(eventID))) {
             Event event = EventController.getEventByID(pool, Long.parseLong(eventID));
@@ -304,14 +306,22 @@ public class SparkServer {
     // GET /event/search
     // Get id of events that satisfy the filter option as a list.
 
+
+
     init();
   }
 
-
-  public static String getUserID (String token, FirebaseApp defaultApp) throws IOException, FirebaseAuthException {
-        token = token.split(" ")[1];
-        FirebaseToken decodedToken = FirebaseAuth.getInstance(defaultApp).verifyIdToken(token);
-        return decodedToken.getUid();
+  /**
+   * Decodes and returns a user id through FirebaseAuth
+   * @param token Bearer token from request.header
+   * @param defaultApp FirebaseApp
+   * @return a decoded userID
+   * @throws FirebaseAuthException
+   */
+  public static String getUserID(String token, FirebaseApp defaultApp)
+      throws FirebaseAuthException {
+    token = token.split(" ")[1];
+    FirebaseToken decodedToken = FirebaseAuth.getInstance(defaultApp).verifyIdToken(token);
+    return decodedToken.getUid();
   }
-
 }
