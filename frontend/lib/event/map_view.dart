@@ -6,7 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
-const styleString = 'mapbox://styles/mapbox/streets-v11';
+import 'eventdetail.dart';
+
+const styleString = 'mapbox://styles/johnwang66/cl2y95qa3000l15p6c38ppu7v';
+
+const events = [
+  LatLng(47.655, -122.309),
+  LatLng(47.653, -122.309),
+  LatLng(47.657, -122.309),
+];
 
 class MapView extends StatefulWidget {
   const MapView({ Key? key }) : super(key: key);
@@ -18,6 +26,43 @@ class MapView extends StatefulWidget {
 class _MapViewState extends State<MapView> {
   MapboxMapController? _mapController;
 
+  _onStyleLoadedCallback() async {
+    for (LatLng event in events) {
+      await _mapController!.addSymbol(
+        SymbolOptions(
+          iconImage: 'embassy',
+          iconColor: '#006992',
+          iconSize: 2.0,
+          geometry: event,
+          textField: "Event 1",
+          textColor: '#000000',
+          textOffset: const Offset(0, -1.4),
+        ),
+      );
+    }
+  }
+
+  _onMapCreate(MapboxMapController controller) async {
+    _mapController = controller;
+    _mapController!.onSymbolTapped.add(_onSymbolTapped);
+    // Acquire current location (returns the LatLng instance)
+    final location = await acquireCurrentLocation();
+    
+    await controller.animateCamera(
+      CameraUpdate.newLatLng(location!),
+    );
+  }
+
+  void _onSymbolTapped(Symbol symbol) {
+    print(123);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const EventPage(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -26,6 +71,8 @@ class _MapViewState extends State<MapView> {
         accessToken: dotenv.env['mapBoxAccessToken']!,
         styleString: styleString,
         minMaxZoomPreference: const MinMaxZoomPreference(6.0, null),
+        myLocationEnabled: true,
+        myLocationTrackingMode: MyLocationTrackingMode.TrackingGPS,
 
         // Initial center of the map to UW
         initialCameraPosition: const CameraPosition(
@@ -33,50 +80,18 @@ class _MapViewState extends State<MapView> {
           target: LatLng(47.6555, -122.3092),
         ),
 
-        // When the map is created, move the map to the center of user's location
-        onMapCreated: (MapboxMapController controller) async {
-          _mapController = controller;
-          // Acquire current location (returns the LatLng instance)
-          final location = await acquireCurrentLocation();
-          
-          await controller.animateCamera(
-            CameraUpdate.newLatLng(location!),
-          );
-
-          // Add a circle denoting current user location
-          await controller.addCircle(
-            CircleOptions(
-              circleRadius: 8.0,
-              circleColor: '#006992',
-              circleOpacity: 0.8,
-              geometry: location,
-              draggable: false,
-            ),
-          );
-        },
-        
-        // add a symbol when user clicks on the map
-        onMapClick: (Point<double> point, LatLng coordinates) async {
-          await _mapController!.addSymbol(
-            SymbolOptions(
-              iconImage: 'embassy-15',
-              iconColor: '#006992',
-              geometry: coordinates,
-            ),
-          );
-        },
+        onMapCreated: _onMapCreate,
+        onStyleLoadedCallback: _onStyleLoadedCallback,
       ),
 
       // recenter map based on user's current loaction
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.location_on_sharp),
+        child: const Icon(Icons.my_location),
         onPressed: () async {
           final location = await acquireCurrentLocation();
           _mapController!.animateCamera(CameraUpdate.newLatLng(location!));
         },
       ),
-
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat
     );
   }
 

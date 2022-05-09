@@ -94,6 +94,15 @@ class _AuthGateState extends State<AuthGate> {
   }
 
   @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    passwordController.dispose();
+    nameController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: FocusScope.of(context).unfocus,
@@ -406,6 +415,8 @@ class _AuthGateState extends State<AuthGate> {
   // sychronize user information with our backend database
   Future<void> _sychronizeUserInfo(User user) async{
     String token = await user.getIdToken();
+    print('user token' + token);
+    print(123);
     if (token.isNotEmpty) {
       http.post(url, 
         headers: {

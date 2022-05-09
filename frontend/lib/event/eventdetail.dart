@@ -68,10 +68,7 @@ class EventState extends State<EventPage> {
                   Align(
                     alignment: Alignment.topLeft,
                     child: GestureDetector(
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const HomePage())),
+                      onTap: () => Navigator.pop(context),
                       child: const Icon(
                         Icons.chevron_left,
                         size: 36,
