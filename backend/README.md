@@ -1,19 +1,27 @@
 # backend
 
-SparkServer
-
-## Getting Started
+### Getting Started
 
 - [Setting up Spark Server](https://sparkjava.com/documentation#getting-started)
 - [Connecting to SQL database](https://sparkjava.com/tutorials/sql2o-database)
 
-## Developer Instruction
-
 ### File structure
 
 - Data Access Object (DAO): model database entities
+    1. `Event.java`
+    2. `EventParticipation.java`
+    3. `User.java`
+    4. `UserParticipates.java`
 - Data Transfer Object (DTO): model HTTP request and response entities
+    1. `DataResponse.java`
+    2. `OperationResponse.java`
 - Data Transfer Layer (DTL): controls data access from database
+    1. `EventController.java`
+    2. `UserController.java`
+    3. `ParticipateController.java`
+    4.
+
+## Developer Instructions
 
 ### How to spin up the SparkServer
 

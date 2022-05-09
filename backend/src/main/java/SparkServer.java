@@ -306,11 +306,20 @@ public class SparkServer {
     // GET /event/search
     // Get id of events that satisfy the filter option as a list.
 
+
+
     init();
   }
 
+  /**
+   * Decodes and returns a user id through FirebaseAuth
+   * @param token Bearer token from request.header
+   * @param defaultApp FirebaseApp
+   * @return a decoded userID
+   * @throws FirebaseAuthException
+   */
   public static String getUserID(String token, FirebaseApp defaultApp)
-      throws IOException, FirebaseAuthException {
+      throws FirebaseAuthException {
     token = token.split(" ")[1];
     FirebaseToken decodedToken = FirebaseAuth.getInstance(defaultApp).verifyIdToken(token);
     return decodedToken.getUid();
