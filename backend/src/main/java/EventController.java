@@ -22,25 +22,28 @@ public class EventController {
         long id = 0;
         try (Connection conn = pool.getConnection()) {
           String stmt = String.format(
-                  "INSERT INTO %s (event_code, event_name, description, host_id, isPublic, location_name, latitude, " +
-                   "longitude, start_time, end_time, max_participants, curr_num_participants, photoID, address, created_at) " +
-                          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", TABLE_NAME);
+                  "INSERT INTO %s (event_code, event_name, description, host_id, isPublic, isDeleted, location_name, latitude, " +
+                   "longitude, start_time, end_time, max_participants, curr_num_participants, photoID, icon, address, created_at) " +
+                          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", TABLE_NAME);
           try(PreparedStatement createEventStmt = conn.prepareStatement(stmt)) {
               createEventStmt.setString(1, event.event_code);
               createEventStmt.setString(2, event.event_name);
               createEventStmt.setString(3, event.description);
               createEventStmt.setString(4, event.host_id);
               createEventStmt.setInt(5, event.isPublic);
-              createEventStmt.setString(6, event.location_name);
-              createEventStmt.setFloat(7, event.latitude);
-              createEventStmt.setFloat(8, event.longitude);
-              createEventStmt.setTimestamp(9, Timestamp.valueOf(event.start_time));
-              createEventStmt.setTimestamp(10, Timestamp.valueOf(event.end_time));
-              createEventStmt.setInt(11, event.max_participants);
-              createEventStmt.setInt(12, event.curr_num_participants);
-              createEventStmt.setString(13, event.photoID);
-              createEventStmt.setString(14, event.address);
-              createEventStmt.setTimestamp(15, new Timestamp(System.currentTimeMillis()));
+              createEventStmt.setInt(6, event.isDeleted);
+
+              createEventStmt.setString(7, event.location_name);
+              createEventStmt.setFloat(8, event.latitude);
+              createEventStmt.setFloat(9, event.longitude);
+              createEventStmt.setTimestamp(10, Timestamp.valueOf(event.start_time));
+              createEventStmt.setTimestamp(11, Timestamp.valueOf(event.end_time));
+              createEventStmt.setInt(12, event.max_participants);
+              createEventStmt.setInt(13, event.curr_num_participants);
+              createEventStmt.setString(14, event.photoID);
+              createEventStmt.setString(15, event.icon);
+              createEventStmt.setString(16, event.address);
+              createEventStmt.setTimestamp(17, new Timestamp(System.currentTimeMillis()));
               System.out.println(stmt);
               createEventStmt.executeUpdate();
           }
@@ -68,7 +71,7 @@ public class EventController {
         try (Connection conn = pool.getConnection()) {
             String stmt = String.format(
                     "SELECT event_id, event_code, event_name, description, host_id, isPublic, location_name, latitude, longitude, " +
-                            "start_time, end_time, max_participants, curr_num_participants, photoID, address, created_at" +
+                            "start_time, end_time, max_participants, curr_num_participants, photoID, icon, address, created_at" +
                             " FROM %s WHERE event_id = ?",
                     TABLE_NAME);
             try(PreparedStatement getEventStmt = conn.prepareStatement(stmt)) {
@@ -89,8 +92,9 @@ public class EventController {
                     event.max_participants = eventResults.getInt(12);
                     event.curr_num_participants = eventResults.getInt(13);
                     event.photoID = eventResults.getString(14);
-                    event.address = eventResults.getString(15);
-                    event.created_at = String.valueOf(eventResults.getTimestamp(16));
+                    event.icon = eventResults.getString(15);
+                    event.address = eventResults.getString(16);
+                    event.created_at = String.valueOf(eventResults.getTimestamp(17));
                 }
                 eventResults.close();
                 return event;
@@ -109,7 +113,7 @@ public class EventController {
             String stmt = String.format(
                     "UPDATE %s SET event_name = ?, description = ?, isPublic = ?, location_name = ?, " +
                             "latitude = ?, longitude = ?, start_time = ?, end_time = ?, max_participants = ?, " +
-                            "curr_num_participants = ?, photoID = ?, address = ?, updated_at = ? " +
+                            "curr_num_participants = ?, photoID = ?, address = ?, updated_at = ?, icon = ?" +
                             "WHERE event_id = ?;", TABLE_NAME);
             try(PreparedStatement updateEventStmt = conn.prepareStatement(stmt)) {
                 updateEventStmt.setString(1, event.event_name);
@@ -125,7 +129,8 @@ public class EventController {
                 updateEventStmt.setString(11, event.photoID);
                 updateEventStmt.setString(12, event.address);
                 updateEventStmt.setTimestamp(13, new Timestamp(System.currentTimeMillis()));
-                updateEventStmt.setLong(14, event.event_id);
+                updateEventStmt.setString(14, event.icon);
+                updateEventStmt.setLong(15, event.event_id);
                 updateEventStmt.executeUpdate();
                 return event.event_id;
             }
