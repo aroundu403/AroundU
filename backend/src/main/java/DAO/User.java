@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 public class User {
 
     public String user_id;
-    public Timestamp register_time;
+    public String register_time;
     public String email;
     public String user_name;
     public String description;
@@ -16,7 +16,7 @@ public class User {
         this.user_name = "";
         this.email = "";
         this.description = "";
-        this.register_time = Timestamp.valueOf("2022-01-01 00:00:00");
+        this.register_time = "2022-01-01 00:00:00";
     }
 
     public User(String id, String user_name, String email, String description) {

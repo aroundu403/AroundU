@@ -46,8 +46,26 @@ public class SparkServer {
         init();
 
 
-        // PUT /user
+        // POST /user
         // for a user to register with email
+        // please use postman to test, dropbox select post
+        // need to add request body, please copy from the API doc
+        // http://localhost:4567/user/ddd444
+        post("/user/:id", (request, response) -> {
+            String userID = request.params(":id");
+            User body = gson.fromJson(request.body(), User.class);
+            if (!UserController.isUserExist(pool, userID)) {
+                    if (UserController.addUser(pool, body)) {
+                        DataResponse resp = new DataResponse(200, "Success", userID);
+                        return gson.toJson(resp);
+                    }else{
+                        return gson.toJson(new OperationResponse(500, "SQL server error"));
+                    }
+            } else {
+                return gson.toJson(new OperationResponse(403, "Email has been registered"));
+            }
+        });
+        init();
 
 
 
