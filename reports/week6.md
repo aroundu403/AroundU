@@ -45,7 +45,7 @@ Issue:
 
 - Controversy over how events are should displayed in map views
 
-Plan: 
+Plan:
 
 - finish up main features PRD
 - get into front-end development (MyEvent Page / Event Details page)
@@ -73,8 +73,8 @@ Plan:
 
 In progress：
 
-- Writing EventController, ParticipateController for querying the database
-- Finalize UserController with API
+- Writing DAL.EventController, DAL.ParticipateController for querying the database
+- Finalize DAL.UserController with API
 - Finalize UserControllerTest with CI
 
 Issue:
@@ -107,7 +107,7 @@ Issue:
 
 Plan:
 
-- Writing missing parts in EventController, ParticipateController with Wenxin
+- Writing missing parts in DAL.EventController, DAL.ParticipateController with Wenxin
 - Writing missing parts in sparkServer with Wenxin
 - Continue creating APIs for event and participate module
 - Learning API Testing with Postman
