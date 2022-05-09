@@ -41,6 +41,7 @@ dependencies:
   flutter_dotenv: ^5.0.2
   mapbox_gl: ^0.15.0
   location: ^4.3.0
+  http: ^0.13.4
 
 dev_dependencies:
   flutter_test:

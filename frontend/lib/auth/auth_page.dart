@@ -1,5 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
-
+import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -11,8 +12,8 @@ typedef OAuthSignIn = void Function();
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
+final url = Uri.parse('https://localhost:4567/user');
 
-// TODO sign in with apple
 /// Helper class to show a snackbar using the passed context.
 class ScaffoldSnackbar {
   // ignore: public_member_api_docs
@@ -357,8 +358,8 @@ class _AuthGateState extends State<AuthGate> {
           final User? user = credential.user;
           if (user != null) {
             await user.updateDisplayName(nameController.text);
+            await _sychronizeUserInfo(user);
           }
-
         }
       } on FirebaseAuthException catch (e) {
         setState(() {
@@ -402,4 +403,28 @@ class _AuthGateState extends State<AuthGate> {
     }
   }
   
+  // sychronize user information with our backend database
+  Future<void> _sychronizeUserInfo(User user) async{
+    String token = await user!.getIdToken();
+    if (token.isNotEmpty) {
+      http.post(url, 
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(<String, String>{
+          'user_id': user.uid,
+          'user_email': user.email!,
+          'user_name': user.displayName!,
+        })
+      ).then((response) => {
+        if (response.statusCode != 200) {
+          setState(() {
+            error = 'Fail to put user information into the backend';
+          })
+        }
+      });
+    }
+  }
 }
