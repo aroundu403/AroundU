@@ -12,7 +12,6 @@ typedef OAuthSignIn = void Function();
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
 
-// TODO sign in with apple
 /// Helper class to show a snackbar using the passed context.
 class ScaffoldSnackbar {
   // ignore: public_member_api_docs
