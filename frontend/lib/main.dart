@@ -1,8 +1,10 @@
+import 'package:aroundu/event/map_view.dart';
 import 'package:aroundu/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:provider/provider.dart';
 import 'package:aroundu/auth/auth_service.dart';
 
@@ -61,7 +63,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: theme,
-        home: const AuthWrapper(),
+        home: const MapView(),
       ),
     );
   }
