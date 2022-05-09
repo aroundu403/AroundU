@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 // [START cloud_sql_mysql_cse_key]
 
 import com.google.crypto.tink.Aead;
@@ -23,6 +22,7 @@ import com.google.crypto.tink.aead.AeadConfig;
 import com.google.crypto.tink.aead.AeadKeyTemplates;
 import com.google.crypto.tink.aead.KmsEnvelopeAead;
 import com.google.crypto.tink.integration.gcpkms.GcpKmsClient;
+
 import java.security.GeneralSecurityException;
 
 public class CloudKmsEnvelopeAead {

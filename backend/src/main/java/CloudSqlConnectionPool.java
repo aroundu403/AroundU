@@ -14,20 +14,17 @@
  * limitations under the License.
  */
 
-
 // [START cloud_sql_mysql_cse_db]
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+
 import javax.sql.DataSource;
 
 public class CloudSqlConnectionPool {
 
-  public static DataSource createConnectionPool(String dbUser, String dbPass, String dbName,
-      String instanceConnectionName) {
+  public static DataSource createConnectionPool(
+      String dbUser, String dbPass, String dbName, String instanceConnectionName) {
     HikariConfig config = new HikariConfig();
     config.setJdbcUrl(String.format("jdbc:mysql:///%s", dbName));
     config.setUsername(dbUser);
