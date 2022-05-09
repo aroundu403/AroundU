@@ -2,16 +2,22 @@ import DAO.Event;
 import DAO.User;
 import DTO.DataResponse;
 import DTO.OperationResponse;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseToken;
 import com.google.gson.Gson;
 
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.FirebaseApp;
 
 import static spark.Spark.*;
 
 public class SparkServer {
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
     Gson gson = new Gson();
 
     // Database accessing preparation
@@ -22,6 +28,14 @@ public class SparkServer {
     // String kmsUri = System.getenv("CLOUD_KMS_URI");   // for data encryption
     DataSource pool =
         CloudSqlConnectionPool.createConnectionPool(dbUser, dbPass, dbName, instanceConnectionName);
+
+    //    FirebaseOptions options =
+    //        FirebaseOptions.builder()
+    //            .setCredentials(GoogleCredentials.getApplicationDefault())
+    //            .setProjectId("aroundu-403")
+    //            .build();
+    //
+    //    FirebaseApp.initializeApp(options);
 
     /*
       --------------------------------------- USER RELATED -----------------------------------------------
@@ -34,9 +48,9 @@ public class SparkServer {
     get(
         "/user/:id",
         (request, response) -> {
-          // String token = request.headers("Authorization");
-          // FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
-          // String userID = decodedToken.getUid();
+          //          String token = request.headers("Authorization");
+          //          FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
+          //          String userID = decodedToken.getUid();
           String userID = request.params(":id");
           if (UserController.isUserExist(pool, userID)) {
             User user = UserController.getUser(pool, userID);
