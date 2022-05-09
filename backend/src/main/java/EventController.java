@@ -23,7 +23,7 @@ public class EventController {
         try (Connection conn = pool.getConnection()) {
           String stmt = String.format(
                   "INSERT INTO %s (event_code, event_name, description, host_id, isPublic, location_name, latitude, " +
-                   "longitude, start_time, end_time, max_participants, curr_num_participants, photoID, address， created_at) " +
+                   "longitude, start_time, end_time, max_participants, curr_num_participants, photoID, address, created_at) " +
                           "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", TABLE_NAME);
           try(PreparedStatement createEventStmt = conn.prepareStatement(stmt)) {
               createEventStmt.setString(1, event.event_code);
