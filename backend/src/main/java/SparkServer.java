@@ -29,13 +29,12 @@ public class SparkServer {
     DataSource pool =
         CloudSqlConnectionPool.createConnectionPool(dbUser, dbPass, dbName, instanceConnectionName);
 
-    //    FirebaseOptions options =
-    //        FirebaseOptions.builder()
-    //            .setCredentials(GoogleCredentials.getApplicationDefault())
-    //            .setProjectId("aroundu-403")
-    //            .build();
-    //
-    //    FirebaseApp.initializeApp(options);
+    FirebaseOptions options =
+        FirebaseOptions.builder()
+            .setCredentials(GoogleCredentials.getApplicationDefault())
+            .setProjectId("aroundu-403")
+            .build();
+    FirebaseApp defaultApp = FirebaseApp.initializeApp(options);
 
     /*
       --------------------------------------- USER RELATED -----------------------------------------------
@@ -46,18 +45,20 @@ public class SparkServer {
     // http://localhost:4567/user/aaa111
 
     get(
-        "/user/:id",
+        "/user",
         (request, response) -> {
-          //          String token = request.headers("Authorization");
-          //          FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
-          //          String userID = decodedToken.getUid();
-          String userID = request.params(":id");
+          String token = request.headers("Authorization");
+          token = token.split(" ")[1];
+          FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
+          String userID = decodedToken.getUid();
+          // String userID = request.params(":id");
           if (UserController.isUserExist(pool, userID)) {
             User user = UserController.getUser(pool, userID);
             DataResponse resp = new DataResponse(200, "Success", user);
             return gson.toJson(resp);
           } else {
-            return gson.toJson(new OperationResponse(400, "User not exist"));
+            // return gson.toJson(new OperationResponse(400, "User not exist"));
+            return gson.toJson(new DataResponse(400, "User not exist", userID));
           }
         });
 
