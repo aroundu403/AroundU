@@ -137,6 +137,39 @@ public class SparkServer {
 
         // DELETE /event
         // Event creator delete a created event
+        // http://localhost:4567/event/guest?eventid=3&userid=aaa111
+        delete("/event", (request, response) ->
+        {
+            String eventID = request.queryParams("eventid");
+            String userID = request.queryParams("userid");
+            // can only delete if event exists
+            if (EventController.isEventExist(pool, Long.parseLong(eventID))) {
+                Event event = EventController.getEventByID(pool, Long.parseLong(eventID));
+                // can only delete if is the creator
+                if (event.host_id.equals(userID)) {
+                    Timestamp curr = new Timestamp(System.currentTimeMillis());
+                    // can only delete if the event isn't started
+                    if (curr.compareTo(Timestamp.valueOf(event.start_time)) < 0) {
+                        if (EventController.deleteEvent(pool, Long.parseLong(eventID))){
+                            DataResponse resp = new DataResponse(200, "Success", null);
+                            event.deleted_at = curr.toString();
+                            EventController.updateEvent(pool, event);
+                            return gson.toJson(resp);
+                        }else{
+                            return gson.toJson(new OperationResponse(500, "SQL server error."));
+                        }
+                    }else{
+                        return gson.toJson(new OperationResponse(402, "The event is started."));
+                    }
+                }else{
+                    return gson.toJson(new OperationResponse(403, "No authentication: Only creator of this event can delete"));
+                }
+            } else {
+                return gson.toJson(new OperationResponse(400, "Event not exist"));
+            }
+        });
+        init();
+
 
 
         // need to add later:
@@ -161,7 +194,7 @@ public class SparkServer {
         // make sure the event end time is in the future, or you will get error code 403
         // http://localhost:4567/event/guest?eventid=2&userid=aaa111
 
-        post("event/guest", (request, response) ->
+        post("/event/guest", (request, response) ->
         {
             String eventID = request.queryParams("eventid");
             String userID = request.queryParams("userid");
@@ -201,7 +234,7 @@ public class SparkServer {
         // make sure the event end time is in the future, or you will get error code 403
         // http://localhost:4567/event/guest?eventid=2&userid=aaa111
 
-        delete("event/guest", (request, response) ->
+        delete("/event/guest", (request, response) ->
         {
             String eventID = request.queryParams("eventid");
             String userID = request.queryParams("userid");
