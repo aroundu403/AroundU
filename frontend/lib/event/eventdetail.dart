@@ -17,40 +17,10 @@ class EventState extends State<EventPage> {
   bool show = false;
   final List<String> participants = [
     "images/scenary.jpg",
-    "images/scenary.jpg",
-    "images/scenary.jpg",
-    "images/tree.jpg",
-    "images/tree.jpg",
-    "images/tree.jpg",
-    "images/scenary.jpg",
-    "images/scenary.jpg",
-    "images/scenary.jpg",
-    "images/tree.jpg",
-    "images/tree.jpg",
-    "images/tree.jpg",
-    "images/scenary.jpg",
-    "images/scenary.jpg",
-    "images/scenary.jpg",
-    "images/tree.jpg",
-    "images/tree.jpg",
     "images/tree.jpg",
     "images/scenary.jpg",
     "images/scenary.jpg",
     "images/tree.jpg",
-    "images/tree.jpg",
-    "images/tree.jpg",
-    "images/tree.jpg",
-    "images/scenary.jpg",
-    "images/scenary.jpg",
-    "images/tree.jpg",
-    "images/tree.jpg",
-    "images/tree.jpg",
-    "images/tree.jpg",
-    "images/scenary.jpg",
-    "images/scenary.jpg",
-    "images/tree.jpg",
-    "images/tree.jpg",
-    "images/tree.jpg"
   ];
   @override
   Widget build(BuildContext context) {
@@ -142,14 +112,14 @@ class EventState extends State<EventPage> {
                   const Padding(padding: EdgeInsets.all(5)),
                   Column(
                     children: const [
-                      Text("Start Time : Sat, 04/02, 13:00 ",
+                      Text("Start Time : Sat, 05/14, 13:00 ",
                         style: TextStyle(
                           color: Color.fromARGB(255, 81, 65, 143),
                           fontWeight: FontWeight.bold,
                           fontSize: 18
                         )
                       ),
-                      Text("End Time   : Sun, 04/03, 14:00",
+                      Text("End Time   : Sun, 05/15, 14:00",
                         style: TextStyle(
                           color: Color.fromARGB(255, 81, 65, 143),
                           fontWeight: FontWeight.bold,
