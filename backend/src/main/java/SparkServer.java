@@ -25,11 +25,14 @@ public class SparkServer {
   public static void main(String[] args) throws IOException {
     Gson gson = new Gson();
     log.info("Starting server...");
+
+    port(Integer.valueOf(System.getenv().getOrDefault("PORT", "8080")));
     // Database accessing preparation
     String dbUser = System.getenv("DB_USER");
     String dbPass = System.getenv("DB_PASS");
     String dbName = System.getenv("DB_NAME");
     String instanceConnectionName = System.getenv("INSTANCE_CONNECTION_NAME");
+
     // String kmsUri = System.getenv("CLOUD_KMS_URI");   // for data encryption
     DataSource pool =
         CloudSqlConnectionPool.createConnectionPool(dbUser, dbPass, dbName, instanceConnectionName);
