@@ -35,7 +35,7 @@ jobs:
         deliverables: app.yaml
         version: v1
         project_id: aroundu-403
-        credentials: ${{ secrets.GCP_CREDENTIALS }}
+        credentials_json: ${{ secrets.GCP_CREDENTIALS }}
 
     - name: Test
       run: curl "${{ steps.deploy.outputs.url }}"
