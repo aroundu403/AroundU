@@ -15,8 +15,13 @@ env:
   DB_NAME: '${{ secrets.DB_NAME }}'
   DB_TEST_NAME: '${{ secrets.DB_TEST_NAME }}'
   INSTANCE_CONNECTION_NAME: '${{ secrets.INSTANCE_CONNECTION_NAME }}'
+  
 jobs:
   deploy:
+    defaults:
+        run:
+          working-directory: ./backend
+    environment: backend
     name: Deploying to Google Cloud
     runs-on: ubuntu-latest
     
@@ -32,18 +37,23 @@ jobs:
       uses: 'google-github-actions/auth@v0'
       with:
         credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
-    - uses: golang-enthusiast/app-yaml-env-compiler@v1.0
-      env:
-        DB_USER: '${{ secrets.DB_USER }}'
-        DB_PASS: '${{ secrets.DB_PASS }}'
-        DB_NAME: '${{ secrets.DB_NAME }}'
-        DB_TEST_NAME: '${{ secrets.DB_TEST_NAME }}'
-        INSTANCE_CONNECTION_NAME: '${{ secrets.INSTANCE_CONNECTION_NAME }}'
+    - uses: JinghuaWang/gcp-yaml-compiler@v1.0
+      with:
+        file: ./backend/app.yaml
+    - name: Set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        cache: maven
+    - name: Build with Maven
+      # this line will automatically build maven, and while building maven, maven test will run all the tests.
+      run: mvn package --file pom.xml
     - name: Deploy to App Engine
       id: deploy
       uses: google-github-actions/deploy-appengine@v0.2.0
       with:
-        deliverables: ./.github/workflows/app.yaml
+        deliverables: ./backend/app.yaml
         version: v1
         project_id: aroundu-403
 
