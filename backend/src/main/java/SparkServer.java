@@ -10,21 +10,21 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 import com.google.gson.Gson;
-
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.net.http.HttpRequest;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.FirebaseApp;
+import lombok.extern.slf4j.Slf4j;
 
 import static spark.Spark.*;
 
+@Slf4j
 public class SparkServer {
   public static void main(String[] args) throws IOException {
     Gson gson = new Gson();
-
+    log.info("Starting server...");
     // Database accessing preparation
     String dbUser = System.getenv("DB_USER");
     String dbPass = System.getenv("DB_PASS");
