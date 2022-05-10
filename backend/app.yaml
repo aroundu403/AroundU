@@ -1,6 +1,6 @@
 # configurate app engine deployment setting
 runtime: java11
-entrypoint: 'java -Xmx64m -jar ./target/backend-1.0-SNAPSHOT-jar-with-dependencies.jar'
+entrypoint: 'java -Xmx64m -jar ./target/backend-1.0-SNAPSHOT-jar-with-dependencies.jar SparkServer'
 
 env_variables:
  DB_USER: $DB_USER
