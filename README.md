@@ -37,9 +37,10 @@ user a sense of authenticity and trust, which is commonalty lacking in todays so
 ## Repository Layout
 
 1. `/report`: all the weekly status report
-2. `/backend`: backend service folder
+2. `/backend`: major components in backend service folder. For details, please checkout backend/README.mc
     1. Data Access Object (DAO): model database entities
     2. Data Transfer Object (DTO): model HTTP request and response entities
     3. Data Transfer Layer (DTL): controls data access from database
+    4. `SparkServer`: APIs with database connections
 3. `/frontend`: frontend Flutter folder
 
