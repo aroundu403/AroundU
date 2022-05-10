@@ -23,12 +23,18 @@
         1. Carries operational data (code, message) between processes
 - Data Transfer Layer (DTL): controls data access from database
     1. `EventController.java`
-       1. Manage the Event database operations such as insertion, selection or deletion.
+       1. Manages the Event database operations such as insertion, selection or deletion.
     2. `UserController.java`
-       1. Manage the User database operations such as insertion, selection or deletion.
+       1. Manages the User database operations such as insertion, selection or deletion.
     3. `ParticipateController.java`
-       1. Manage the Participate database operations such as insertion, selection or deletion.
-
+       1. Manages the Participate database operations such as insertion, selection or deletion.
+- Others:
+`SparkServer.java`
+  1. Manages all APIs, connection to the database and parsing token from firebase.
+`CloudSqlConnectionPool.java`
+  1. Generates the datasource connection pool according to the authentication info given.
+`CloudKmsEnvelopeAead.java`
+  1. Initialize an envelope AEAD primitive for data Encryption.
 ## Developer Instructions
 
 ### How to spin up the SparkServer
