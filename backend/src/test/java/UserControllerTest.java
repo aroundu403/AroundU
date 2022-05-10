@@ -60,7 +60,7 @@ public class UserControllerTest {
     }
   }
 
-  //@Test
+@Test
   public void testAddUser() throws SQLException {
     UserController.addUser(pool, new User("test333", "Test3", "test3@gmail.com", "I am TEST3"));
     int newCardinality = -1;
@@ -79,7 +79,7 @@ public class UserControllerTest {
    *
    * @throws SQLException
    */
-  //@Test
+  @Test
   public void testGetUser() throws SQLException {
     User resultUser = UserController.getUser(pool, "test111");
     assertEquals("User_name doesn't match!", "TEST1", resultUser.user_name);
@@ -90,7 +90,7 @@ public class UserControllerTest {
    *
    * @throws SQLException
    */
-  //@Test
+  @Test
   public void testUpdateUserDescription() throws SQLException {
     UserController.updateUserDescription(pool, "test111", "Update Test111");
     String newDescp;
@@ -110,7 +110,7 @@ public class UserControllerTest {
    *
    * @throws SQLException
    */
-  //@Test
+  @Test
   public void testIsUserExist() throws SQLException {
     assertTrue("Exist!", UserController.isUserExist(pool, "test111"));
     assertFalse("Not Exist!", UserController.isUserExist(pool, "test999"));

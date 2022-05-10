@@ -44,7 +44,11 @@
 3. run SparkServer
 
 ### How to deploy to GCP cloud engine
-You can deploy the  backend to GCP App Engine by triggering a deployment workflow in *GitHub Actions*
+Make sure your GCP account has permission to deploy
+```
+gcloud init
+gcloud app deploy
+```
 
 ### Maven Commands
 
