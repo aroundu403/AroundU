@@ -11,9 +11,15 @@ import 'eventdetail.dart';
 const styleString = 'mapbox://styles/johnwang66/cl2y95qa3000l15p6c38ppu7v';
 
 const events = [
-  LatLng(47.655, -122.309),
-  LatLng(47.653, -122.309),
-  LatLng(47.657, -122.309),
+  LatLng(47.655, -122.305),
+  LatLng(47.653, -122.310),
+  LatLng(47.657, -122.306),
+];
+
+const eventNames = [
+  "Game Night",
+  "Ski Carpool",
+  "Boba Meetup"
 ];
 
 class MapView extends StatefulWidget {
@@ -27,6 +33,7 @@ class _MapViewState extends State<MapView> {
   MapboxMapController? _mapController;
 
   _onStyleLoadedCallback() async {
+    int i = 0;
     for (LatLng event in events) {
       await _mapController!.addSymbol(
         SymbolOptions(
@@ -34,11 +41,12 @@ class _MapViewState extends State<MapView> {
           iconColor: '#006992',
           iconSize: 2.0,
           geometry: event,
-          textField: "Event 1",
+          textField: eventNames[i],
           textColor: '#000000',
           textOffset: const Offset(0, -1.4),
         ),
       );
+      i++;
     }
   }
 

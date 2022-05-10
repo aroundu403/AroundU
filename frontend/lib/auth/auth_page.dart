@@ -12,7 +12,7 @@ typedef OAuthSignIn = void Function();
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
-final url = Uri.parse('https://localhost:4567/user');
+final url = Uri.parse('https://aroundu-403.uw.r.appspot.com/');
 
 /// Helper class to show a snackbar using the passed context.
 class ScaffoldSnackbar {
