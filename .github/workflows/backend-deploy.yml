@@ -1,0 +1,41 @@
+# This is a basic workflow to help you get started with Actions
+
+name: backend-deployment
+
+# Controls when the workflow will run
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    
+jobs:
+  deploy:
+    name: Deploying to Google Cloud
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Deploy to App Engine
+      id: deploy
+      uses: google-github-actions/deploy-appengine@v0.2.0
+      env:
+        # these are for storing database access information into github secret
+        # for github actions to directly access them.
+        DB_USER: '${{ secrets.DB_USER }}'
+        DB_PASS: '${{ secrets.DB_PASS }}'
+        DB_NAME: '${{ secrets.DB_NAME }}'
+        DB_TEST_NAME: '${{ secrets.DB_TEST_NAME }}'
+        INSTANCE_CONNECTION_NAME: '${{ secrets.INSTANCE_CONNECTION_NAME }}'
+      with:
+        deliverables: app.yaml
+        version: v1
+        project_id: aroundu-403
+        credentials: ${{ secrets.GCP_CREDENTIALS }}
+
+    - name: Test
+      run: curl "${{ steps.deploy.outputs.url }}"
