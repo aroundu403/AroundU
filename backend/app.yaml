@@ -2,8 +2,8 @@
 runtime: java11
 entrypoint: './target/backend-1.0-SNAPSHOT-jar-with-dependencies.jar'
 
-env:
+env_variables:
  DB_USER: $DB_USER
-  DB_PASS: $DB_PAS
-  DB_NAME: $DB_NAME
-  INSTANCE_CONNECTION_NAME: $INSTANCE_CONNECTION_NAME
+ DB_PASS: $DB_PAS
+ DB_NAME: $DB_NAME
+ INSTANCE_CONNECTION_NAME: $INSTANCE_CONNECTION_NAME
