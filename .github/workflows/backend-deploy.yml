@@ -32,12 +32,18 @@ jobs:
       uses: 'google-github-actions/auth@v0'
       with:
         credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
-
+    - uses: golang-enthusiast/app-yaml-env-compiler@v1.0
+      env:
+        DB_USER: '${{ secrets.DB_USER }}'
+        DB_PASS: '${{ secrets.DB_PASS }}'
+        DB_NAME: '${{ secrets.DB_NAME }}'
+        DB_TEST_NAME: '${{ secrets.DB_TEST_NAME }}'
+        INSTANCE_CONNECTION_NAME: '${{ secrets.INSTANCE_CONNECTION_NAME }}'
     - name: Deploy to App Engine
       id: deploy
       uses: google-github-actions/deploy-appengine@v0.2.0
       with:
-        deliverables: backend/app.yaml
+        deliverables: ./.github/workflows/app.yaml
         version: v1
         project_id: aroundu-403
 
