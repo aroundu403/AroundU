@@ -9,17 +9,25 @@
 
 - Data Access Object (DAO): model database entities
     1. `Event.java`
-    2. `EventParticipation.java`
+       1. Data representation of an Event
+    2. `EventParticipants.java`
+       1. Data representation of all participants in an Event
     3. `User.java`
+       1. Data representation of a User
     4. `UserParticipates.java`
+       1. Data representation of all events a User is in
 - Data Transfer Object (DTO): model HTTP request and response entities
     1. `DataResponse.java`
+       1. Carries data (code, message, data object) between processes 
     2. `OperationResponse.java`
+        1. Carries operational data (code, message) between processes
 - Data Transfer Layer (DTL): controls data access from database
     1. `EventController.java`
+       1. Manage the Event database operations such as insertion, selection or deletion.
     2. `UserController.java`
+       1. Manage the User database operations such as insertion, selection or deletion.
     3. `ParticipateController.java`
-    4.
+       1. Manage the Participate database operations such as insertion, selection or deletion.
 
 ## Developer Instructions
 
