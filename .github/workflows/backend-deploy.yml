@@ -37,7 +37,7 @@ jobs:
         DB_TEST_NAME: '${{ secrets.DB_TEST_NAME }}'
         INSTANCE_CONNECTION_NAME: '${{ secrets.INSTANCE_CONNECTION_NAME }}'
       with:
-        deliverables: app.yaml
+        deliverables: backend/app.yaml
         version: v1
         project_id: aroundu-403
 
