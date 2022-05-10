@@ -43,7 +43,7 @@ jobs:
       id: deploy
       uses: google-github-actions/deploy-appengine@v0.2.0
       with:
-        deliverables: backend/app.yaml
+        deliverables: .github/workflows/app.yaml
         version: v1
         project_id: aroundu-403
 
