@@ -111,18 +111,22 @@ class EventState extends State<EventPage> {
                   )
                 ],
               ),
-              SizedBox(
+              Container(
                 width: 343,
                 height: 100,
-                child: Expanded(
-                    child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10.0), //or 15.0
-                  child: Container(
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage(image), fit: BoxFit.fill)),
-                  ),
-                )),
+                child: Row(
+                  children: [
+                    Expanded(
+                        child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0), //or 15.0
+                      child: Container(
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage(image), fit: BoxFit.fill)),
+                      ),
+                    )),
+                  ],
+                ),
               ),
               const Padding(padding: EdgeInsets.all(5)),
               Row(
@@ -295,102 +299,106 @@ class EventState extends State<EventPage> {
               const Padding(padding: EdgeInsets.all(15)),
             ]),
           )),
-      bottomNavigationBar: SizedBox(
+      bottomNavigationBar: Container(
           width: 343,
           height: 60,
-          child: Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color.fromARGB(255, 120, 117, 117).withOpacity(.5),
-                    blurRadius: 20.0, // soften the shadow
-                    spreadRadius: 0.0, //extend the shadow
-                    offset: const Offset(
-                      5.0, // Move to right 10  horizontally
-                      8.0, // Move to bottom 10 Vertically
-                    ),
-                  )
-                ],
-              ),
-              child: !joinedIn && size >= capacity
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(20.0), //or 15.0
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Color.fromARGB(255, 80, 77, 77),
-                              Color.fromARGB(255, 120, 117, 117),
-                            ]
-                          )
+          child: Row(
+            children: [
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color.fromARGB(255, 120, 117, 117).withOpacity(.5),
+                        blurRadius: 20.0, // soften the shadow
+                        spreadRadius: 0.0, //extend the shadow
+                        offset: const Offset(
+                          5.0, // Move to right 10  horizontally
+                          8.0, // Move to bottom 10 Vertically
                         ),
-                        child: const Align(
-                          alignment: Alignment.center,
-                          child: Text("Full",
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 243, 241, 241),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 22
-                            )
-                          )
-                        )
-                      ),
-                    )
-                  : ClipRRect(
-                      borderRadius: BorderRadius.circular(20.0), //or 15.0
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: joinedIn ? 
-                            [
-                              const Color(0xffff1fa7),
-                              const Color.fromARGB(255, 172, 115, 248),
-                            ]
-                            : 
-                            [
-                              const Color.fromARGB(255, 81, 65, 143),
-                              const Color.fromARGB(255, 172, 115, 248)
-                            ],
-                          )),
-                          child: ElevatedButton(
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(Colors.transparent),
-                              shadowColor: MaterialStateProperty.all(Colors.transparent),
+                      )
+                    ],
+                  ),
+                  child: !joinedIn && size >= capacity
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(20.0), //or 15.0
+                          child: Container(
+                            decoration: const BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Color.fromARGB(255, 80, 77, 77),
+                                  Color.fromARGB(255, 120, 117, 117),
+                                ]
+                              )
                             ),
-                            child: joinedIn ? 
-                              const Text("I'm In !!",
+                            child: const Align(
+                              alignment: Alignment.center,
+                              child: Text("Full",
                                 style: TextStyle(
-                                  color:Color.fromARGB(255, 243, 241, 241),
+                                  color: Color.fromARGB(255, 243, 241, 241),
                                   fontWeight: FontWeight.bold,
                                   fontSize: 22
                                 )
                               )
-                              : 
-                              const Text("Join Event !",
-                                style: TextStyle(
-                                  color:
-                                      Color.fromARGB(255, 243, 241, 241),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 22
-                                )
-                              ),
-                            onPressed: () {
-                              setState(() {
-                                if (joinedIn) {
-                                  size--;
-                                } else {
-                                  size++;
-                                }
-                                joinedIn = !joinedIn;
-                              });
-                            },
-                          ))),
-            ),
+                            )
+                          ),
+                        )
+                      : ClipRRect(
+                          borderRadius: BorderRadius.circular(20.0), //or 15.0
+                          child: Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: joinedIn ? 
+                                [
+                                  const Color(0xffff1fa7),
+                                  const Color.fromARGB(255, 172, 115, 248),
+                                ]
+                                : 
+                                [
+                                  const Color.fromARGB(255, 81, 65, 143),
+                                  const Color.fromARGB(255, 172, 115, 248)
+                                ],
+                              )),
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(Colors.transparent),
+                                  shadowColor: MaterialStateProperty.all(Colors.transparent),
+                                ),
+                                child: joinedIn ? 
+                                  const Text("I'm In !!",
+                                    style: TextStyle(
+                                      color:Color.fromARGB(255, 243, 241, 241),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 22
+                                    )
+                                  )
+                                  : 
+                                  const Text("Join Event !",
+                                    style: TextStyle(
+                                      color:
+                                          Color.fromARGB(255, 243, 241, 241),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 22
+                                    )
+                                  ),
+                                onPressed: () {
+                                  setState(() {
+                                    if (joinedIn) {
+                                      size--;
+                                    } else {
+                                      size++;
+                                    }
+                                    joinedIn = !joinedIn;
+                                  });
+                                },
+                              ))),
+                ),
+              ),
+            ],
           )),
     );
   }

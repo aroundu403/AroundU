@@ -20,7 +20,9 @@ class AuthWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     final firebaseUser = context.watch<User?>();
 
-    return Scaffold(
+    return 
+    firebaseUser != null ? const HomePage() :
+    Scaffold(
         body: LayoutBuilder(
           builder: (context, constraines) {
             return Row(
@@ -52,7 +54,7 @@ class AuthWrapper extends StatelessWidget {
                   width: constraines.maxWidth >= 1200
                       ? constraines.maxWidth / 2
                       : constraines.maxWidth,
-                  child: firebaseUser != null ? const HomePage() : const AuthGate(),
+                  child: const AuthGate(),
                 ),
               ],
             );
