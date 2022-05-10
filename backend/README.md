@@ -1,9 +1,4 @@
-# backend
-
-### Getting Started
-
-- [Setting up Spark Server](https://sparkjava.com/documentation#getting-started)
-- [Connecting to SQL database](https://sparkjava.com/tutorials/sql2o-database)
+# Backend
 
 ### File structure
 
@@ -37,11 +32,23 @@
         1. Initialize an envelope AEAD primitive for data Encryption.
 ## Developer Instructions
 
+### Getting Started
+
+- [Setting up Spark Server](https://sparkjava.com/documentation#getting-started)
+- [Connecting to SQL database](https://sparkjava.com/tutorials/sql2o-database)
+
 ### How to spin up the SparkServer
 
 1. Sign in to your gcloud account. Make sure you have IAM access to the database
 2. Add environment variable such as database password. Contact @John if you don't know the secret strings
 3. run SparkServer
+
+### How to deploy to GCP cloud engine
+Make sure your GCP account has permission to deploy
+```
+gcloud init
+gcloud app deploy
+```
 
 ### Maven Commands
 

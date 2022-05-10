@@ -189,7 +189,7 @@ public class SparkServer {
 
     // need to add later:
     // VIEW /event
-    // show the “created event” list
+    // show the "created event" list
 
     /*
       ------------------------------- EVENT PARTICIPANTS RELATED -----------------------------------
@@ -198,7 +198,7 @@ public class SparkServer {
 
     // need to add later:
     // GET /event/guest
-    // show the “my event” list
+    // show the "my event" list
 
     // POST /event/guest
     // Participate in an event
