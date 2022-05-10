@@ -29,12 +29,12 @@
     3. `ParticipateController.java`
        1. Manages the Participate database operations such as insertion, selection or deletion.
 - Others:
-`SparkServer.java`
-  1. Manages all APIs, connection to the database and parsing token from firebase.
-`CloudSqlConnectionPool.java`
-  1. Generates the datasource connection pool according to the authentication info given.
-`CloudKmsEnvelopeAead.java`
-  1. Initialize an envelope AEAD primitive for data Encryption.
+1. `SparkServer.java`
+   1. Manages all APIs, connection to the database and parsing token from firebase.
+1. `CloudSqlConnectionPool.java`
+   1. Generates the datasource connection pool according to the authentication info given.
+1. `CloudKmsEnvelopeAead.java`
+   1. Initialize an envelope AEAD primitive for data Encryption.
 ## Developer Instructions
 
 ### How to spin up the SparkServer
