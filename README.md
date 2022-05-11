@@ -48,7 +48,7 @@ user a sense of authenticity and trust, which is commonalty lacking in todays so
     2. interact with the Map, and discover events on the map
     3. click on an event that interested him the most
     4. look at the event info on the event detail page
-    5. click on the [join event botton] to join the event
+    5. click on the `join event botton` to join the event
 
 - Internal Implementation
     1. our Account System utilizes Firebase API to connect the frontend and backend, allowing the user account info safely and securely transfer and store encrypted in our database. 
