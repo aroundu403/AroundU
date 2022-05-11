@@ -12,7 +12,7 @@
 
 **Project Summary**:
 
-> A platform for college student to post and find events within the university community。
+> A platform for college student to post and find events within the university community.
 
 **Project Description:**
 
@@ -44,3 +44,5 @@ user a sense of authenticity and trust, which is commonalty lacking in todays so
     4. `SparkServer`: APIs with database connections
 3. `/frontend`: frontend Flutter folder
 
+## Instructions:
+See `/backend` and `/frontend` directory for details
