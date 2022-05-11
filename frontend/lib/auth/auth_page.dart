@@ -241,32 +241,32 @@ class _AuthGateState extends State<AuthGate> {
                             onPressed: _resetPassword,
                             child: const Text('Forgot password?'),
                           ),
-                          const SizedBox(height: 20),
-                          ...authButtons.keys
-                              .map(
-                                (button) => Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 5),
-                                  child: AnimatedSwitcher(
-                                    duration: const Duration(milliseconds: 200),
-                                    child: isLoading
-                                        ? Container(
-                                            color: Colors.grey[200],
-                                            height: 50,
-                                            width: double.infinity,
-                                          )
-                                        : SizedBox(
-                                            width: double.infinity,
-                                            height: 50,
-                                            child: SignInButton(
-                                              button,
-                                              onPressed: authButtons[button]!,
-                                            ),
-                                          ),
-                                  ),
-                                ),
-                              )
-                              .toList(),
+                          //const SizedBox(height: 20),
+                          // ...authButtons.keys
+                          //     .map(
+                          //       (button) => Padding(
+                          //         padding:
+                          //             const EdgeInsets.symmetric(vertical: 5),
+                          //         child: AnimatedSwitcher(
+                          //           duration: const Duration(milliseconds: 200),
+                          //           child: isLoading
+                          //               ? Container(
+                          //                   color: Colors.grey[200],
+                          //                   height: 50,
+                          //                   width: double.infinity,
+                          //                 )
+                          //               : SizedBox(
+                          //                   width: double.infinity,
+                          //                   height: 50,
+                          //                   child: SignInButton(
+                          //                     button,
+                          //                     onPressed: authButtons[button]!,
+                          //                   ),
+                          //                 ),
+                          //         ),
+                          //       ),
+                          //     )
+                          //     .toList(),
                           const SizedBox(height: 20),
                           RichText(
                             text: TextSpan(
