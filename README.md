@@ -12,7 +12,7 @@
 
 **Project Summary**:
 
-> A platform for college student to post and find events within the university community。
+> A platform for college student to post and find events within the university community.
 
 **Documentation**
 The detailed onboaring document is in `/frontend` and `/backend`. Refer to those README document for setup, build, test, and deploy applicaiton. 
@@ -38,6 +38,25 @@ user a sense of authenticity and trust, which is commonalty lacking in todays so
    user to interactive with the map element to preform verity of task like see, found, and join specific event or
    activity.
 
+**Prototype Use case**
+- Actor: User
+- precondition: A new User first download our app and want to find a event that neer him to participate
+- Postconditions: the user successfully joins an event that interested him the most.
+- List of step:
+    1. register a account with Email address
+    1. Enter to the Map View home page
+    2. interact with the Map, and discover events on the map
+    3. click on an event that interested him the most
+    4. look at the event info on the event detail page
+    5. click on the [join event botton] to join the event
+
+- Internal Implementation
+    1. our Account System utilizes Firebase API to connect the frontend and backend, allowing the user account info safely and securely transfer and store encrypted in our database. 
+    2. Our Map View is powered by the Mapbox framework, which allows users to interact with the real-world map. 
+    3. We implemented an Event API, which fetches all event data around the user's physical location from our database, then displays them on the map.
+    4. Each event has detailed information including location, time, size, description, etc
+    5. We implemented a join event API, which will update the selected event in our database.
+
 ## Repository Layout
 
 1. `/report`: all the weekly status report
@@ -48,3 +67,5 @@ user a sense of authenticity and trust, which is commonalty lacking in todays so
     4. `SparkServer`: APIs with database connections
 3. `/frontend`: frontend Flutter folder
 
+## Instructions:
+See `/backend` and `/frontend` directory for details
