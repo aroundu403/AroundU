@@ -44,7 +44,7 @@
 3. run SparkServer
 
 ### How to deploy to GCP cloud engine
-Deploy backend code by mannually triggering the deployment GitHub action
+Deploy backend code by mannually triggering the deployment GitHub action. We have automated the build and deploy process by reducing variations and setting up environment variables.
 
 ### Maven Commands
 
