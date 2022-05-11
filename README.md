@@ -14,6 +14,10 @@
 
 > A platform for college student to post and find events within the university community。
 
+**Documentation**
+The detailed onboaring document is in `/frontend` and `/backend`. Refer to those README document for setup, build, test, and deploy applicaiton. 
+For technical documentation, please refer to our Notion documents regarding API and Database doc.
+
 **Project Description:**
 
 Our goal is to allow user(students) more easy to find events or activities around them, and build connection or
