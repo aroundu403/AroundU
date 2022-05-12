@@ -18,9 +18,24 @@ import java.util.ArrayList;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.FirebaseApp;
 
-import static spark.Spark.*;
 
+
+import static spark.Spark.*;
+/**
+ * This class manages all APIs, connection to the database and parsing token from firebase.
+ *
+ *
+ * @author Wenxin Zhang, Wei Wu
+ */
 public class SparkServer {
+  /**
+  * This is the main method of the SparkServer class.
+  * Make sure to connect to the database before running.
+  *
+  * @param args any excessive arguments
+  * @throws IOException
+  */
+
   public static void main(String[] args) throws IOException {
     Gson gson = new Gson();
 
@@ -286,19 +301,23 @@ public class SparkServer {
 
     // GET /event/list
     // Get id of events that are within n days as a list.
-    // http://localhost:4567/event/list?nday=14  e.g within next 2 weeks
+    // http://localhost:4567/event/list  e.g within next 2 weeks
     get(
         "/event/list",
         (request, response) -> {
-          String nday = request.queryParams("nday");
+          //String nday = request.queryParams("nday");
           ArrayList<Long> eventIDs =
-              EventController.getEventsInNextNDays(pool, Integer.parseInt(nday));
+              EventController.getEventsInNextNDays(pool, 14);
+          ArrayList<Event> result_event = new ArrayList<>();
           if (eventIDs.size() > 0) {
-            DataResponse resp = new DataResponse(200, "Success", eventIDs);
+              for (long curr : eventIDs) {
+                  result_event.add(EventController.getEventByID(pool, curr));
+              }
+            DataResponse resp = new DataResponse(200, "Success", result_event);
             return gson.toJson(resp);
           } else {
             return gson.toJson(
-                new OperationResponse(400, "No Event in the next " + nday + " days."));
+                new OperationResponse(400, "No Event in the next " + 14 + " days."));
           }
         });
 
