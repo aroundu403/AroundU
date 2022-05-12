@@ -63,7 +63,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: theme,
-        home: const MapView(),
+        home: AuthWrapper(),
       ),
     );
   }

@@ -3,10 +3,15 @@ import 'package:provider/provider.dart';
 import '../auth/auth_service.dart';
 import 'eventdetail.dart';
 
-
 // ignore: must_be_immutable
-class ListViewHome extends StatelessWidget {
+class ListViewHome extends StatefulWidget {
   ListViewHome({Key? key}) : super(key: key);
+
+  @override
+  State<ListViewHome> createState() => _ListViewHomeState();
+}
+
+class _ListViewHomeState extends State<ListViewHome> {
   final List<String> images = [
     "images/scenary.jpg",
     "images/scenary_red.jpg",
@@ -25,8 +30,9 @@ class ListViewHome extends StatelessWidget {
     "images/tree.jpg",
     "images/tree.jpg"
   ];
+
   final List<String> titles = [
-    "Title 1",
+    "Title 0",
     "Title 2",
     "Title 3",
     "Title 4",
@@ -43,6 +49,7 @@ class ListViewHome extends StatelessWidget {
     "Title 4",
     "Title 4"
   ];
+
   final List<String> subtitles = [
     "subtitle 1",
     "subtitle 2",
@@ -61,6 +68,7 @@ class ListViewHome extends StatelessWidget {
     "subtitle 4",
     "subtitle 4"
   ];
+
   final List<String> participant = [
     "images/scenary.jpg",
     "images/scenary.jpg",
@@ -69,6 +77,7 @@ class ListViewHome extends StatelessWidget {
     "images/tree.jpg",
     "images/tree.jpg"
   ];
+
   final List<List<String>> participants = [
     ["images/scenary.jpg"],
     [
@@ -108,14 +117,21 @@ class ListViewHome extends StatelessWidget {
     ["images/tree.jpg", "images/tree.jpg", "images/tree.jpg"],
     []
   ];
+
   final ScrollController _controller = ScrollController();
+
   final ScrollPhysics _physics = const ClampingScrollPhysics();
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Container(
+    return Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         decoration: const BoxDecoration(
@@ -320,6 +336,6 @@ class ListViewHome extends StatelessWidget {
             },
             child: const Text("Sign out"),
           )
-        ]))));
+        ])));
   }
 }

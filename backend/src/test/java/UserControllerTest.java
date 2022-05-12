@@ -60,7 +60,7 @@ public class UserControllerTest {
     }
   }
 
-  @Test
+@Test
   public void testAddUser() throws SQLException {
     UserController.addUser(pool, new User("test333", "Test3", "test3@gmail.com", "I am TEST3"));
     int newCardinality = -1;
