@@ -1,17 +1,12 @@
-
-import 'dart:math';
-
-import 'package:aroundu/event/list_view.dart';
-import 'package:aroundu/event/location_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+/// This is the map-view widget of AroundU which is responsible for displaying the recent events on a map view
+/// This widget will invoke the MapBox Flutter library to render the map view. 
+/// User can learn more about the events by clicking the icons on the map.
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
-import 'package:provider/provider.dart';
+import 'event_detail.dart';
 
-import '../auth/auth_service.dart';
-import 'eventdetail.dart';
-
+// MapBox style url which serves a map style configuration file
 const styleString = 'mapbox://styles/johnwang66/cl2y95qa3000l15p6c38ppu7v';
 
 const events = [
@@ -54,6 +49,7 @@ class _MapViewState extends State<MapView> {
     }
   }
 
+  /// After map has been initialized, register controller and callback functions
   _onMapCreate(MapboxMapController controller) async {
     _mapController = controller;
     _mapController!.onSymbolTapped.add(_onSymbolTapped);

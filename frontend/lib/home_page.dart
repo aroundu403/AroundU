@@ -1,7 +1,8 @@
-import 'package:aroundu/auth/auth_wrapper.dart';
+/// This is the home page of AroundU which contains the map view and list view of events.
+/// It also contains the access to other modules such as create event page and my event page
+/// It will be the main page that users will interact with after they have signed in.
 import 'package:aroundu/event/map_view.dart';
 import 'package:flutter/material.dart';
-
 import 'event/list_view.dart';
 
 enum ViewMode { map, list }

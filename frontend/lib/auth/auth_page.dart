@@ -1,3 +1,6 @@
+/// This is the sign-in/register page that peforms user authernication.
+/// It contains input fields that ask users to provide email and password.
+/// After user clicks the submit button, it will send network requests to Firebase and our backend service
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
@@ -58,12 +61,14 @@ class AuthGate extends StatefulWidget {
 }
 
 class _AuthGateState extends State<AuthGate> {
+  // user input controllers
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController nameController = TextEditingController();
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  // widget error message
   String error = '';
   String verificationId = '';
 
@@ -307,6 +312,8 @@ class _AuthGateState extends State<AuthGate> {
     );
   }
 
+  /// resetPassword callback function
+  /// pop up a AlertDialog to ask for the email to send to.
   Future _resetPassword() async {
     String? email;
     await showDialog(
@@ -348,6 +355,10 @@ class _AuthGateState extends State<AuthGate> {
     }
   }
 
+  /// Sign-in/Register callback function
+  /// In sign-in mode, validate user by sending email and password to the Firebase API
+  /// In register mode, create an user account from Firebase, change the user name, 
+  /// and sychronize the user information with the backend service.
   Future<void> _emailAndPassword() async {
     if (formKey.currentState?.validate() ?? false) {
       setIsLoading();
@@ -384,6 +395,7 @@ class _AuthGateState extends State<AuthGate> {
     }
   }
 
+  // Call sign-in with Google service to use google credential to sign-in
   Future<void> _signInWithGoogle() async {
     setIsLoading();
     try {
@@ -415,8 +427,6 @@ class _AuthGateState extends State<AuthGate> {
   // sychronize user information with our backend database
   Future<void> _sychronizeUserInfo(User user) async{
     String token = await user.getIdToken();
-    print('user token' + token);
-    print(123);
     if (token.isNotEmpty) {
       http.post(url, 
         headers: {

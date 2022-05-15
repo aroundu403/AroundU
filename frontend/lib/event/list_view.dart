@@ -1,7 +1,8 @@
+/// Display the events in list view with event title and image.
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../auth/auth_service.dart';
-import 'eventdetail.dart';
+import 'event_detail.dart';
 
 // ignore: must_be_immutable
 class ListViewHome extends StatefulWidget {
@@ -119,7 +120,6 @@ class _ListViewHomeState extends State<ListViewHome> {
   ];
 
   final ScrollController _controller = ScrollController();
-
   final ScrollPhysics _physics = const ClampingScrollPhysics();
 
   @override

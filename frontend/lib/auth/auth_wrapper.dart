@@ -1,17 +1,11 @@
 
-// controller for showing which page
+/// This is a wrapper class that conditionally render auth_page or homepage 
+/// based on whether the user has signed in
 import 'package:aroundu/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'auth_page.dart';
-
-// TODO
-// google sign in register
-  // IOS
-  // Web
-  // Android
 
 class AuthWrapper extends StatefulWidget {
   const AuthWrapper({ Key? key }) : super(key: key);
@@ -30,6 +24,8 @@ class _AuthWrapperState extends State<AuthWrapper> {
         Scaffold(
           body: Row(
                 children: [
+                  // If the screen is too wide, display a two column view.
+                  // Fill the left half with the theme color and display the name of the app
                   Visibility(
                     visible: constraines.maxWidth >= 1200,
                     child: Expanded(

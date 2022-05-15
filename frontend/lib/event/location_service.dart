@@ -1,7 +1,7 @@
+/// get user location helper function
 import 'package:location/location.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
-// get user location helper function
 Future<LatLng?> acquireCurrentLocation() async {
   // Initializes the plugin and starts listening for potential platform events
   Location location = Location();

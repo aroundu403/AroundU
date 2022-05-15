@@ -1,6 +1,6 @@
+/// Display the detial information of an event such as event name, location, start time,
+/// end time, number of participants, description.
 import 'package:flutter/material.dart';
-
-import '../home_page.dart';
 
 class EventPage extends StatefulWidget {
   const EventPage({Key? key}) : super(key: key);
@@ -11,10 +11,11 @@ class EventPage extends StatefulWidget {
 
 class EventState extends State<EventPage> {
   final image = "images/scenary.jpg";
-  bool joinedIn = false;
   final int capacity = 7;
+  bool joinedIn = false;
   int size = 5;
   bool show = false;
+
   final List<String> participants = [
     "images/scenary.jpg",
     "images/tree.jpg",
@@ -22,16 +23,17 @@ class EventState extends State<EventPage> {
     "images/scenary.jpg",
     "images/tree.jpg",
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SizedBox(
-          height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: SingleChildScrollView(
             child: Column(children: [
               const Padding(padding: EdgeInsets.all(15)),
+              // back to preview page button
               Row(
                 children: [
                   const Padding(padding: EdgeInsets.all(5)),
@@ -46,7 +48,8 @@ class EventState extends State<EventPage> {
                           )))
                 ],
               ),
-              const Padding(padding: EdgeInsets.all(2)),
+              const SizedBox(height: 4),
+              // Event Title
               Row(
                 children: const [
                   Padding(padding: EdgeInsets.all(16)),
@@ -60,6 +63,7 @@ class EventState extends State<EventPage> {
                   )
                 ],
               ),
+              // number of spot avaible
               Row(
                 children: [
                   const Padding(padding: EdgeInsets.all(18)),
@@ -75,9 +79,10 @@ class EventState extends State<EventPage> {
                   )
                 ],
               ),
+              // Event images
               Container(
                 width: 343,
-                height: 100,
+                height: 150,
                 child: Row(
                   children: [
                     Expanded(
@@ -92,7 +97,8 @@ class EventState extends State<EventPage> {
                   ],
                 ),
               ),
-              const Padding(padding: EdgeInsets.all(5)),
+              const SizedBox(height: 20),
+              // start time and end time widget
               Row(
                 children: [
                   const Padding(padding: EdgeInsets.all(10)),
@@ -121,7 +127,8 @@ class EventState extends State<EventPage> {
                   )
                 ],
               ),
-              const Padding(padding: EdgeInsets.all(5)),
+              const SizedBox(height: 10),
+              // number of participant 
               Row(
                 children: [
                   const Padding(padding: EdgeInsets.all(10)),
@@ -201,7 +208,8 @@ class EventState extends State<EventPage> {
                         );
                       }),
                 ),
-              const Padding(padding: EdgeInsets.all(5)),
+              const SizedBox(height: 10),
+              // event address
               Row(
                 children: const [
                   Padding(padding: EdgeInsets.all(10)),
@@ -217,7 +225,8 @@ class EventState extends State<EventPage> {
                           fontSize: 18)),
                 ],
               ),
-              const Padding(padding: EdgeInsets.all(5)),
+              const SizedBox(height: 10),
+              // event description 
               Row(
                 children: const [
                   Padding(padding: EdgeInsets.all(10)),
@@ -233,7 +242,7 @@ class EventState extends State<EventPage> {
                           fontSize: 18)),
                 ],
               ),
-              const Padding(padding: EdgeInsets.all(5)),
+              const SizedBox(height: 10),
               Row(
                 children: [
                   const Padding(padding: EdgeInsets.all(10)),
@@ -248,7 +257,7 @@ class EventState extends State<EventPage> {
               const Padding(padding: EdgeInsets.all(15)),
             ]),
           )),
-      bottomNavigationBar: Container(
+      bottomNavigationBar: SizedBox(
           width: 343,
           height: 60,
           child: Row(
