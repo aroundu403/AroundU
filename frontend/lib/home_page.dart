@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _viewMode == ViewMode.map ? MapView() : ListViewHome(),
+      body: _viewMode == ViewMode.map ? const MapView() : ListViewHome(),
       floatingActionButton: FloatingActionButton.extended(
         label: _viewMode == ViewMode.map ? const Text("List View"): const Text("Map View"),
         onPressed: () {

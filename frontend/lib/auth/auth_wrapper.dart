@@ -20,7 +20,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
     final firebaseUser = context.watch<User?>();
     return LayoutBuilder(
       builder: (context, constraines) {
-        return firebaseUser != null ? HomePage() :
+        return firebaseUser != null ? const HomePage() :
         Scaffold(
           body: Row(
                 children: [
