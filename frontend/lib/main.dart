@@ -18,7 +18,7 @@ ThemeData theme = ThemeData(
   primaryColor: const Color.fromARGB(255, 92, 74, 210), 
   backgroundColor: const Color.fromARGB(255, 81, 65, 143), 
   focusColor: const Color(0xff8DFFF2), 
-  highlightColor: const Color(0xffff1fa7),
+  //highlightColor: const Color(0xffff1fa7),
 
   textTheme: const TextTheme(
       headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 92, 74, 210)),
