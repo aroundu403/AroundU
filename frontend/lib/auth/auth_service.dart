@@ -1,5 +1,5 @@
+/// Helper class that wraps firbase sign-in function into helper functions to hanlde execptions
 import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
 
 // a helper class that authenicates users and wrap the FirebaseAuth instance

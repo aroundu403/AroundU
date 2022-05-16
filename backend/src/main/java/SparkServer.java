@@ -10,25 +10,41 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 import com.google.gson.Gson;
-
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.FirebaseApp;
+import lombok.extern.slf4j.Slf4j;
 
 import static spark.Spark.*;
-
+/**
+ * This class manages all APIs, connection to the database and parsing token from firebase.
+ *
+ *
+ * @author Wenxin Zhang, Wei Wu
+ */
+@Slf4j
 public class SparkServer {
+  /**
+  * This is the main method of the SparkServer class.
+  * Make sure to connect to the database before running.
+  *
+  * @param args any excessive arguments
+  * @throws IOException
+  */
   public static void main(String[] args) throws IOException {
     Gson gson = new Gson();
+    log.info("Starting server...");
 
+    port(Integer.valueOf(System.getenv().getOrDefault("PORT", "8080")));
     // Database accessing preparation
     String dbUser = System.getenv("DB_USER");
     String dbPass = System.getenv("DB_PASS");
     String dbName = System.getenv("DB_NAME");
     String instanceConnectionName = System.getenv("INSTANCE_CONNECTION_NAME");
+
     // String kmsUri = System.getenv("CLOUD_KMS_URI");   // for data encryption
     DataSource pool =
         CloudSqlConnectionPool.createConnectionPool(dbUser, dbPass, dbName, instanceConnectionName);
@@ -46,7 +62,7 @@ public class SparkServer {
 
     // GET /user
     // Show the user information by id
-    // http://localhost:4567/user/aaa111
+    // http://localhost:8080/user/aaa111
 
     get(
         "/user",
@@ -66,7 +82,7 @@ public class SparkServer {
     // for a user to register with email
     // please use postman to test, dropbox select post
     // need to add request body, please copy from the API doc
-    // http://localhost:4567/user/ddd444
+    // http://localhost:8080/user/ddd444
     post(
         "/user",
         (request, response) -> {
@@ -90,7 +106,7 @@ public class SparkServer {
 
     // GET /event
     // User check an event.
-    // http://localhost:4567/event/id?eventid=1
+    // http://localhost:8080/event/id?eventid=1
 
     get(
         "/event/id",
@@ -109,7 +125,7 @@ public class SparkServer {
     // Create a new event
     // please use postman to test, dropbox select post
     // need to add request body: please copy from the API doc
-    // http://localhost:4567/event
+    // http://localhost:8080/event
 
     post(
         "/event",
@@ -129,7 +145,7 @@ public class SparkServer {
     // Update an existed event
     // please use postman to test, dropbox select put
     // need to add request body: please copy from the API doc and make modification
-    // http://localhost:4567/event
+    // http://localhost:8080/event
 
     put(
         "/event",
@@ -151,7 +167,7 @@ public class SparkServer {
 
     // DELETE /event
     // Event creator delete a created event
-    // http://localhost:4567/event/guest?eventid=3
+    // http://localhost:8080/event/guest?eventid=3
     delete(
         "/event",
         (request, response) -> {
@@ -203,7 +219,7 @@ public class SparkServer {
     // Participate in an event
     // please use postman to test, dropbox select post
     // make sure the event end time is in the future, or you will get error code 403
-    // http://localhost:4567/event/guest?eventid=2
+    // http://localhost:8080/event/guest?eventid=2
 
     post(
         "/event/guest",
@@ -243,7 +259,7 @@ public class SparkServer {
     // make sure the user have participated in this event before testing, or you will get error code
     // 402
     // make sure the event end time is in the future, or you will get error code 403
-    // http://localhost:4567/event/guest?eventid=2
+    // http://localhost:8080/event/guest?eventid=2
 
     delete(
         "/event/guest",
@@ -284,23 +300,27 @@ public class SparkServer {
       ------------------------------- EVENT LISTS/SEARCHING RELATED -----------------------------------
     */
 
-    // GET /event/list
-    // Get id of events that are within n days as a list.
-    // http://localhost:4567/event/list?nday=14  e.g within next 2 weeks
-    get(
-        "/event/list",
-        (request, response) -> {
-          String nday = request.queryParams("nday");
-          ArrayList<Long> eventIDs =
-              EventController.getEventsInNextNDays(pool, Integer.parseInt(nday));
-          if (eventIDs.size() > 0) {
-            DataResponse resp = new DataResponse(200, "Success", eventIDs);
-            return gson.toJson(resp);
-          } else {
-            return gson.toJson(
-                new OperationResponse(400, "No Event in the next " + nday + " days."));
-          }
-        });
+      // GET /event/list
+      // Get id of events that are within n days as a list.
+      // http://localhost:8080/event/list  e.g within next 2 weeks
+      get(
+              "/event/list",
+              (request, response) -> {
+                  //String nday = request.queryParams("nday");
+                  ArrayList<Long> eventIDs =
+                          EventController.getEventsInNextNDays(pool, 14);
+                  ArrayList<Event> result_event = new ArrayList<>();
+                  if (eventIDs.size() > 0) {
+                      for (long curr : eventIDs) {
+                          result_event.add(EventController.getEventByID(pool, curr));
+                      }
+                      DataResponse resp = new DataResponse(200, "Success", result_event);
+                      return gson.toJson(resp);
+                  } else {
+                      return gson.toJson(
+                              new OperationResponse(400, "No Event in the next " + 14 + " days."));
+                  }
+              });
 
     // GET /event/search
     // Get id of events that satisfy the filter option as a list.
