@@ -41,7 +41,8 @@
 - [Connecting to Cloud SQL database](https://github.com/GoogleCloudPlatform/java-docs-samples/blob/main/cloud-sql/mysql/servlet/README.md)
 - Put the secret API strings into a env file in /backend. The application will need those secret strings to access
   external dependencies. Contact @John to get the secret strings.
-- Make sure your GCP accout has access to the arondu-403 project.
+- Make sure your GCP account has access to the aroundu-403 project.
+- Run maven command listed below to compile
 
 ### How to spin up the SparkServer
 
