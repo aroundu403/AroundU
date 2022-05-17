@@ -10,15 +10,14 @@ import 'package:aroundu/json/event.dart';
 Future<EventInfo> fetchEvent() async {
   final response = await http.get(
     Uri(
-      host: backendAddress, 
-      path: "/event/id",
-      queryParameters: {"eventid": "3"}
-    ),
+        host: backendAddress,
+        path: "/event/id",
+        queryParameters: {"eventid": "3"}),
   );
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
     // then parse the JSON.
-    
+
     return EventInfo.fromJson(jsonDecode(response.body)["data"]);
   } else {
     // If the server did not return a 200 OK response,
@@ -45,28 +44,28 @@ class EventState extends State<EventPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Column(
-            children: [
-              const Padding(padding: EdgeInsets.all(15)),
-              // back to preview page button
-              Row(
-                children: [
-                  const Padding(padding: EdgeInsets.all(5)),
-                  Align(
+        body: Stack(
+      children: [
+        Column(
+          children: [
+            const Padding(padding: EdgeInsets.all(15)),
+            // back to preview page button
+            Row(
+              children: [
+                const Padding(padding: EdgeInsets.all(5)),
+                Align(
                     alignment: Alignment.topLeft,
                     child: GestureDetector(
-                      onTap: () => Navigator.pop(context),
-                      child: const Icon(
-                        Icons.chevron_left,
-                        size: 36,
-                        color: Color.fromARGB(255, 81, 65, 143),
-                      )))
-                ],
-              ),
-              const SizedBox(height: 4),
-              FutureBuilder<EventInfo>(
+                        onTap: () => Navigator.pop(context),
+                        child: const Icon(
+                          Icons.chevron_left,
+                          size: 36,
+                          color: Color.fromARGB(255, 81, 65, 143),
+                        )))
+              ],
+            ),
+            const SizedBox(height: 4),
+            FutureBuilder<EventInfo>(
                 future: _event,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
@@ -74,35 +73,33 @@ class EventState extends State<EventPage> {
                   } else if (snapshot.hasError) {
                     return const Center(
                         child: Text('No Events Posted Currently',
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 81, 65, 143),
-                          fontStyle: FontStyle.italic,
-                          fontSize: 20
-                        )));
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 81, 65, 143),
+                                fontStyle: FontStyle.italic,
+                                fontSize: 20)));
                   }
                   return const CircularProgressIndicator();
-                } 
-              ),
-            ],
-          ),
-          FutureBuilder<EventInfo>(
+                }),
+          ],
+        ),
+        FutureBuilder<EventInfo>(
             future: _event,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    margin: const EdgeInsets.only(bottom: 10.0),
-                    child: JoinEventButton(event: snapshot.data!, mode: EventButtonMode.join,),
-                  )
-                );
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 10.0),
+                      child: JoinEventButton(
+                        event: snapshot.data!,
+                        mode: EventButtonMode.join,
+                      ),
+                    ));
               }
               return const Text("");
-            }
-          )
-        ],
-      )
-    );
+            })
+      ],
+    ));
   }
 }
 
@@ -129,8 +126,7 @@ class _EventDetailState extends State<EventDetailHelper> {
   ];
   @override
   Widget build(BuildContext context) {
-    return 
-      SingleChildScrollView(
+    return SingleChildScrollView(
       child: Column(children: [
         // Event Title
         Row(
@@ -139,10 +135,10 @@ class _EventDetailState extends State<EventDetailHelper> {
             Align(
               alignment: Alignment.topLeft,
               child: Text(event.eventName,
-                style: const TextStyle(
-                    color: Color.fromARGB(255, 81, 65, 143),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 27)),
+                  style: const TextStyle(
+                      color: Color.fromARGB(255, 81, 65, 143),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 27)),
             )
           ],
         ),
@@ -156,10 +152,11 @@ class _EventDetailState extends State<EventDetailHelper> {
                   ? const Text("Closed",
                       style: TextStyle(color: Colors.red, fontSize: 15))
                   : Text(
-                      (event.maxParticipants - event.currNumParticipants).toString() +
+                      (event.maxParticipants - event.currNumParticipants)
+                              .toString() +
                           " spots available",
-                      style: const TextStyle(
-                          color: Colors.green, fontSize: 15)),
+                      style:
+                          const TextStyle(color: Colors.green, fontSize: 15)),
             )
           ],
         ),
@@ -175,8 +172,7 @@ class _EventDetailState extends State<EventDetailHelper> {
                 child: Container(
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                          image: AssetImage(image),
-                          fit: BoxFit.fill)), // TODO
+                          image: AssetImage(image), fit: BoxFit.fill)), // TODO
                 ),
               )),
             ],
@@ -218,8 +214,7 @@ class _EventDetailState extends State<EventDetailHelper> {
                 child: Icon(Icons.people_alt_outlined,
                     color: Color.fromARGB(255, 81, 65, 143))),
             const Padding(padding: EdgeInsets.all(5)),
-            Text(
-                event.currNumParticipants.toString() + " people joined",
+            Text(event.currNumParticipants.toString() + " people joined",
                 style: const TextStyle(
                     color: Color.fromARGB(255, 81, 65, 143),
                     fontWeight: FontWeight.bold,
@@ -239,8 +234,7 @@ class _EventDetailState extends State<EventDetailHelper> {
                           radius: 12,
                           child: CircleAvatar(
                             radius: 12,
-                            backgroundImage:
-                                AssetImage(participants[index]),
+                            backgroundImage: AssetImage(participants[index]),
                           ),
                         ),
                       );
@@ -273,8 +267,7 @@ class _EventDetailState extends State<EventDetailHelper> {
             width: 350,
             child: GridView.builder(
                 itemCount: participants.length,
-                gridDelegate:
-                    const SliverGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 10,
                   crossAxisSpacing: 1.0,
                   mainAxisSpacing: 1.0,
@@ -285,8 +278,7 @@ class _EventDetailState extends State<EventDetailHelper> {
                     radius: 8,
                     child: CircleAvatar(
                       radius: 12,
-                      backgroundImage:
-                          AssetImage(participants[index]), // TODO
+                      backgroundImage: AssetImage(participants[index]), // TODO
                     ),
                   );
                 }),
@@ -332,8 +324,7 @@ class _EventDetailState extends State<EventDetailHelper> {
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.9,
               child: Text(event.description,
-                  style:
-                      const TextStyle(color: Colors.black, fontSize: 16)),
+                  style: const TextStyle(color: Colors.black, fontSize: 16)),
             )
           ],
         ),
@@ -346,7 +337,8 @@ class _EventDetailState extends State<EventDetailHelper> {
 enum EventButtonMode { join, leave, full }
 
 class JoinEventButton extends StatefulWidget {
-  const JoinEventButton({Key? key, required this.event, required this.mode}) : super(key: key);
+  const JoinEventButton({Key? key, required this.event, required this.mode})
+      : super(key: key);
   final EventInfo event;
   final EventButtonMode mode;
 
@@ -371,102 +363,104 @@ class _JoinEventButtonState extends State<JoinEventButton> {
   Widget build(BuildContext context) {
     // Todo restyle the widget for consistency
     return SizedBox(
-      width: 343,
-      height: 60,
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color.fromARGB(255, 120, 117, 117)
-                        .withOpacity(.5),
-                    blurRadius: 20.0, // soften the shadow
-                    spreadRadius: 0.0, //extend the shadow
-                    offset: const Offset(
-                      5.0, // Move to right 10  horizontally
-                      8.0, // Move to bottom 10 Vertically
-                    ),
-                  )
-                ],
-              ),
-              child: !joinedIn &&
-                      widget.event.maxParticipants >= widget.event.currNumParticipants
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(20.0), //or 15.0
-                      child: Container(
-                          decoration: const BoxDecoration(
-                              gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [
-                                Color.fromARGB(255, 80, 77, 77),
-                                Color.fromARGB(255, 120, 117, 117),
-                              ])),
-                          child: const Align(
-                              alignment: Alignment.center,
-                              child: Text("Full",
-                                  style: TextStyle(
-                                      color: Color.fromARGB(
-                                          255, 243, 241, 241),
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 22)))),
+        width: 343,
+        height: 60,
+        child: Row(
+          children: [
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color.fromARGB(255, 120, 117, 117)
+                          .withOpacity(.5),
+                      blurRadius: 20.0, // soften the shadow
+                      spreadRadius: 0.0, //extend the shadow
+                      offset: const Offset(
+                        5.0, // Move to right 10  horizontally
+                        8.0, // Move to bottom 10 Vertically
+                      ),
                     )
-                  : ClipRRect(
-                      borderRadius: BorderRadius.circular(20.0), //or 15.0
-                      child: Container(
-                          decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: widget.mode == EventButtonMode.leave
-                                ? [
-                                    const Color(0xffff1fa7),
-                                    const Color.fromARGB(
-                                        255, 172, 115, 248),
-                                  ]
-                                : [
-                                    const Color.fromARGB(255, 81, 65, 143),
-                                    const Color.fromARGB(255, 172, 115, 248)
-                                  ],
-                          )),
-                          child: ElevatedButton(
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  Colors.transparent),
-                              shadowColor: MaterialStateProperty.all(
-                                  Colors.transparent),
-                            ),
-                            child: widget.mode == EventButtonMode.leave
-                                ? const Text("Leave Event",
+                  ],
+                ),
+                child: !joinedIn &&
+                        widget.event.currNumParticipants >=
+                            widget.event.maxParticipants
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(20.0), //or 15.0
+                        child: Container(
+                            decoration: const BoxDecoration(
+                                gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                  Color.fromARGB(255, 80, 77, 77),
+                                  Color.fromARGB(255, 120, 117, 117),
+                                ])),
+                            child: const Align(
+                                alignment: Alignment.center,
+                                child: Text("Full",
                                     style: TextStyle(
-                                        color: Color.fromARGB(
-                                            255, 243, 241, 241),
+                                        color:
+                                            Color.fromARGB(255, 243, 241, 241),
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 22))
-                                : const Text("Join Event",
-                                    style: TextStyle(
-                                        color: Color.fromARGB(
-                                            255, 243, 241, 241),
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 22)),
-                            onPressed: () {
-                              // TODO state management and send network request
-                              setState(() {
-                                if (joinedIn) {
-                                  size--; // TODO
-                                } else {
-                                  size++; // TODO
-                                }
-                                joinedIn = !joinedIn;
-                                mode = mode == EventButtonMode.join ? EventButtonMode.leave : EventButtonMode.join;
-                              });
-                            },
-                          ))),
+                                        fontSize: 22)))),
+                      )
+                    : ClipRRect(
+                        borderRadius: BorderRadius.circular(20.0), //or 15.0
+                        child: Container(
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: widget.mode == EventButtonMode.leave
+                                  ? [
+                                      const Color(0xffff1fa7),
+                                      const Color.fromARGB(255, 172, 115, 248),
+                                    ]
+                                  : [
+                                      const Color.fromARGB(255, 81, 65, 143),
+                                      const Color.fromARGB(255, 172, 115, 248)
+                                    ],
+                            )),
+                            child: ElevatedButton(
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    Colors.transparent),
+                                shadowColor: MaterialStateProperty.all(
+                                    Colors.transparent),
+                              ),
+                              child: widget.mode == EventButtonMode.leave
+                                  ? const Text("Leave Event",
+                                      style: TextStyle(
+                                          color: Color.fromARGB(
+                                              255, 243, 241, 241),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 22))
+                                  : const Text("Join Event",
+                                      style: TextStyle(
+                                          color: Color.fromARGB(
+                                              255, 243, 241, 241),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 22)),
+                              onPressed: () {
+                                // TODO state management and send network request
+                                setState(() {
+                                  if (joinedIn) {
+                                    size--; // TODO
+                                  } else {
+                                    size++; // TODO
+                                  }
+                                  joinedIn = !joinedIn;
+                                  mode = mode == EventButtonMode.join
+                                      ? EventButtonMode.leave
+                                      : EventButtonMode.join;
+                                });
+                              },
+                            ))),
+              ),
             ),
-          ),
-        ],
-      ));
+          ],
+        ));
   }
 }
