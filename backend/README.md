@@ -68,7 +68,7 @@
 
 1. Sign in to your gcloud account. Make sure you have IAM access to the database
 2. Add environment variable such as database password. Contact @John if you don't know the secret strings
-3. run SparkServer
+3. run SparkServer (preferably using Intellij 'Run SparkServer.main()' feature)
     1. Once the server is running, Postman is used to test relevant data access and transfer
 
 ### How to deploy to GCP cloud engine
