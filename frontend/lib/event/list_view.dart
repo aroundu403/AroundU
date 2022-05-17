@@ -66,10 +66,11 @@ class _ListViewHomeState extends State<ListViewHome> {
     []
   ];
 
+  late Future<List<EventInfo>> _events;
   @override
   void initState() {
     super.initState();
-    _fetchEvents();
+    _events = _fetchEvents();
   }
 
   // fetch the list of event from the backend API
@@ -115,9 +116,10 @@ class _ListViewHomeState extends State<ListViewHome> {
                   fontSize: 36)),
           // build the list view once the event list data arrives
           FutureBuilder<List<EventInfo>>(
-              future: _fetchEvents(),
+              future: _events,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
+
                   return EventList(events: snapshot.data!);
                 } else if (snapshot.hasError) {
                   return const Center(
@@ -260,7 +262,7 @@ class EventCardLayout extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Padding(padding: EdgeInsets.all(5)),
-                    Text(eventInfo.event_name,
+                    Text(eventInfo.eventName,
                         style: const TextStyle(
                             color: Color.fromARGB(255, 81, 65, 143),
                             fontWeight: FontWeight.bold,
