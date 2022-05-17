@@ -39,7 +39,6 @@ public class EventController {
         createEventStmt.setString(4, event.host_id);
         createEventStmt.setInt(5, event.isPublic);
         createEventStmt.setInt(6, event.isDeleted);
-
         createEventStmt.setString(7, event.location_name);
         createEventStmt.setFloat(8, event.latitude);
         createEventStmt.setFloat(9, event.longitude);
