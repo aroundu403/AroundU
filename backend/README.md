@@ -115,7 +115,55 @@ Expected result:
 }
 ```
 
+***
+Using Postman `POST` with the example request url, and example request body
+
+(You need to have a valid user token in the request header to test this. Contact @John if you need
+a user token)
+
+Example request url:
+```
+http://localhost:8080/event
+```
+
+Example request body:
+```
+{
+    "event_code": "EVENT3",
+    "event_name": "event3",
+    "description": "This is event3.",
+    "host_id": "aaa111",
+    "isPublic":1,
+    "isDeleted": 0,
+    "location_name": "CSE2",
+    "latitude":47.653157358950686, 
+    "longitude":-122.30507501538806,
+    "start_time": "2022-06-01 12:00:00", 
+    "end_time": "2022-06-02 12:00:00",
+    "max_participants": 20, 
+    "curr_num_participants": 10, 
+    "photoID": "event3.jpg",
+    "icon": "icon3.jpg",
+    "address": "University of Washington, 3800 E Stevens Way NE, Seattle, WA 98195",
+    "created_at": "Apr 1, 2022, 12:00:00 PM"
+}
+```
+
+Expected result:
+```
+{
+    "code": 200,
+    "message": "Success",
+    "data": 4           // this can be different
+}
+```
+
 ### Adding new tests
 
 Although we mainly used Postman for testing, you can still add integration-test under `src/integration-test/java` to
 test out the connection with the database.
+Sample unit testing is in `UserControllerIT.java`. 
+
+Notice that these unit tests can only test
+the interactions between our server and the database. If you want to test the APIs by simulating the frontend request and 
+checking the backend responses, you should use Postman to test, detailed instructions above.
