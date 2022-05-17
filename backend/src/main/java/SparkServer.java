@@ -75,8 +75,8 @@ public class SparkServer {
     */
 
     // GET /user
-    // Show the user information by id
-    // http://localhost:8080/user/aaa111
+    // Show the user information by id (we get id automatically from header)
+    // http://localhost:8080/user
 
     get(
         "/user",
@@ -96,12 +96,13 @@ public class SparkServer {
     // for a user to register with email
     // please use postman to test, dropbox select post
     // need to add request body, please copy from the API doc
-    // http://localhost:8080/user/ddd444
+    // http://localhost:8080/user
     post(
         "/user",
         (request, response) -> {
           String userID = getUserID(request.headers("Authorization"), defaultApp);
           User body = gson.fromJson(request.body(), User.class);
+          body.user_id = userID;
           if (!UserController.isUserExist(pool, userID)) {
             if (UserController.addUser(pool, body)) {
               DataResponse resp = new DataResponse(200, "Success", userID);
@@ -144,9 +145,11 @@ public class SparkServer {
     post(
         "/event",
         (request, response) -> {
+          String userID = getUserID(request.headers("Authorization"), defaultApp);
           Event body = gson.fromJson(request.body(), Event.class);
           // if start time >= end time, invalid.
           if (body.start_time.compareTo(body.end_time) < 0) {
+            body.host_id = userID;
             long eventID = EventController.createEvent(pool, body);
             DataResponse resp = new DataResponse(200, "Success", eventID);
             return gson.toJson(resp);
@@ -166,22 +169,27 @@ public class SparkServer {
         (request, response) -> {
           String userID = getUserID(request.headers("Authorization"), defaultApp);
           Event body = gson.fromJson(request.body(), Event.class);
-          if (!userID.equals(body.host_id)) {
-            return gson.toJson(
-                new OperationResponse(
-                    403, "No authentication: Only creator of this event can edit"));
-          } else if (EventController.isEventExist(pool, body.event_id)) {
-            long eventID = EventController.updateEvent(pool, body);
-            DataResponse resp = new DataResponse(200, "Success", eventID);
-            return gson.toJson(resp);
+          long eventID = body.event_id;
+          if (EventController.isEventExist(pool, eventID)) {
+              String hostID = EventController.getEventByID(pool, eventID).host_id;
+              // comparison: the user id extracted from header must be the same
+              // as the host id of this event in database
+              if (!userID.equals(hostID)) {
+                  return gson.toJson(new OperationResponse(
+                                  403, "No authentication: Only creator of this event can edit"));
+              } else {
+                  eventID = EventController.updateEvent(pool, body);
+                  DataResponse resp = new DataResponse(200, "Success", eventID);
+                  return gson.toJson(resp);
+              }
           } else {
-            return gson.toJson(new OperationResponse(400, "Event not exist"));
+              return gson.toJson(new OperationResponse(400, "Event not exist"));
           }
         });
 
     // DELETE /event
     // Event creator delete a created event
-    // http://localhost:8080/event/guest?eventid=3
+    // http://localhost:8080/event/eventid=3
     delete(
         "/event",
         (request, response) -> {
