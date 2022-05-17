@@ -28,8 +28,8 @@ public class EventController {
     try (Connection conn = pool.getConnection()) {
       String stmt =
           String.format(
-              "INSERT INTO %s (event_code, event_name, description, host_id, isPublic, isDeleted, location_name, latitude, "
-                  + "longitude, start_time, end_time, max_participants, curr_num_participants, photoID, icon, address, created_at) "
+              "INSERT INTO %s (event_code, event_name, description, host_id, is_public, is_deleted, location_name, latitude, "
+                  + "longitude, start_time, end_time, max_participants, curr_num_participants, photo_id, icon, address, created_at) "
                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
               TABLE_NAME);
       try (PreparedStatement createEventStmt = conn.prepareStatement(stmt)) {
@@ -37,8 +37,8 @@ public class EventController {
         createEventStmt.setString(2, event.event_name);
         createEventStmt.setString(3, event.description);
         createEventStmt.setString(4, event.host_id);
-        createEventStmt.setInt(5, event.isPublic);
-        createEventStmt.setInt(6, event.isDeleted);
+        createEventStmt.setInt(5, event.is_public);
+        createEventStmt.setInt(6, event.is_deleted);
         createEventStmt.setString(7, event.location_name);
         createEventStmt.setFloat(8, event.latitude);
         createEventStmt.setFloat(9, event.longitude);
@@ -46,7 +46,7 @@ public class EventController {
         createEventStmt.setTimestamp(11, Timestamp.valueOf(event.end_time));
         createEventStmt.setInt(12, event.max_participants);
         createEventStmt.setInt(13, event.curr_num_participants);
-        createEventStmt.setString(14, event.photoID);
+        createEventStmt.setString(14, event.photo_id);
         createEventStmt.setString(15, event.icon);
         createEventStmt.setString(16, event.address);
         createEventStmt.setTimestamp(17, new Timestamp(System.currentTimeMillis()));
@@ -78,8 +78,8 @@ public class EventController {
     try (Connection conn = pool.getConnection()) {
       String stmt =
           String.format(
-              "SELECT event_id, event_code, event_name, description, host_id, isPublic, location_name, latitude, longitude, "
-                  + "start_time, end_time, max_participants, curr_num_participants, photoID, icon, address, created_at"
+              "SELECT event_id, event_code, event_name, description, host_id, is_public, location_name, latitude, longitude, "
+                  + "start_time, end_time, max_participants, curr_num_participants, photo_id, icon, address, created_at"
                   + " FROM %s WHERE event_id = ?",
               TABLE_NAME);
       try (PreparedStatement getEventStmt = conn.prepareStatement(stmt)) {
@@ -91,7 +91,7 @@ public class EventController {
           event.event_name = eventResults.getString(3);
           event.description = eventResults.getString(4);
           event.host_id = eventResults.getString(5);
-          event.isPublic = eventResults.getInt(6);
+          event.is_public = eventResults.getInt(6);
           event.location_name = eventResults.getString(7);
           event.latitude = eventResults.getFloat(8);
           event.longitude = eventResults.getFloat(9);
@@ -99,7 +99,7 @@ public class EventController {
           event.end_time = String.valueOf(eventResults.getTimestamp(11));
           event.max_participants = eventResults.getInt(12);
           event.curr_num_participants = eventResults.getInt(13);
-          event.photoID = eventResults.getString(14);
+          event.photo_id = eventResults.getString(14);
           event.icon = eventResults.getString(15);
           event.address = eventResults.getString(16);
           event.created_at = String.valueOf(eventResults.getTimestamp(17));
@@ -121,15 +121,15 @@ public class EventController {
     try (Connection conn = pool.getConnection()) {
       String stmt =
           String.format(
-              "UPDATE %s SET event_name = ?, description = ?, isPublic = ?, location_name = ?, "
+              "UPDATE %s SET event_name = ?, description = ?, is_public = ?, location_name = ?, "
                   + "latitude = ?, longitude = ?, start_time = ?, end_time = ?, max_participants = ?, "
-                  + "curr_num_participants = ?, photoID = ?, address = ?, updated_at = ?, icon = ?"
+                  + "curr_num_participants = ?, photo_id = ?, address = ?, updated_at = ?, icon = ?"
                   + "WHERE event_id = ?;",
               TABLE_NAME);
       try (PreparedStatement updateEventStmt = conn.prepareStatement(stmt)) {
         updateEventStmt.setString(1, event.event_name);
         updateEventStmt.setString(2, event.description);
-        updateEventStmt.setInt(3, event.isPublic);
+        updateEventStmt.setInt(3, event.is_public);
         updateEventStmt.setString(4, event.location_name);
         updateEventStmt.setFloat(5, event.latitude);
         updateEventStmt.setFloat(6, event.longitude);
@@ -137,7 +137,7 @@ public class EventController {
         updateEventStmt.setTimestamp(8, Timestamp.valueOf(event.end_time));
         updateEventStmt.setInt(9, event.max_participants);
         updateEventStmt.setInt(10, event.curr_num_participants);
-        updateEventStmt.setString(11, event.photoID);
+        updateEventStmt.setString(11, event.photo_id);
         updateEventStmt.setString(12, event.address);
         updateEventStmt.setTimestamp(13, new Timestamp(System.currentTimeMillis()));
         updateEventStmt.setString(14, event.icon);
@@ -159,7 +159,7 @@ public class EventController {
     try (Connection conn = pool.getConnection()) {
       String stmt =
           String.format(
-              "UPDATE %s SET deleted_at = ?, isDeleted = ? WHERE event_id = ?;", TABLE_NAME);
+              "UPDATE %s SET deleted_at = ?, is_deleted = ? WHERE event_id = ?;", TABLE_NAME);
       try (PreparedStatement updateEventStmt = conn.prepareStatement(stmt)) {
         updateEventStmt.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
         updateEventStmt.setInt(2, 1);
@@ -183,7 +183,7 @@ public class EventController {
     try (Connection conn = pool.getConnection()) {
       String stmt =
           String.format(
-              "SELECT event_name FROM %s WHERE (event_id = ?) AND (isDeleted != 1);", TABLE_NAME);
+              "SELECT event_name FROM %s WHERE (event_id = ?) AND (is_deleted != 1);", TABLE_NAME);
       try (PreparedStatement isUserExistStmt = conn.prepareStatement(stmt)) {
         isUserExistStmt.setLong(1, event_id);
         ResultSet eventResult = isUserExistStmt.executeQuery();

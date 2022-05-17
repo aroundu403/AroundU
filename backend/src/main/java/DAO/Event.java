@@ -10,8 +10,8 @@ public class Event {
   public String event_name;
   public String description;
   public String host_id;
-  public int isPublic; // 1 for public, 0 for private
-  public int isDeleted; // 1 for deleted, 0 for not deleted
+  public int is_public; // 1 for public, 0 for private
+  public int is_deleted; // 1 for deleted, 0 for not deleted
 
   public String location_name;
   public float latitude;
@@ -19,7 +19,7 @@ public class Event {
   public int max_participants;
   public int curr_num_participants;
 
-  public String photoID;
+  public String photo_id;
   public String icon;
   public String address;
   // public String type;
@@ -38,13 +38,13 @@ public class Event {
       String event_name,
       String description,
       String creator_id,
-      int isPublic,
+      int is_public,
       String location_name,
       float latitude,
       float longitude,
       int max_participants,
       int curr_participants,
-      String photoID,
+      String photo_id,
       String address,
       Timestamp start_time,
       Timestamp end_time,
@@ -57,13 +57,13 @@ public class Event {
     this.event_name = event_name;
     this.description = description;
     this.host_id = creator_id;
-    this.isPublic = isPublic;
+    this.is_public = is_public;
     this.location_name = location_name;
     this.latitude = latitude;
     this.longitude = longitude;
     this.max_participants = max_participants;
     this.curr_num_participants = curr_participants;
-    this.photoID = photoID;
+    this.photo_id = photo_id;
     this.address = address;
     this.start_time = String.valueOf(start_time);
     this.end_time = String.valueOf(end_time);
@@ -89,7 +89,7 @@ public class Event {
         + ", creator_id="
         + host_id
         + ", IsPublic="
-        + isPublic
+        + is_public
         + ", location_name='"
         + location_name
         + '\''
@@ -100,7 +100,7 @@ public class Event {
         + ", max_participants="
         + max_participants
         + ", photoID="
-        + photoID
+        + photo_id
         + ", address='"
         + address
         + '\''
