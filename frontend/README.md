@@ -51,6 +51,16 @@ Build output articraft in a specific platform by:
 flutter build <platform>
 ```
 
+## Current dependency:
+- Flutter 2.18.0 
+- Chrome: 101.0.4951.67
+- iOS: 15.4
+- Google Cloud SDK 374.0.0
+- cloud-datastore-emulator 2.1.0
+- firebase_auth: ^3.3.14
+- mapbox_gl: ^0.15.0
+
+
 ## How to run the system
 
 Select a debugging environment and run Flutter by:
