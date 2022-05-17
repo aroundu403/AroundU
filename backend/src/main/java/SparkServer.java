@@ -189,11 +189,12 @@ public class SparkServer {
 
     // DELETE /event
     // Event creator delete a created event
-    // http://localhost:8080/event/eventid=3
+    // need to provide event id in request body
+    // http://localhost:8080/event
     delete(
         "/event",
         (request, response) -> {
-          String eventID = request.queryParams("eventid");
+          String eventID = gson.fromJson(request.body(), String.class);
           String userID = getUserID(request.headers("Authorization"), defaultApp);
           // can only delete if event exists
           if (EventController.isEventExist(pool, Long.parseLong(eventID))) {
@@ -240,13 +241,14 @@ public class SparkServer {
     // POST /event/guest
     // Participate in an event
     // please use postman to test, dropbox select post
+    // need to provide event id in request body
     // make sure the event end time is in the future, or you will get error code 403
-    // http://localhost:8080/event/guest?eventid=2
+    // http://localhost:8080/event/guest
 
     post(
         "/event/guest",
         (request, response) -> {
-          String eventID = request.queryParams("eventid");
+          String eventID = gson.fromJson(request.body(), String.class);
           String userID = getUserID(request.headers("Authorization"), defaultApp);
           if (EventController.isEventExist(pool, Long.parseLong(eventID))) {
             Event event = EventController.getEventByID(pool, Long.parseLong(eventID));
@@ -278,15 +280,16 @@ public class SparkServer {
     // DELETE /event/guest
     // Quit an participated event
     // please use postman to test, dropbox select delete
+    // need to provide event id in request body
     // make sure the user have participated in this event before testing, or you will get error code
     // 402
     // make sure the event end time is in the future, or you will get error code 403
-    // http://localhost:8080/event/guest?eventid=2
+    // http://localhost:8080/event/guest
 
     delete(
         "/event/guest",
         (request, response) -> {
-          String eventID = request.queryParams("eventid");
+          String eventID = gson.fromJson(request.body(), String.class);
           String userID = getUserID(request.headers("Authorization"), defaultApp);
           // can only quit if event exists
           if (EventController.isEventExist(pool, Long.parseLong(eventID))) {
