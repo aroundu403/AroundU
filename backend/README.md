@@ -35,6 +35,8 @@
 - Install Maven, Spark and set up [Cloud SQL Auth proxy](https://cloud.google.com/sql/docs/mysql/connect-instance-auth-proxy)
 - [Setting up Spark Server](https://sparkjava.com/documentation#getting-started)
 - [Connecting to Cloud SQL database](https://github.com/GoogleCloudPlatform/java-docs-samples/blob/main/cloud-sql/mysql/servlet/README.md)
+- Put the secret API strings into a env file in /backend. The application will need those secret strings to access external dependences. Contact @John to get the secret strings.
+-Make sure your GCP accout has access to the arondu-403 project.
 
 ### How to spin up the SparkServer
 
