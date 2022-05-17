@@ -8,7 +8,8 @@ Learn more about our UI design in [Figma](https://www.figma.com/file/L12QAFCSRn0
 - /lib: source code folder
     - /auth：user authorization module
     - /event: event related module
-    - main.dart the entry point of Flutter project
+    - /json: dart objects that model entities.
+    - main.dart: the entry point of Flutter project
     - home_page: home page after user has login.
     - firebase_options.dart: platform depenedent Firebase configuration
 - /andriod: Generated Andriod articraft
