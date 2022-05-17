@@ -13,15 +13,9 @@ import static org.junit.Assert.*;
 
 public class UserControllerTest {
 
-  // here we get the thing from the environment
-  // environment can be set/seen/get from the "configure environment" in the right upper dropbox of
-  // each file
-  // here we pre set the environment variable to be:
-  // DB_USER=root;DB_PASS=kM3CGIGIO0wz7x4u;INSTANCE_CONNECTION_NAME=aroundu-403:us-west1:aroundu-db;DB_NAME=aroundu;DB_TEST_NAME=test
   int cardinality = 0;
   String dbUser = System.getenv("DB_USER");
   String dbPass = System.getenv("DB_PASS");
-  String dbName = System.getenv("DB_NAME");
   String dbTestName = System.getenv("DB_TEST_NAME");
   String instanceConnectionName = System.getenv("INSTANCE_CONNECTION_NAME");
 
@@ -60,7 +54,7 @@ public class UserControllerTest {
     }
   }
 
-@Test
+  @Test
   public void testAddUser() throws SQLException {
     UserController.addUser(pool, new User("test333", "Test3", "test3@gmail.com", "I am TEST3"));
     int newCardinality = -1;
