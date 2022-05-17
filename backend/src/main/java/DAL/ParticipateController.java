@@ -80,7 +80,7 @@ public class ParticipateController {
   }
 
   /**
-   * Add a user to an event
+   * Add a user to an event and update the number of current participants in the event
    *
    * @param pool used for database connection
    * @param user_id the unique representation of a user
@@ -97,15 +97,17 @@ public class ParticipateController {
         createEventStmt.setLong(2, event_id);
         createEventStmt.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
         createEventStmt.executeUpdate();
-        return true;
+        int newNumPart = countParticipants(pool, event_id);
+        return updateNumParticipants(pool, event_id, newNumPart);
       }
+
     } catch (SQLException e) {
       return false;
     }
   }
 
   /**
-   * Remove a user from an event
+   * Remove a user from an event and update the number of current participants in the event
    *
    * @param pool used for database connection
    * @param user_id the unique representation of a user
@@ -120,6 +122,29 @@ public class ParticipateController {
         deleteEventStmt.setString(1, user_id);
         deleteEventStmt.setLong(2, event_id);
         deleteEventStmt.executeUpdate();
+        int newNumPart = countParticipants(pool, event_id);
+        return updateNumParticipants(pool, event_id, newNumPart);
+      }
+    } catch (SQLException e) {
+      return false;
+    }
+  }
+
+  /** Update the number of current participants in the event
+   * @param pool used for database connection
+   * @param event_id the unique representation of a user
+   * @param newNumParticipant the updated number of participants
+   * @return true if the number of current participants is updated, returns false otherwise
+   */
+  public static boolean updateNumParticipants(
+      DataSource pool, long event_id, int newNumParticipant) {
+    try (Connection conn = pool.getConnection()) {
+      String stmt =
+          String.format("UPDATE %s SET curr_num_participants = ? WHERE event_id = ?;", TABLE_NAME);
+      try (PreparedStatement updateStmt = conn.prepareStatement(stmt)) {
+        updateStmt.setInt(1, newNumParticipant);
+        updateStmt.setLong(2, event_id);
+        updateStmt.executeUpdate();
         return true;
       }
     } catch (SQLException e) {
