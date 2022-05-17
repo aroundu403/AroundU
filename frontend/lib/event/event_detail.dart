@@ -1,6 +1,137 @@
 /// Display the detial information of an event such as event name, location, start time,
 /// end time, number of participants, description.
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+import 'dart:async';
+import '../main.dart';
+import 'package:aroundu/json/event.dart';
+
+Future<EventInfo> fetchEvent() async {
+  final response = await http.get(
+    Uri(host: backendAddress, path: "/event/list"),
+  );
+  if (response.statusCode == 200) {
+    // If the server did return a 200 OK response,
+    // then parse the JSON.
+    return EventInfo.fromJson(jsonDecode(response.body));
+  } else {
+    // If the server did not return a 200 OK response,
+    // then throw an exception.
+    throw Exception('Failed to load event');
+  }
+}
+
+// Future<Event> createEvent(String title) async {
+//   final response = await http.post(
+//     Uri.parse('https://aroundu-403.uw.r.appspot.com/'),
+//     headers: <String, String>{
+//       'Content-Type': 'application/json; charset=UTF-8',
+//     },
+//     body: jsonEncode(<String, String>{
+//       'event_name': title,
+//     }),
+//   );
+
+//   if (response.statusCode == 201) {
+//     // If the server did return a 201 CREATED response,
+//     // then parse the JSON.
+//     return Event.fromJson(jsonDecode(response.body));
+//   } else {
+//     // If the server did not return a 201 CREATED response,
+//     // then throw an exception.
+//     throw Exception('Failed to create event.');
+//   }
+// }
+
+// class Event {
+//   // final int userId;
+//   // final int id;
+//   // final String title;
+
+//   final int event_id;
+//   final String event_code;
+//   final String event_name;
+//   final String description;
+//   final String host_id;
+//   final int isPublic; // 1 for public, 0 for private
+//   final int isDeleted; // 1 for deleted, 0 for not deleted
+
+// final String location_name;
+// final double latitude;
+// final double longitude;
+// final int max_participants;
+// final int curr_num_participants;
+
+// final String photoID;
+// final String icon;
+// final String address;
+
+// final String start_time;
+// final String end_time;
+// final String created_at;
+// final String deleted_at;
+// final String updated_at;
+
+// const Event({
+//   // required this.userId,
+//   // required this.id,
+//   // required this.title,
+//   required this.event_id,
+//   required this.event_code,
+//   required this.event_name,
+//   required this.description,
+//   required this.host_id,
+//   required this.isPublic, // 1 for public, 0 for private
+//   required this.isDeleted, // 1 for deleted, 0 for not deleted
+
+//   required this.location_name,
+//   required this.latitude,
+//   required this.longitude,
+//   required this.max_participants,
+//   required this.curr_num_participants,
+//   required this.photoID,
+//   required this.icon,
+//   required this.address,
+//   required this.start_time,
+//   required this.end_time,
+//   required this.created_at,
+//   required this.deleted_at,
+//   required this.updated_at,
+// });
+
+// factory Event.fromJson(Map<String, dynamic> json) {
+//   return Event(
+//     // userId: json['userId'],
+//     // id: json['id'],
+//     // title: json['title'],
+
+//     event_id: json['event_id'],
+//     event_code: json['event_code'],
+//     event_name: json['event_name'],
+//     description: json['description'],
+// host_id: json['host_id'],
+// isPublic: json['isPublic'], // 1 for public, 0 for private
+// isDeleted: json['isDeleted'], // 1 for deleted, 0 for not deleted
+
+// location_name: json['location_name'],
+// latitude: json['latitude'],
+// longitude: json['longitude'],
+// max_participants: json['max_participants'],
+// curr_num_participants: json['curr_num_participants'],
+
+// photoID: json['photoID'],
+// icon: json['icon'],
+// address: json['address'],
+// start_time: json['start_time'],
+// end_time: json['end_time'],
+// created_at: json['created_at'],
+// deleted_at: json['deleted_at'],
+// updated_at: json['updated_at'],
+//     );
+//   }
+// }
 
 class EventPage extends StatefulWidget {
   const EventPage({Key? key}) : super(key: key);
@@ -10,11 +141,85 @@ class EventPage extends StatefulWidget {
 }
 
 class EventState extends State<EventPage> {
+  late Future<EventInfo> futureEvent;
+  @override
+  void initState() {
+    super.initState();
+    futureEvent = fetchEvent();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<EventInfo>(
+        future: futureEvent,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return EventDetailHelper(eventInfo: snapshot.data!);
+          } else if (snapshot.hasError) {
+            return const Center(
+                child: Text('No Events Posted Currently',
+                    style: TextStyle(
+                        color: Color.fromARGB(255, 81, 65, 143),
+                        fontStyle: FontStyle.italic,
+                        fontSize: 20)));
+          }
+          return const CircularProgressIndicator();
+        });
+  }
+
+  // */
+  // @override
+  // Widget build(BuildContext context) {
+  //   return MaterialApp(
+  //     title: 'Fetch Data Example',
+  //     theme: ThemeData(
+  //       primarySwatch: Colors.blue,
+  //     ),
+  //     home: Scaffold(
+  //       appBar: AppBar(
+  //         title: const Text('Fetch Data Example'),
+  //       ),
+  //       body: Center(
+  //         child: FutureBuilder<Event>(
+  //           future: futureEvent,
+  //           builder: (context, snapshot) {
+  //             if (snapshot.hasData) {
+  //               return Text(snapshot.data!.event_name);
+  //             } else if (snapshot.hasError) {
+  //               return Text('${snapshot.error}');
+  //             }
+
+  //             // By default, show a loading spinner.
+  //             return const CircularProgressIndicator();
+  //           },
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
+}
+
+class EventDetailHelper extends StatefulWidget {
+  const EventDetailHelper({Key? key, required this.eventInfo})
+      : super(key: key);
+  final EventInfo eventInfo;
+
+  @override
+  State<EventDetailHelper> createState() => _EventDetailState();
+}
+
+class _EventDetailState extends State<EventDetailHelper> {
   final image = "images/scenary.jpg";
-  final int capacity = 7;
+  // final int capacity = 7;
   bool joinedIn = false;
   int size = 5;
   bool show = false;
+  // @override
+  // void initState() {
+  //   EventInfo event = widget.eventInfo;
+  // }
+
+  late EventInfo event = widget.eventInfo;
 
   final List<String> participants = [
     "images/scenary.jpg",
@@ -23,7 +228,6 @@ class EventState extends State<EventPage> {
     "images/scenary.jpg",
     "images/tree.jpg",
   ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,12 +255,12 @@ class EventState extends State<EventPage> {
               const SizedBox(height: 4),
               // Event Title
               Row(
-                children: const [
-                  Padding(padding: EdgeInsets.all(16)),
+                children: [
+                  const Padding(padding: EdgeInsets.all(16)),
                   Align(
                     alignment: Alignment.topLeft,
-                    child: Text("Crystal Ski Carpool",
-                        style: TextStyle(
+                    child: Text(event.event_name,
+                        style: const TextStyle(
                             color: Color.fromARGB(255, 81, 65, 143),
                             fontWeight: FontWeight.bold,
                             fontSize: 27)),
@@ -69,11 +273,14 @@ class EventState extends State<EventPage> {
                   const Padding(padding: EdgeInsets.all(18)),
                   Align(
                     alignment: Alignment.topLeft,
-                    child: size >= capacity
+                    child: event.max_participants >= event.curr_num_participants
                         ? const Text("Closed",
                             style: TextStyle(color: Colors.red, fontSize: 15))
                         : Text(
-                            (capacity - size).toString() + " spots available",
+                            (event.curr_num_participants -
+                                        event.max_participants)
+                                    .toString() +
+                                " spots available",
                             style: const TextStyle(
                                 color: Colors.green, fontSize: 15)),
                   )
@@ -91,7 +298,8 @@ class EventState extends State<EventPage> {
                       child: Container(
                         decoration: BoxDecoration(
                             image: DecorationImage(
-                                image: AssetImage(image), fit: BoxFit.fill)),
+                                image: AssetImage(image),
+                                fit: BoxFit.fill)), // TODO
                       ),
                     )),
                   ],
@@ -108,27 +316,23 @@ class EventState extends State<EventPage> {
                           color: Color.fromARGB(255, 81, 65, 143))),
                   const Padding(padding: EdgeInsets.all(5)),
                   Column(
-                    children: const [
-                      Text("Start Time : Sat, 05/14, 13:00 ",
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 81, 65, 143),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18
-                        )
-                      ),
-                      Text("End Time   : Sun, 05/15, 14:00",
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 81, 65, 143),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18
-                        )
-                      )
+                    children: [
+                      Text(event.start_time,
+                          style: const TextStyle(
+                              color: Color.fromARGB(255, 81, 65, 143),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18)),
+                      Text(event.end_time,
+                          style: const TextStyle(
+                              color: Color.fromARGB(255, 81, 65, 143),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18))
                     ],
                   )
                 ],
               ),
               const SizedBox(height: 10),
-              // number of participant 
+              // number of participant
               Row(
                 children: [
                   const Padding(padding: EdgeInsets.all(10)),
@@ -137,7 +341,8 @@ class EventState extends State<EventPage> {
                       child: Icon(Icons.people_alt_outlined,
                           color: Color.fromARGB(255, 81, 65, 143))),
                   const Padding(padding: EdgeInsets.all(5)),
-                  Text(size.toString() + " people joined",
+                  Text(
+                      event.curr_num_participants.toString() + " people joined",
                       style: const TextStyle(
                           color: Color.fromARGB(255, 81, 65, 143),
                           fontWeight: FontWeight.bold,
@@ -203,7 +408,8 @@ class EventState extends State<EventPage> {
                           radius: 8,
                           child: CircleAvatar(
                             radius: 12,
-                            backgroundImage: AssetImage(participants[index]),
+                            backgroundImage:
+                                AssetImage(participants[index]), // TODO
                           ),
                         );
                       }),
@@ -211,22 +417,22 @@ class EventState extends State<EventPage> {
               const SizedBox(height: 10),
               // event address
               Row(
-                children: const [
-                  Padding(padding: EdgeInsets.all(10)),
-                  Align(
+                children: [
+                  const Padding(padding: EdgeInsets.all(10)),
+                  const Align(
                       alignment: Alignment.topLeft,
                       child: Icon(Icons.location_on_outlined,
                           color: Color.fromARGB(255, 81, 65, 143))),
-                  Padding(padding: EdgeInsets.all(5)),
-                  Text("4510 21st Ave NE",
-                      style: TextStyle(
+                  const Padding(padding: EdgeInsets.all(5)),
+                  Text(event.address,
+                      style: const TextStyle(
                           color: Color.fromARGB(255, 81, 65, 143),
                           fontWeight: FontWeight.bold,
                           fontSize: 18)),
                 ],
               ),
               const SizedBox(height: 10),
-              // event description 
+              // event description
               Row(
                 children: const [
                   Padding(padding: EdgeInsets.all(10)),
@@ -248,9 +454,9 @@ class EventState extends State<EventPage> {
                   const Padding(padding: EdgeInsets.all(10)),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.9,
-                    child: const Text(
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Congue mauris rhoncus aenean vel. Eleifend mi in nulla posuere sollicitudin. Diam ut venenatis tellus in metus vulputate eu scelerisque felis. At ultrices mi tempus imperdiet nulla malesuada pellentesque elit eget. Et ultrices neque ornare aenean euismod elementum nisi quis eleifend. Sit amet consectetur adipiscing elit ut aliquam purus. Amet nisl suscipit adipiscing bibendum. Pellentesque habitant morbi tristique senectus et netus et. Imperdiet proin fermentum leo vel orci porta non pulvinar neque. Nibh venenatis cras sed felis eget velit aliquet. Vel pharetra vel turpis nunc eget lorem dolor. Bibendum neque egestas congue quisque.",
-                        style: TextStyle(color: Colors.black, fontSize: 16)),
+                    child: Text(event.description,
+                        style:
+                            const TextStyle(color: Colors.black, fontSize: 16)),
                   )
                 ],
               ),
@@ -278,7 +484,8 @@ class EventState extends State<EventPage> {
                       )
                     ],
                   ),
-                  child: !joinedIn && size >= capacity
+                  child: !joinedIn &&
+                          event.max_participants >= event.curr_num_participants
                       ? ClipRRect(
                           borderRadius: BorderRadius.circular(20.0), //or 15.0
                           child: Container(
@@ -340,9 +547,9 @@ class EventState extends State<EventPage> {
                                 onPressed: () {
                                   setState(() {
                                     if (joinedIn) {
-                                      size--;
+                                      size--; // TODO
                                     } else {
-                                      size++;
+                                      size++; // TODO
                                     }
                                     joinedIn = !joinedIn;
                                   });
