@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 import static org.junit.Assert.*;
 
-public class UserControllerTest {
+public class UserControllerIT {
 
   int cardinality = 0;
   String dbUser = System.getenv("DB_USER");
