@@ -293,11 +293,14 @@ class _EventDetailState extends State<EventDetailHelper> {
                 child: Icon(Icons.location_on_outlined,
                     color: Color.fromARGB(255, 81, 65, 143))),
             const Padding(padding: EdgeInsets.all(5)),
-            Text(event.address,
-                style: const TextStyle(
-                    color: Color.fromARGB(255, 81, 65, 143),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18)),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.85,
+              child: Text(event.address,
+                  style: const TextStyle(
+                      color: Color.fromARGB(255, 81, 65, 143),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18)),
+            ),
           ],
         ),
         const SizedBox(height: 10),
