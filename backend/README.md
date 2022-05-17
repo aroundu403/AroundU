@@ -16,7 +16,7 @@
         1. Carries data (code, message, data object) between processes
     2. `OperationResponse.java`
         1. Carries operational data (code, message) between processes
-- Data Transfer Layer (DTL): controls data access from database
+- Data Access Layer (DAL): controls data access from database
     1. `EventController.java`
         1. Manages the Event database operations such as insertion, selection or deletion.
     2. `UserController.java`
@@ -41,8 +41,7 @@
 - [Connecting to Cloud SQL database](https://github.com/GoogleCloudPlatform/java-docs-samples/blob/main/cloud-sql/mysql/servlet/README.md)
 - Put the secret API strings into a env file in /backend. The application will need those secret strings to access
   external dependencies. Contact @John to get the secret strings.
-- Make sure your GCP account has access to the aroundu-403 project.
-- Run maven command listed below to compile
+- Make sure your GCP accout has access to the arondu-403 project.
 
 ### How to spin up the SparkServer
 
