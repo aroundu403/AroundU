@@ -12,6 +12,7 @@ import 'firebase_options.dart';
 
 // whether to use local Firebase emulator
 const bool useFirebaseEmulator = false;
+const backendAddress = 'aroundu-403.uw.r.appspot.com';
 
 // define app color theme
 ThemeData theme = ThemeData(
