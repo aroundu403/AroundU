@@ -67,5 +67,11 @@ user a sense of authenticity and trust, which is commonalty lacking in todays so
     4. `SparkServer`: APIs with database connections
 3. `/frontend`: frontend Flutter folder
 
+## Contribution Policy
+
+Currently, the frontend and backend developers work in pairs to develop the codebase. Each pair work together to build new features and we cross check each others’ work before the weekly meeting and leave constructive feedback. After the meeting, we will go back to fix the issues based on the feedback. We implement this progress because we are often experiencing with new features and face fast turnover rate. Those features needs to be viewed by others, in the main branch, to make further progress. With the fork branch and merge back method, our development will often be block by unmerged changes. Therefore, we believes this approach is the best practices given our situation. The ultimate goal is to write better code not following the industrial process. What worked for established codebase may not work for our situation.
+
+Side note: George is our product manager who is mainly responsive to writing documentation and coordinating project progress. He contributed to our project by developing the team vision not just the code.
+
 ## Instructions:
 See `/backend` and `/frontend` directory for details
