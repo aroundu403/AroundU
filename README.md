@@ -5,7 +5,7 @@
 | --- | ----------- | 
 | George Ma | Product Manager | 
 | Wei Wu | UI/UX Developer, Backend Developer | 
-|Wenxin Zhang | Backend Developer |
+| Wenxin Zhang | Backend Developer |
 | John Wang | Frontend Developer, Deployment Developer | 
 | Melody Zhang | Frontend Developer | 
 | Vandy Zhang | Frontend Developer |
@@ -91,4 +91,4 @@ See `/backend` and `/frontend` directory for details on required installations, 
 
 ## User Manual:
 
-See `UserDocumentation.md` directory for details.
+See `UserDocumentation.md` for details.
