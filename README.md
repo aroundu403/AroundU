@@ -1,9 +1,14 @@
 # AroundU
 
 **Team Members:**
-| Name | Role | | --- | ----------- | | George Ma | Product Manager | | Wei Wu | UI/UX Developer, Backend Developer | |
-Wenxin Zhang | Backend Developer | | John Wang | Frontend Developer, Deployment Developer | | Melody Zhang | Frontend
-Developer | | Vandy Zhang | Frontend Developer |
+| Name | Role | 
+| --- | ----------- | 
+| George Ma | Product Manager | 
+| Wei Wu | UI/UX Developer, Backend Developer | 
+|Wenxin Zhang | Backend Developer |
+| John Wang | Frontend Developer, Deployment Developer | 
+| Melody Zhang | Frontend Developer | 
+| Vandy Zhang | Frontend Developer |
 
 **Project Summary**:
 
