@@ -29,7 +29,9 @@
     2. `CloudSqlConnectionPool.java`
         1. Generates the datasource connection pool according to the authentication info given.
     3. `CloudKmsEnvelopeAead.java`
-        1. Initialize an envelope AEAD primitive for data Encryption.
+        1. Initialize an envelope AEAD primitive for data Encryption. Details can be
+           found [here](https://github.com/GoogleCloudPlatform/java-docs-samples/tree/main/cloud-sql/mysql/client-side-encryption#encrypting-fields-in-cloud-sql---mysql-with-tink)
+           . (We are not doing encryption at currently stages, but we may have it when necessary)
 
 ## Developer Instructions
 
@@ -38,11 +40,12 @@
 - Install Maven, Spark and set
   up [Cloud SQL Auth proxy](https://cloud.google.com/sql/docs/mysql/connect-instance-auth-proxy)
 - [Connecting to Cloud SQL database](https://github.com/GoogleCloudPlatform/java-docs-samples/blob/main/cloud-sql/mysql/servlet/README.md)
-- Put the secret API strings into a env file in /backend. The application will need those secret strings to access
-  external dependencies. Contact @John to get the secret strings.
+  
+- Put the environment variables into your bash file. The backend will need those secrets to access external
+  dependencies. Contact @John to get the secrets.
 - Make sure your GCP account has access to the aroundu-403 project.
 - Run maven command listed below to compile
-    - There is no extra step to get extra source, once the build is successfully, you should be able to spin up the
+    - There is no additional step to get extra source, once the build is successfully, you should be able to spin up the
       SparkServer
 
 ### How to use Maven
@@ -67,21 +70,30 @@
 ### How to spin up the SparkServer
 
 1. Sign in to your gcloud account. Make sure you have IAM access to the database
-2. Add environment variable such as database password. Contact @John if you don't know the secret strings
+2. Add environment variable such as database password, which should be set up in previous step. Again, contact @John if
+   you don't know them
 3. run SparkServer (preferably using Intellij 'Run SparkServer.main()' feature)
     1. Once the server is running, Postman is used to test relevant data access and transfer
 
 ### How to deploy to GCP cloud engine
 
-Deploy backend code by manually triggering the deployment GitHub action. We have automated the build and deploy process
-by reducing variations and setting up environment variables.
+Deploy backend code by manually triggering the deployment GitHub Actions. We have automated
+the [build](https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven) and
+[deploy](https://docs.github.com/en/actions/deployment/about-deployments/deploying-with-github-actions) process by
+reducing variations and setting up environment variables. Check
+out [GitHub Actions](https://github.com/aroundu403/AroundU/actions) and files inside `.github/workflows` from top-level
+directory for details.
+
+**Remember to set up the environment variables
+in [GitHub Secrets](https://docs.github.com/en/codespaces/managing-codespaces-for-your-organization/managing-encrypted-secrets-for-your-repository-and-organization-for-codespaces#adding-secrets-for-a-repository)**
 
 ### Test APIs using Postman
 
 - Download [Postman](https://www.postman.com)
 - make sure you started the SparkServer
+- test the APIs as some examples are provided below
 
-#### Example
+#### Examples
 
 Using Postman `GET` with the example request url to get event data with `event_id = 1`
 
@@ -119,9 +131,9 @@ Expected result:
 ```
 
 ***
-Using Postman `POST` with the example request url, and example request body
+Using Postman `POST` with the example request url, and example request body to create a event
 
-(You need to have a valid user token in the request header to test this. Contact @John if you need a user token)
+**You need to have a valid user token in the request header to test this. Contact @John if you need a user token**
 
 Example request url:
 
