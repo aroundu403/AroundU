@@ -42,7 +42,7 @@
 - [Connecting to Cloud SQL database](https://github.com/GoogleCloudPlatform/java-docs-samples/blob/main/cloud-sql/mysql/servlet/README.md)
   
 - Put the environment variables into your bash file. The backend will need those secrets to access external
-  dependencies. Contact @John to get the secrets.
+  dependencies. Contact John (wangj616@uw.edu) to get the secrets.
 - Make sure your GCP account has access to the aroundu-403 project.
 - Run maven command listed below to compile
     - There is no additional step to get extra source, once the build is successfully, you should be able to spin up the

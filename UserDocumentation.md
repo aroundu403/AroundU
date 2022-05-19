@@ -9,10 +9,10 @@ build relationship with others in the old days. So now join a event in AroundU, 
 
 ## How to install AroundU
 
-Simply visit [https://aroundu-403.web.app/#/](https://aroundu-403.web.app/#/) to access the web version
+Simply visit [https://aroundu-403.web.app/#/](https://aroundu-403.web.app/#/) to access the web version. For the best experience, please resize your Chrome window to simulate mobile experience.
 
 You will only need Chrome browser and internet access to access the web-application. To learn more about building the
-software and dependencies, go to `/frontend/README.md`.
+software and dependencies, go to [/frontend/README.md](./frontend/README.md).
 
 ## How to use AroundU
 

@@ -34,7 +34,7 @@ building from source code. Double think before you go into the setup hell**
 - Install Flutter and its development dependencies. Follow
   the [official guide](https://docs.flutter.dev/get-started/install?gclid=Cj0KCQjwmuiTBhDoARIsAPiv6L-IlgpgVr44lmg_KoBgytkVF59rI3wHkyRr18sYWGarML2UWXBlGOsaAhdtEALw_wcB&gclsrc=aw.ds)
 - **Put the secret API strings into a `env` file in `/frontend`. The application will need those secret strings to access
-  dependencies. Contact @John to get the secret strings.**
+  dependencies. Contact John (wangj616@uw.edu) to get the secret strings.**
 - Make sure your GCP account has access to the `aroundu-403` project
 - Login your GCP account in your gcloud cli
 - Install the Vscode Flutter plugin so you have more development support
