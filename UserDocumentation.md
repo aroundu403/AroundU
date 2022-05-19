@@ -44,6 +44,8 @@ In AroundU, you can be an event participant or an event creator.
 
 As a newly started platform, we are working hard to provide you the best experience as we can.
 
+(We are still developing the features. Currently, part of the UI is connected to mock data and some buttons aren't functional yet.)
+
 If you find something wrong or would like to give us suggestion, head
 to: [https://github.com/aroundu403/AroundU/issues](https://github.com/aroundu403/AroundU/issues)
 

@@ -1,6 +1,6 @@
 # AroundU
 
-![Fimga Design](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/62dc9f9a-723e-47cc-9fb7-de840ca72fa7/Screen_Shot_2022-04-25_at_4.27.26_PM.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220519%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220519T215351Z&X-Amz-Expires=86400&X-Amz-Signature=a60e66694eeb97854ef1ba3d2e49afc3270a891ce5659c05a2e45d4437186979&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Screen%2520Shot%25202022-04-25%2520at%25204.27.26%2520PM.png%22&x-id=GetObject)
+![Fimga Design](./figma.png)
 
 **Team Members:**
 | Name | Role | 
