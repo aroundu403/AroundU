@@ -15,17 +15,12 @@
 > A platform for college student to post and find events within the university community.
 
 **Documentation**
-<<<<<<< HEAD
 - User Documentaion
   - The detailed user manual is in the file name "User Documentation"
 - Development Documentation: 
-  - The detailed onboaring document is in `/frontend` and `/backend`. Refer to those README document for setup, build, test, and deploy applicaiton. 
-For technical documentation, please refer to our Notion documents regarding API and Database doc.
-=======
-The detailed onboaring document is in `/frontend` and `/backend`. Refer to those README document for setup, build, test,
+  - The detailed onboaring document is in `/frontend` and `/backend`. Refer to those README document for setup, build, test,
 and deploy application. For technical documentation, please refer to our Notion documents regarding API and Database
 doc.
->>>>>>> 7412efb2c6983f0a4f6af1e35bf0401b8b42579f
 
 **Project Description:**
 
