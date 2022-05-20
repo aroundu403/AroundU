@@ -369,4 +369,9 @@ public class SparkServer {
     FirebaseToken decodedToken = FirebaseAuth.getInstance(defaultApp).verifyIdToken(token);
     return decodedToken.getUid();
   }
+
+  //  /** Stop the server. */
+  //  public static void stopServer() {
+  //    System.exit(0);
+  //  }
 }

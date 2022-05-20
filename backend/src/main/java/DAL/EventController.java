@@ -1,6 +1,7 @@
 package DAL; // This class will control the event modules with database
 
 import DAO.Event;
+import org.apache.commons.lang3.NotImplementedException;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -231,5 +232,15 @@ public class EventController {
         return eventIDs;
       }
     }
+  }
+
+  public static ArrayList<Long> getEventsInMapBox(
+      DataSource pool, double topLeft, double topRight, double botLeft, double botRight) {
+    throw new NotImplementedException();
+  }
+
+  public static ArrayList<Long> getNearbyEvents(
+      DataSource pool, double latitude, double longitude) {
+    throw new NotImplementedException();
   }
 }
