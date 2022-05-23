@@ -42,6 +42,9 @@ public class SparkServer {
     String dbUser = System.getenv("DB_USER");
     String dbPass = System.getenv("DB_PASS");
     String dbName = System.getenv("DB_NAME");
+    if (args.length != 0 && args[0].equals("test")) {
+      dbName = System.getenv("DB_TEST_NAME");
+    }
     String instanceConnectionName = System.getenv("INSTANCE_CONNECTION_NAME");
 
     // String kmsUri = System.getenv("CLOUD_KMS_URI");   // for data encryption
@@ -196,17 +199,17 @@ public class SparkServer {
     delete(
         "/event",
         (request, response) -> {
-          String eventID = gson.fromJson(request.body(), String.class);
+          long eventID = gson.fromJson(request.body(), Event.class).event_id;
           String userID = getUserID(request.headers("Authorization"), defaultApp);
           // can only delete if event exists
-          if (EventController.isEventExist(pool, Long.parseLong(eventID))) {
-            Event event = EventController.getEventByID(pool, Long.parseLong(eventID));
+          if (EventController.isEventExist(pool, eventID)) {
+            Event event = EventController.getEventByID(pool, eventID);
             // can only delete if is the creator
             if (event.host_id.equals(userID)) {
               Timestamp curr = new Timestamp(System.currentTimeMillis());
               // can only delete if the event isn't started
               if (curr.compareTo(Timestamp.valueOf(event.start_time)) < 0) {
-                if (EventController.deleteEvent(pool, Long.parseLong(eventID))) {
+                if (EventController.deleteEvent(pool, eventID)) {
                   DataResponse resp = new DataResponse(200, "Success", null);
                   event.deleted_at = curr.toString();
                   EventController.updateEvent(pool, event);
