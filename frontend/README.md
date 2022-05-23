@@ -110,3 +110,15 @@ firebase deploy
 
 ## How to deploy to iOS:
 Coming soon...
+
+## Develoer Hints:
+### CORS error when running local application:
+This is the problem with Chrome default CORS policy. To disable this behavior, run use the `flutter_cors` script
+```
+# to install
+dart pub global activate flutter_cors
+# to disable
+fluttercors --disable
+# to enable
+fluttercors --enable
+```

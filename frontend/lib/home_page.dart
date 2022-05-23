@@ -1,8 +1,10 @@
 /// This is the home page of AroundU which contains the map view and list view of events.
 /// It also contains the access to other modules such as create event page and my event page
 /// It will be the main page that users will interact with after they have signed in.
+import 'package:aroundu/event/create_event_page.dart';
 import 'package:aroundu/event/map_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'event/list_view.dart';
 
 enum ViewMode { map, list }
@@ -36,18 +38,37 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             )
+          ),
+          // map view and list view toggle button
+          Align(
+            alignment: Alignment.topLeft,
+            child: Container(
+              margin: const EdgeInsets.only(left: 15, top: 10),
+              child: FlutterToggleTab(  
+                width: 20,  
+                borderRadius: 40,  
+                selectedIndex: _viewMode == ViewMode.map ? 0 : 1, 
+                selectedTextStyle: TextStyle(
+                  color: Theme.of(context).focusColor,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600
+                ),
+                unSelectedTextStyle: TextStyle(
+                  color: Theme.of(context).primaryColor.withAlpha(170),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600
+                ),
+                labels: const ["Map","List"],  
+                selectedLabelIndex: (index) { 
+                  setState(() {
+                    _viewMode = index == 0 ? ViewMode.map : ViewMode.list;
+                  });
+                },
+              ),
+            ),
           )
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        label: _viewMode == ViewMode.map ? const Text("List View"): const Text("Map View"),
-        onPressed: () {
-          setState(() {
-            _viewMode = _viewMode == ViewMode.map ? ViewMode.list : ViewMode.map;
-          });
-        },
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.miniStartTop,
     );
   }
 }
@@ -111,7 +132,14 @@ class PostEventButton extends StatelessWidget {
           radius: 35,
           backgroundColor: const Color.fromARGB(255, 156, 133, 255),
           child: InkWell(
-            onTap: () {}, 
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CreateEeventPage(),
+                ),
+              );
+            },
             child: const Icon(
               Icons.add,
               color: Color(0xFFD4FCDF),

@@ -42,6 +42,14 @@ dependencies:
   mapbox_gl: ^0.15.0
   location: ^4.3.0
   http: ^0.13.4
+  flutter_toggle_tab: "^1.1.7"
+  firebase_storage: ^10.2.16
+  cloud_firestore: ^3.1.15
+  image_picker: ^0.8.5+3
+  dotted_border: ^2.0.0+2
+  flutter_typeahead: ^4.0.0
+  flutter_datetime_picker: ^2.1.0
+  sprintf: "^6.0.0"
 
 dev_dependencies:
   flutter_test:
