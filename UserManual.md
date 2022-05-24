@@ -1,4 +1,4 @@
-# User Documentation
+# User Manual
 
 ## Application description
 
