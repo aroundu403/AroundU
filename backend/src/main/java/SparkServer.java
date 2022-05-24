@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.sql.Array;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Comparator;
+
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.FirebaseApp;
 import jnr.ffi.Struct;
@@ -371,7 +373,7 @@ public class SparkServer {
     */
 
     // GET /event/list
-    // Get id of events that are within n days as a list.
+    // Get list of events that are within n days as a list.
     // http://localhost:8080/event/list  e.g within next 2 weeks
     get(
         "/event/list",
@@ -392,9 +394,106 @@ public class SparkServer {
           }
         });
 
-    // GET /event/search
-    // Get id of events that satisfy the filter option as a list.
 
+      // POST /event/search
+      // Get list of events that has name containing the keyword.
+      // Request body must include String: "event_name" = "the key word"
+      // If no info given or no valid results, just return all events in recent days.
+      // http://localhost:8080/event/search
+      post(
+              "/event/search",
+              (request, response) -> {
+                  Event event_info = gson.fromJson(request.body(), Event.class);
+                  ArrayList<Event> result_event = new ArrayList<>();
+                  ArrayList<Long> eventIDs = new ArrayList<>();
+                  boolean no_input = false;
+
+                  if (event_info.event_name != null) {
+                      // first we try finding events at this location.
+                      eventIDs = EventController.getEventsByKeyWord(pool, event_info.event_name);
+                  }
+
+                  if (eventIDs.isEmpty()) {
+                      no_input = true;
+                      // no input info given or we can't find valid events, just return list of events in 14 days.
+                      eventIDs = EventController.getEventsInNextNDays(pool, 14);
+                  }
+
+                  for (long curr : eventIDs) {
+                      Event event = EventController.getEventByID(pool, curr);
+                      event.participant_ids = ParticipateController.getUsersByEvent(pool, curr);
+                      result_event.add(event);
+                  }
+
+                  if (no_input) {
+                      DataResponse resp = new DataResponse(202, "No events meet current requirements. Here " +
+                              "are some alternative events for you:", result_event);
+                      return gson.toJson(resp);
+                  }
+                  DataResponse resp = new DataResponse(200, "Success", result_event);
+                  return gson.toJson(resp);
+              });
+
+
+    // GET /event/search
+    // Get list of events that satisfy the filter option as a list.
+    // Can contain information: max_participants, location_name.
+    // max_participants: 2-15, inclusive or INFINITE (just use 100000000)
+    // location_name must be a valid building name/landmark
+    // If no info given or no valid results, just return all events in recent days.
+    // http://localhost:8080/event/search
+      get(
+              "/event/search",
+              (request, response) -> {
+                  Event event_info = gson.fromJson(request.body(), Event.class);
+                  ArrayList<Event> result_event = new ArrayList<>();
+                  ArrayList<Long> eventIDs = new ArrayList<>();
+                  ArrayList<Long> eventIDs_loc = new ArrayList<>();
+                  ArrayList<Long> eventIDs_par = new ArrayList<>();
+                  boolean no_input = false;
+
+                  if (event_info.location_name != null) {
+                      // first we try finding events at this location.
+                      eventIDs_loc = EventController.getEventsByLocation(pool, event_info.location_name);
+                  }
+                  if (event_info.max_participants > 0) {
+                      eventIDs_par = EventController.getEventsByMaxPar(pool, event_info.max_participants);
+                  }
+
+                  if (event_info.location_name != null && (event_info.max_participants > 0)) {
+                      for (Long id : eventIDs_loc) {
+                          if (eventIDs_par.contains(id)) {
+                              eventIDs.add(id);
+                          }
+                      }
+                  }else if (event_info.location_name == null && (event_info.max_participants <= 0)) {
+                      no_input = true;
+                  }else if (eventIDs_loc.isEmpty()) {
+                      eventIDs = eventIDs_par;
+                  }else{
+                      eventIDs = eventIDs_loc;
+                  }
+
+                  if (eventIDs.isEmpty()) {
+                      no_input = true;
+                      // no input info given or we can't find valid events, just return list of events in 14 days.
+                      eventIDs = EventController.getEventsInNextNDays(pool, 14);
+                  }
+
+                  for (long curr : eventIDs) {
+                      Event event = EventController.getEventByID(pool, curr);
+                      event.participant_ids = ParticipateController.getUsersByEvent(pool, curr);
+                      result_event.add(event);
+                  }
+
+                  if (no_input) {
+                      DataResponse resp = new DataResponse(202, "No events meet current requirements. Here " +
+                              "are some alternative events for you:", result_event);
+                      return gson.toJson(resp);
+                  }
+                  DataResponse resp = new DataResponse(200, "Success", result_event);
+                  return gson.toJson(resp);
+              });
 
 
     init();

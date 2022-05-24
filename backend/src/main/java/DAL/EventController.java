@@ -313,6 +313,55 @@ public class EventController {
   }
 
   /**
+   * Returns a list of event_id that is at a geo location.
+   *
+   * @param pool used for database connection
+   * @param location_name the location name given
+   * @return a list of events
+   */
+  public static ArrayList<Long> getEventsByLocation(DataSource pool, String location_name)
+          throws SQLException {
+    ArrayList<Long> eventIDs = new ArrayList<>();
+    try (Connection conn = pool.getConnection()) {
+      String stmt = String.format("SELECT event_id FROM %s WHERE location_name = ? AND is_deleted = 0;", TABLE_NAME);
+      try (PreparedStatement getEventsStmt = conn.prepareStatement(stmt)) {
+        getEventsStmt.setString(1, location_name);
+        ResultSet eventResults = getEventsStmt.executeQuery();
+        while (eventResults.next()) {
+          eventIDs.add(eventResults.getLong(1));
+        }
+        eventResults.close();
+      }
+      return eventIDs;
+    }
+  }
+
+  /**
+   * Returns a list of event_id that is at a geo location.
+   *
+   * @param pool used for database connection
+   * @param max_participants the max number of participants
+   * @return a list of events
+   */
+  public static ArrayList<Long> getEventsByMaxPar(DataSource pool, int max_participants)
+          throws SQLException {
+    ArrayList<Long> eventIDs = new ArrayList<>();
+    try (Connection conn = pool.getConnection()) {
+      String stmt = String.format("SELECT event_id FROM %s WHERE max_participants <= ? AND is_deleted = 0;", TABLE_NAME);
+      try (PreparedStatement getEventsStmt = conn.prepareStatement(stmt)) {
+        getEventsStmt.setInt(1, max_participants);
+        ResultSet eventResults = getEventsStmt.executeQuery();
+        while (eventResults.next()) {
+          eventIDs.add(eventResults.getLong(1));
+        }
+        eventResults.close();
+      }
+      return eventIDs;
+    }
+  }
+
+
+  /**
    * Returns a list of event_id that a host created
    *
    * @param pool used for database connection
@@ -326,6 +375,30 @@ public class EventController {
       String stmt = String.format("SELECT event_id FROM %s WHERE host_id = ? AND is_deleted = 0;", TABLE_NAME);
       try (PreparedStatement getEventsStmt = conn.prepareStatement(stmt)) {
         getEventsStmt.setString(1, host_id);
+        ResultSet eventResults = getEventsStmt.executeQuery();
+        while (eventResults.next()) {
+          eventIDs.add(eventResults.getLong(1));
+        }
+        eventResults.close();
+      }
+      return eventIDs;
+    }
+  }
+
+  /**
+   * Returns a list of event_id that a host created
+   *
+   * @param pool used for database connection
+   * @param keyword the keyword given for searching event
+   * @return a list of events
+   */
+  public static ArrayList<Long> getEventsByKeyWord(DataSource pool, String keyword)
+          throws SQLException {
+    ArrayList<Long> eventIDs = new ArrayList<>();
+    try (Connection conn = pool.getConnection()) {
+      String stmt = String.format("SELECT event_id FROM %s WHERE event_name LIKE ? AND is_deleted = 0;", TABLE_NAME);
+      try (PreparedStatement getEventsStmt = conn.prepareStatement(stmt)) {
+        getEventsStmt.setString(1, "%" + keyword + "%");
         ResultSet eventResults = getEventsStmt.executeQuery();
         while (eventResults.next()) {
           eventIDs.add(eventResults.getLong(1));
