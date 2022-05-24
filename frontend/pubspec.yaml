@@ -48,7 +48,7 @@ dependencies:
   image_picker: ^0.8.5+3
   dotted_border: ^2.0.0+2
   flutter_typeahead: ^4.0.0
-  flutter_datetime_picker: ^2.1.0
+  flutter_datetime_picker: ^1.5.1
   sprintf: "^6.0.0"
 
 dev_dependencies:

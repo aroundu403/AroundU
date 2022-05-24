@@ -25,7 +25,9 @@ class Place {
 }
 
 class AddressSuggestion {
+  // unique identifier of a place
   final String placeId;
+  // description of the place. e.g. Husky Union Building
   final String description;
 
   AddressSuggestion(this.placeId, this.description);

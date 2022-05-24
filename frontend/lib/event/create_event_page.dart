@@ -1,21 +1,23 @@
 
-
+/// Create event page allows user to create an event by providing the event infomation such as
+/// event title, desription, location, and time.
 import 'dart:convert';
-
-import 'package:aroundu/auth/auth_page.dart';
 import 'package:aroundu/component/image_upload.dart';
-import 'package:aroundu/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:provider/provider.dart';
 import 'package:sprintf/sprintf.dart';
 import '../component/address_search.dart';
-import '../component/event_input_card_title.dart';
+import '../component/event_input_card.dart';
 import '../json/place.dart';
 import 'package:http/http.dart' as http;
+import '../main.dart';
 
+/// Todo:
+///   input validator
+///   upload image
+/// 
 class CreateEeventPage extends StatefulWidget {
   const CreateEeventPage({Key? key}) : super(key: key);
 
@@ -53,8 +55,6 @@ class _CreateEeventPageState extends State<CreateEeventPage> {
                       ],
                     ),
                     const Expanded(
-                      // A flexible child that will grow to fit the viewport but
-                      // still be at least as big as necessary to fit its contents.
                       child: Padding(
                         padding: EdgeInsets.only(left: 20, right: 20, top: 20),
                         child: EventInputs(),
@@ -79,6 +79,8 @@ class EventInputs extends StatefulWidget {
 }
 
 class _EventInputsState extends State<EventInputs> {
+  final _formKey = GlobalKey<FormState>();
+  // Input controllers
   late TextEditingController _titleController;
   late TextEditingController _descriController;
   late TextEditingController _addressController;
@@ -114,6 +116,8 @@ class _EventInputsState extends State<EventInputs> {
     super.dispose();
   }
   
+  /// Given the inputs from the user, validate the input, and create an event
+  /// by invoking the backend create event API.
   void _postEvent() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
@@ -121,7 +125,12 @@ class _EventInputsState extends State<EventInputs> {
     }
 
     String token = await user.getIdToken();
-    final response = await http.post(
+    if (_formKey.currentState!.validate()) {
+      // If the form is valid, display a snackbar
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Creating Event')),
+      );
+      final response = await http.post(
       Uri(
         host: backendAddress,
         path: "event",
@@ -143,108 +152,83 @@ class _EventInputsState extends State<EventInputs> {
         'max_participants': _maxCapcityValue,
         'address': _place.address
       }));
-    print(response);
+    }
   }
 
   @override
-  Widget build(BuildContext context) {  
-    var shadowBox = BoxDecoration(
-      boxShadow: [
-        BoxShadow(
-          color: const Color.fromARGB(255, 120, 117, 117)
-              .withOpacity(.2),
-          blurRadius: 10.0, // soften the shadow
-          offset: const Offset(
-            2.0,
-            3.0,
-          ),
-        )
-      ],
+  Widget build(BuildContext context) {
+    // inpput decoration style for all input boxes
+    var eventInputDecoration = InputDecoration(
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
+      )
     );
 
-    var sliderCard = Container(
-      decoration: shadowBox,
-      child: Card(
-        color: const Color(0xFFF8F9FF),
-        shape: RoundedRectangleBorder(
-          side: const BorderSide(color: Color(0xffAF9BF3), width: 3),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(20), 
-          child: Column(
-            children: [
-              const EventInputCardTitle("Event Size"),
-              Row(
-                children: [
-                  Expanded(
-                    flex: 6,
-                    child: Slider(
-                      value: _maxCapcityValue,
-                      min: 5,
-                      max: 20,
-                      divisions: 15,
-                      activeColor: Theme.of(context).primaryColor,
-                      thumbColor: Theme.of(context).primaryColor,
-                      inactiveColor: Colors.grey,
-                      label: _maxCapcityValue.round().toString(),
-                      onChanged: (double value) {
-                        setState(() {
-                          _maxCapcityValue = value;
-                        });
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Center(
-                      child: Text(
-                        '$_maxCapcityValue',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
-                          color: Colors.white,
-                          background : Paint()
-                            ..strokeWidth = 20.0
-                            ..color = Theme.of(context).backgroundColor
-                            ..style = PaintingStyle.stroke
-                            ..strokeJoin = StrokeJoin.round
-                        )),
-                    ))]),
-          ]
-        ))));
+    var dateInputDecoration = InputDecoration(
+      hintText: "Date",
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
+      )
+    );
+    var timeInputDecoration = InputDecoration(
+      hintText: "Time",
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
+      )
+    );
 
-    var eventTitle = Container(
-      decoration: shadowBox,
-      child: Card(
-        color: const Color(0xFFF8F9FF),
-        shape: RoundedRectangleBorder(
-          side: const BorderSide(color: Color(0xffAF9BF3), width: 3),
-          borderRadius: BorderRadius.circular(10),
+    // event title input card
+    var eventTitle = EventInputCard(
+      children: [
+        const EventInputCardTitle("Title"),
+        const SizedBox(height: 15),
+        TextFormField(
+          controller: _titleController,
+          cursorColor: Theme.of(context).primaryColor,
+          decoration: eventInputDecoration,
+          validator: (title) {
+            if (title == null || title.isEmpty) {
+              return "Please entry a title";
+            } else if (title.length > 50) {
+              return "Title exceeds 50 characters";
+            }
+            return null;
+          },
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(20), 
-          child: Column(
-            children: [
-              const EventInputCardTitle("Title"),
-              const SizedBox(height: 15),
-              TextFormField(
-                controller: _titleController,
-                cursorColor: Theme.of(context).primaryColor,
-                decoration: InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
-                  )
-                ),
-              ),
-            ],
-      ))));
+      ]
+    );
 
+    // start date and time picker
     var stateDateTime = Row(
       children: [
+        // The start title should be centered in the 2/12 flex space
         Expanded(
           flex: 2,
           child: Center(
@@ -259,21 +243,15 @@ class _EventInputsState extends State<EventInputs> {
           ),
         ),
         const SizedBox(width: 10),
+        // create data picker by using the flutter_date_picker
         Expanded(
           flex: 5,
           child: TextFormField(
             controller: _startDateController,
             cursorColor: Theme.of(context).primaryColor,
-            decoration: InputDecoration(
-              hintText: "Date",
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
-              )
-            ),
+            decoration: dateInputDecoration,
             onTap: () {
+              // pop up a date picker on the bottom of the screen
               DatePicker.showDatePicker(
                 context,
                 theme: const DatePickerTheme(
@@ -291,6 +269,12 @@ class _EventInputsState extends State<EventInputs> {
                 locale: LocaleType.en
               );
             },
+            validator: (date) {
+              if (date == null || date.isEmpty) {
+                return "Select a start date";
+              }
+              return null;
+            }
           ),
         ),
         const SizedBox(width: 10),
@@ -299,15 +283,7 @@ class _EventInputsState extends State<EventInputs> {
           child: TextFormField(
             controller: _startTimeController,
             cursorColor: Theme.of(context).primaryColor,
-            decoration: InputDecoration(
-              hintText: "Time",
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
-              )
-            ),
+            decoration: timeInputDecoration,
             onTap: () {
               DatePicker.showTimePicker(
                 context,
@@ -321,11 +297,18 @@ class _EventInputsState extends State<EventInputs> {
                 showSecondsColumn: false,
               );
             },
+            validator: (time) {
+              if (time == null || time.isEmpty) {
+                return "Select a start time";
+              }
+              return null;
+            }
           ),
         ),
       ],
     );
     
+    // end data and time picker
     var endDateTime = Row(
       children: [
         Expanded(
@@ -347,15 +330,7 @@ class _EventInputsState extends State<EventInputs> {
           child: TextFormField(
             controller: _endDateController,
             cursorColor: Theme.of(context).primaryColor,
-            decoration: InputDecoration(
-              hintText: "Date",
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
-              )
-            ),
+            decoration: dateInputDecoration,
             onTap: () {
               DatePicker.showDatePicker(
                 context,
@@ -374,6 +349,12 @@ class _EventInputsState extends State<EventInputs> {
                 locale: LocaleType.en
               );
             },
+            validator: (date) {
+              if (date == null || date.isEmpty) {
+                return "Select a end date";
+              }
+              return null;
+            }
           ),
         ),
         const SizedBox(width: 10),
@@ -382,15 +363,7 @@ class _EventInputsState extends State<EventInputs> {
           child: TextFormField(
             controller: _endTimeController,
             cursorColor: Theme.of(context).primaryColor,
-            decoration: InputDecoration(
-              hintText: "Time",
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
-              )
-            ),
+            decoration: timeInputDecoration,
             onTap: () {
               DatePicker.showTimePicker(
                 context,
@@ -404,85 +377,132 @@ class _EventInputsState extends State<EventInputs> {
                 showSecondsColumn: false,
               );
             },
+            validator: (time) {
+              if (time == null || time.isEmpty) {
+                return "Select a end date";
+              }
+              return null;
+            }
           ),
         ),
       ],
     );
 
-    var dateAndTile = Container(
-      decoration: shadowBox,
-      child: Card(
-        color: const Color(0xFFF8F9FF),
-        shape: RoundedRectangleBorder(
-          side: const BorderSide(color: Color(0xffAF9BF3), width: 3),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(20), 
-          child: Column(
-            children: [
-              const EventInputCardTitle("Data & Time"),
-              const SizedBox(height: 15),
-              stateDateTime,
-              const SizedBox(height: 15),
-              endDateTime,
-            ],
-          )
-        )));
+    // start & end data picker
+    var dateAndTile = EventInputCard(
+      children: [
+        const EventInputCardTitle("Data & Time"),
+        const SizedBox(height: 15),
+        stateDateTime,
+        const SizedBox(height: 15),
+        endDateTime,
+      ],
+    );
 
-
-    var placeSearch = Container(
-      decoration: shadowBox,
-      child: Card(
-        color: const Color(0xFFF8F9FF),
-        shape: RoundedRectangleBorder(
-          side: const BorderSide(color: Color(0xffAF9BF3), width: 3),
-          borderRadius: BorderRadius.circular(10),
+    // place search that allows user to search a place by utilizing Google Place atuocomplete API
+    var placeSearch = EventInputCard(
+      children: [
+        const EventInputCardTitle("Location"),
+        const SizedBox(height: 15),
+        TypeAheadFormField(
+          validator: (place) {
+            if (place == null || place.isEmpty) {
+              return "Please select a validate event location";
+            }
+            return null;
+          },
+          textFieldConfiguration: TextFieldConfiguration(
+            controller: _addressController,
+            autofocus: true,
+            decoration: eventInputDecoration
+          ),
+          // use Google Map place autocomplete API to search for places
+          suggestionsCallback: (query) async {
+            if (query.isNotEmpty) {
+              return await PlaceApiProvider().fetchSuggestions(query);
+            }
+            return <AddressSuggestion>[];
+          },
+          itemBuilder: (context, AddressSuggestion suggestion) {
+            return ListTile(
+              leading: const Icon(Icons.place),
+              title: Text(suggestion.description),
+            );
+          },
+          // use the Google Map place detail API to get detailed place information
+          onSuggestionSelected: (AddressSuggestion suggestion) async {
+            Place place = await PlaceApiProvider().getPlaceDetailFromId(suggestion.placeId);
+            setState(() {
+              _addressController.text = suggestion.description;
+              _place = place;
+            });
+          },
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(20), 
-          child: Column(
-            children: [
-              const EventInputCardTitle("Location"),
-              const SizedBox(height: 15),
-              TypeAheadField(
-                textFieldConfiguration: TextFieldConfiguration(
-                  controller: _addressController,
-                  autofocus: true,
-                  decoration: InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
-                    )
-                  ),
-                ),
-                // use Google Map place autocomplete API to search for places
-                suggestionsCallback: (query) async {
-                  if (query.isNotEmpty) {
-                    return await PlaceApiProvider().fetchSuggestions(query);
-                  }
-                  return <AddressSuggestion>[];
-                },
-                itemBuilder: (context, AddressSuggestion suggestion) {
-                  return ListTile(
-                    leading: const Icon(Icons.place),
-                    title: Text(suggestion.description),
-                  );
-                },
-                // use the Google Map place detail API to get detailed place information
-                onSuggestionSelected: (AddressSuggestion suggestion) async {
-                  Place place = await PlaceApiProvider().getPlaceDetailFromId(suggestion.placeId);
+      ],
+    );
+
+    var sliderCard = EventInputCard(
+      children: [
+        const EventInputCardTitle("Event Size"),
+        Row(
+          children: [
+            Expanded(
+              flex: 6,
+              // Use a discrete selector with from [5, 20]
+              child: Slider(
+                value: _maxCapcityValue,
+                min: 5,
+                max: 20,
+                divisions: 15,
+                activeColor: Theme.of(context).primaryColor,
+                thumbColor: Theme.of(context).primaryColor,
+                inactiveColor: Colors.grey,
+                label: _maxCapcityValue.round().toString(),
+                onChanged: (double value) {
                   setState(() {
-                    _addressController.text = suggestion.description;
-                    _place = place;
+                    _maxCapcityValue = value;
                   });
                 },
               ),
-            ],
-          )
-      )));
+            ),
+            Expanded(
+              flex: 1,
+              child: Center(
+                child: Text(
+                  '$_maxCapcityValue',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                    color: Colors.white,
+                    background : Paint()
+                      ..strokeWidth = 20.0
+                      ..color = Theme.of(context).backgroundColor
+                      ..style = PaintingStyle.stroke
+                      ..strokeJoin = StrokeJoin.round
+                  )),
+              ))]),
+    ]
+  );
+
+    var eventDescription = EventInputCard(
+      children: [
+        const EventInputCardTitle("Event Description"),
+        const SizedBox(height: 15),
+        TextFormField(
+          controller: _descriController,
+          cursorColor: Theme.of(context).primaryColor,
+          maxLength: 2500,
+          maxLines: 10,
+          decoration: eventInputDecoration,
+          validator: (description) {
+            if (description == null || description.isEmpty) {
+              return "Please provide an event description";
+            }
+            return null;
+          },
+        )
+      ]
+    );
 
     var postEventButton = SizedBox(
       width: double.infinity,
@@ -519,79 +539,44 @@ class _EventInputsState extends State<EventInputs> {
       ),
     );
 
-    var eventDescription = Container(
-      decoration: shadowBox,
-      child: Card(
-        color: const Color(0xFFF8F9FF),
-        shape: RoundedRectangleBorder(
-          side: const BorderSide(color: Color(0xffAF9BF3), width: 3),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(20), 
-          child: Column(
-            children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Event Description",
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 20,
-                  ),
-                )
-              ),
-              const SizedBox(height: 15),
-              TextFormField(
-                controller: _descriController,
-                cursorColor: Theme.of(context).primaryColor,
-                maxLength: 2500,
-                maxLines: 10,
-                decoration: InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
-                  )
-                )
-              ),
-            ]
-      ))));
-
-    return Column(
-      children: [
-        Row(
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 600),
+      child: Form(
+        key: _formKey,
+        child: Column(
           children: [
-            Align(
-              alignment: Alignment.topLeft,
-              child: Text(
-                "Post Event",
-                style: TextStyle(
-                    fontFamily: 'Inter',
-                    color: Theme.of(context).backgroundColor,
-                    fontWeight: FontWeight.w900,
-                    fontSize: 30
-              )))
-          ],
+            Row(
+              children: [
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    "Post Event",
+                    style: TextStyle(
+                        fontFamily: 'Inter',
+                        color: Theme.of(context).backgroundColor,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 30
+                  )))
+              ],
+            ),
+            const SizedBox(height: 20),
+            ImageUploads(),
+            const SizedBox(height: 20),
+            eventTitle,
+            const SizedBox(height: 20),
+            dateAndTile,
+            const SizedBox(height: 20),
+            placeSearch,
+            const SizedBox(height: 20),
+            sliderCard,
+            const SizedBox(height: 20),
+            eventDescription,
+            const SizedBox(height: 20),
+            postEventButton,
+            const SizedBox(height: 50),
+          ]
         ),
-        const SizedBox(height: 20),
-        ImageUploads(),
-        const SizedBox(height: 20),
-        eventTitle,
-        const SizedBox(height: 20),
-        dateAndTile,
-        const SizedBox(height: 20),
-        placeSearch,
-        const SizedBox(height: 20),
-        sliderCard,
-        const SizedBox(height: 20),
-        eventDescription,
-        const SizedBox(height: 20),
-        postEventButton,
-        const SizedBox(height: 20),
-      ]
+      ),
     );
   }
 }
