@@ -2,6 +2,7 @@
 /// end time, number of participants, description.
 //import 'dart:ffi';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -10,11 +11,23 @@ import '../main.dart';
 import 'package:aroundu/json/event.dart';
 
 Future<EventInfo> fetchEvent() async {
+  User? user = FirebaseAuth.instance.currentUser;
+  if (user == null) {
+    throw Exception("User isn't login");
+  }
+
+  String token = await user.getIdToken();
   final response = await http.get(
     Uri(
         host: backendAddress,
         path: "/event/id",
-        queryParameters: {"eventid": "3"}),
+        queryParameters: {"eventid": "3"}
+    ),
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    }
   );
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
