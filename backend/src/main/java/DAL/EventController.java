@@ -313,6 +313,31 @@ public class EventController {
   }
 
   /**
+   * Returns a list of event_id that a host created
+   *
+   * @param pool used for database connection
+   * @param host_id the unique representation of a user
+   * @return a list of events
+   */
+  public static ArrayList<Long> getEventsByHost(DataSource pool, String host_id)
+          throws SQLException {
+    ArrayList<Long> eventIDs = new ArrayList<>();
+    try (Connection conn = pool.getConnection()) {
+      String stmt = String.format("SELECT event_id FROM %s WHERE host_id = ? AND is_deleted = 0;", TABLE_NAME);
+      try (PreparedStatement getEventsStmt = conn.prepareStatement(stmt)) {
+        getEventsStmt.setString(1, host_id);
+        ResultSet eventResults = getEventsStmt.executeQuery();
+        while (eventResults.next()) {
+          eventIDs.add(eventResults.getLong(1));
+        }
+        eventResults.close();
+      }
+      return eventIDs;
+    }
+  }
+
+
+  /**
    * Reset the auto_increment index of the table
    *
    * @param pool used for database connection

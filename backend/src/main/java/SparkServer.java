@@ -12,10 +12,12 @@ import com.google.firebase.auth.FirebaseToken;
 import com.google.gson.Gson;
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.sql.Array;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.FirebaseApp;
+import jnr.ffi.Struct;
 import lombok.extern.slf4j.Slf4j;
 
 import static spark.Spark.*;
@@ -231,8 +233,27 @@ public class SparkServer {
         });
 
     // need to add later:
-    // VIEW /event
+    // /event/created
     // show the "created event" list
+      get(
+              "/event/created",
+              (request, response) -> {
+                  String userID = getUserID(request.headers("Authorization"), defaultApp);
+                  ArrayList<Long> eventIDs = EventController.getEventsByHost(pool, userID);
+                  ArrayList<Event> result_event = new ArrayList<>();
+                  if (eventIDs.size() > 0) {
+                      for (long curr : eventIDs) {
+                          Event event = EventController.getEventByID(pool, curr);
+                          event.participant_ids = ParticipateController.getUsersByEvent(pool, curr);
+                          result_event.add(event);
+                      }
+                      DataResponse resp = new DataResponse(200, "Success", result_event);
+                      return gson.toJson(resp);
+                  } else {
+                      return gson.toJson(new OperationResponse(403, "You did not create any event."));
+                  }
+              });
+
 
     /*
       ------------------------------- EVENT PARTICIPANTS RELATED -----------------------------------
@@ -242,6 +263,25 @@ public class SparkServer {
     // need to add later:
     // GET /event/guest
     // show the "my event" list
+      get(
+              "/event/guest",
+              (request, response) -> {
+                  String userID = getUserID(request.headers("Authorization"), defaultApp);
+                  ArrayList<Long> eventIDs = ParticipateController.getEventsByUser(pool, userID);
+                  ArrayList<Event> result_event = new ArrayList<>();
+                  if (eventIDs.size() > 0) {
+                      for (long curr : eventIDs) {
+                          Event event = EventController.getEventByID(pool, curr);
+                          event.participant_ids = ParticipateController.getUsersByEvent(pool, curr);
+                          result_event.add(event);
+                      }
+                      DataResponse resp = new DataResponse(200, "Success", result_event);
+                      return gson.toJson(resp);
+                  } else {
+                      return gson.toJson(new OperationResponse(403, "You did not participate in any event."));
+                  }
+              });
+
 
     // POST /event/guest
     // Participate in an event
@@ -354,6 +394,8 @@ public class SparkServer {
 
     // GET /event/search
     // Get id of events that satisfy the filter option as a list.
+
+
 
     init();
   }
