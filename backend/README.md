@@ -49,6 +49,7 @@
       SparkServer
 
 ### How to use Maven
+Run the following commands in `/backend`
 
 1. `mvn install`
    Installs the packaged code to the local Maven repository.
