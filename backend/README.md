@@ -37,15 +37,15 @@
 
 ### Getting Started
 
-- Install Maven, Spark and set
-  up [Cloud SQL Auth proxy](https://cloud.google.com/sql/docs/mysql/connect-instance-auth-proxy)
-- [Connecting to Cloud SQL database](https://github.com/GoogleCloudPlatform/java-docs-samples/blob/main/cloud-sql/mysql/servlet/README.md)
+- Install Maven and Java 11.
+- (for local development only) 
+    - Set up [Cloud SQL Auth proxy](https://cloud.google.com/sql/docs/mysql/connect-instance-auth-proxy)
+    - [Connecting to Cloud SQL database](https://github.com/GoogleCloudPlatform/java-docs-samples/blob/main/cloud-sql/mysql/servlet/README.md)
   
 - Put the environment variables into your bash file. The backend will need those secrets to access external
   dependencies. Contact John (wangj616@uw.edu) to get the secrets.
-- Make sure your GCP account has access to the aroundu-403 project.
 - Run maven command listed below to compile
-    - There is no additional step to get extra source, once the build is successfully, you should be able to spin up the
+    - There is no additional step, once the build is successfully, you should be able to spin up the
       SparkServer
 
 ### How to use Maven
@@ -72,10 +72,9 @@
 
 ### How to spin up the SparkServer
 
-1. Sign in to your gcloud account. Make sure you have IAM access to the database
-2. Add environment variable such as database password, which should be set up in previous step. Again, contact @John if
+1. Add environment variable such as database password, which should be set up in previous step. Again, contact @John if
    you don't know them
-3. run SparkServer (preferably using Intellij 'Run SparkServer.main()' feature)
+2. run SparkServer (preferably using Intellij 'Run SparkServer.main()' feature)
     1. Once the server is running, Postman is used to test relevant data access and transfer
 
 ### How to deploy to GCP cloud engine
