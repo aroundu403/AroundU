@@ -31,8 +31,8 @@ public class EventController {
       String stmt =
           String.format(
               "INSERT INTO %s (event_code, event_name, description, host_id, is_public, is_deleted, location_name, latitude, "
-                  + "longitude, start_time, end_time, max_participants, curr_num_participants, photo_id, icon, address, created_at) "
-                  + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+                  + "longitude, start_time, end_time, max_participants, curr_num_participants, address, created_at) "
+                  + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
               TABLE_NAME);
       try (PreparedStatement createEventStmt = conn.prepareStatement(stmt)) {
         createEventStmt.setString(1, event.event_code);
@@ -48,11 +48,8 @@ public class EventController {
         createEventStmt.setTimestamp(11, Timestamp.valueOf(event.end_time));
         createEventStmt.setInt(12, event.max_participants);
         createEventStmt.setInt(13, event.curr_num_participants);
-        createEventStmt.setString(14, event.photo_id);
-        createEventStmt.setString(15, event.icon);
-        createEventStmt.setString(16, event.address);
-        createEventStmt.setTimestamp(17, new Timestamp(System.currentTimeMillis()));
-        System.out.println(stmt);
+        createEventStmt.setString(14, event.address);
+        createEventStmt.setTimestamp(15, new Timestamp(System.currentTimeMillis()));
         createEventStmt.executeUpdate();
         resetIdIndex(pool);
       }

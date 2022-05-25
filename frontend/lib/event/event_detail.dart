@@ -2,6 +2,7 @@
 /// end time, number of participants, description.
 //import 'dart:ffi';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -10,12 +11,22 @@ import '../main.dart';
 import 'package:aroundu/json/event.dart';
 
 Future<EventInfo> fetchEvent() async {
+  User? user = FirebaseAuth.instance.currentUser;
+  if (user == null) {
+    throw Exception("User has not logged in");
+  }
+
+  String token = await user.getIdToken();
   final response = await http.get(
-    Uri(
-        host: backendAddress,
-        path: "/event/id",
-        queryParameters: {"eventid": "3"}),
-  );
+      Uri(
+          host: backendAddress,
+          path: "/event/id",
+          queryParameters: {"eventid": "3"}),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      });
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
     // then parse the JSON.
@@ -564,206 +575,206 @@ class _EventDetailState extends State<EventDetailHelper> {
 
 enum EventButtonMode { join, leave, full }
 
-// disgard this class
-class JoinEventButton extends StatefulWidget {
-  JoinEventButton({Key? key, required this.event, required this.mode})
-      : super(key: key);
-  Future<EventInfo> event;
-  final EventButtonMode mode;
+// // disgard this class
+// class JoinEventButton extends StatefulWidget {
+//   JoinEventButton({Key? key, required this.event, required this.mode})
+//       : super(key: key);
+//   Future<EventInfo> event;
+//   final EventButtonMode mode;
 
-  @override
-  State<JoinEventButton> createState() => _JoinEventButtonState();
-}
+//   @override
+//   State<JoinEventButton> createState() => _JoinEventButtonState();
+// }
 
-class _JoinEventButtonState extends State<JoinEventButton> {
-  // Todo state management between join, leave, and full
-  // final int capacity = 7;
-  bool joinedIn = true;
-  int size = 5;
-  late EventButtonMode mode;
-  //EventInfo eventInfo;
+// class _JoinEventButtonState extends State<JoinEventButton> {
+//   // Todo state management between join, leave, and full
+//   // final int capacity = 7;
+//   bool joinedIn = true;
+//   int size = 5;
+//   late EventButtonMode mode;
+//   //EventInfo eventInfo;
 
-  @override
-  void initState() {
-    super.initState();
-    mode = widget.mode;
-  }
+//   @override
+//   void initState() {
+//     super.initState();
+//     mode = widget.mode;
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    // Todo restyle the widget for consistency
+//   @override
+//   Widget build(BuildContext context) {
+//     // Todo restyle the widget for consistency
 
-    return Scaffold(
-        body: Stack(children: [
-      Column(children: [
-        FutureBuilder<EventInfo>(
-            future: widget.event,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                        margin: const EdgeInsets.only(bottom: 10.0),
-                        child: SizedBox(
-                            width: 343,
-                            height: 60,
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: const Color.fromARGB(
-                                                  255, 120, 117, 117)
-                                              .withOpacity(.5),
-                                          blurRadius: 20.0, // soften the shadow
-                                          spreadRadius: 0.0, //extend the shadow
-                                          offset: const Offset(
-                                            5.0, // Move to right 10  horizontally
-                                            8.0, // Move to bottom 10 Vertically
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    child: !joinedIn &&
-                                            snapshot.data!
-                                                    .currNumParticipants >=
-                                                snapshot.data!.maxParticipants
-                                        ? ClipRRect(
-                                            borderRadius: BorderRadius.circular(
-                                                20.0), //or 15.0
-                                            child: Container(
-                                                decoration: const BoxDecoration(
-                                                    gradient: LinearGradient(
-                                                        begin: Alignment
-                                                            .topCenter,
-                                                        end: Alignment
-                                                            .bottomCenter,
-                                                        colors: [
-                                                      Color.fromARGB(
-                                                          255, 80, 77, 77),
-                                                      Color.fromARGB(
-                                                          255, 120, 117, 117),
-                                                    ])),
-                                                child: const Align(
-                                                    alignment: Alignment.center,
-                                                    child: Text("Full",
-                                                        style: TextStyle(
-                                                            color: Color
-                                                                .fromARGB(
-                                                                    255,
-                                                                    243,
-                                                                    241,
-                                                                    241),
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontSize: 22)))),
-                                          )
-                                        : ClipRRect(
-                                            borderRadius: BorderRadius.circular(
-                                                20.0), //or 15.0
-                                            child: Container(
-                                                decoration: BoxDecoration(
-                                                    gradient: LinearGradient(
-                                                  begin: Alignment.topCenter,
-                                                  end: Alignment.bottomCenter,
-                                                  colors: widget.mode ==
-                                                          EventButtonMode.leave
-                                                      ? [
-                                                          const Color(
-                                                              0xffff1fa7),
-                                                          const Color.fromARGB(
-                                                              255,
-                                                              172,
-                                                              115,
-                                                              248),
-                                                        ]
-                                                      : [
-                                                          const Color.fromARGB(
-                                                              255, 81, 65, 143),
-                                                          const Color.fromARGB(
-                                                              255,
-                                                              172,
-                                                              115,
-                                                              248)
-                                                        ],
-                                                )),
-                                                child: ElevatedButton(
-                                                  style: ButtonStyle(
-                                                    backgroundColor:
-                                                        MaterialStateProperty
-                                                            .all(Colors
-                                                                .transparent),
-                                                    shadowColor:
-                                                        MaterialStateProperty
-                                                            .all(Colors
-                                                                .transparent),
-                                                  ),
-                                                  child: widget.mode ==
-                                                          EventButtonMode.leave
-                                                      ? const Text("Leave Event",
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Color.fromARGB(
-                                                                      255,
-                                                                      243,
-                                                                      241,
-                                                                      241),
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontSize: 22))
-                                                      : const Text("Join Event",
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Color.fromARGB(
-                                                                      255,
-                                                                      243,
-                                                                      241,
-                                                                      241),
-                                                              fontWeight:
-                                                                  FontWeight.bold,
-                                                              fontSize: 22)),
-                                                  onPressed: () {
-                                                    // TODO state management and send network request
-                                                    setState(() {
-                                                      if (joinedIn) {
-                                                        // size--; // TODO
-                                                        widget.event =
-                                                            quitEvent();
-                                                      } else {
-                                                        //size++; // TODO
-                                                        widget.event =
-                                                            updateEvent();
-                                                      }
-                                                      joinedIn = !joinedIn;
-                                                      mode = mode ==
-                                                              EventButtonMode
-                                                                  .join
-                                                          ? EventButtonMode
-                                                              .leave
-                                                          : EventButtonMode
-                                                              .join;
-                                                    });
-                                                  },
-                                                ))),
-                                  ),
-                                ),
-                              ],
-                            ))));
-                //return EventDetailHelper(eventInfo: snapshot.data!);
-              } else if (snapshot.hasError) {
-                return const Center(
-                    child: Text('No Events Posted Currently',
-                        style: TextStyle(
-                            color: Color.fromARGB(255, 81, 65, 143),
-                            fontStyle: FontStyle.italic,
-                            fontSize: 20)));
-              }
-              return Text("..");
-            }),
-      ])
-    ]));
-  }
-}
+//     return Scaffold(
+//         body: Stack(children: [
+//       Column(children: [
+//         FutureBuilder<EventInfo>(
+//             future: widget.event,
+//             builder: (context, snapshot) {
+//               if (snapshot.hasData) {
+//                 return Align(
+//                     alignment: Alignment.bottomCenter,
+//                     child: Container(
+//                         margin: const EdgeInsets.only(bottom: 10.0),
+//                         child: SizedBox(
+//                             width: 343,
+//                             height: 60,
+//                             child: Row(
+//                               children: [
+//                                 Expanded(
+//                                   child: Container(
+//                                     decoration: BoxDecoration(
+//                                       boxShadow: [
+//                                         BoxShadow(
+//                                           color: const Color.fromARGB(
+//                                                   255, 120, 117, 117)
+//                                               .withOpacity(.5),
+//                                           blurRadius: 20.0, // soften the shadow
+//                                           spreadRadius: 0.0, //extend the shadow
+//                                           offset: const Offset(
+//                                             5.0, // Move to right 10  horizontally
+//                                             8.0, // Move to bottom 10 Vertically
+//                                           ),
+//                                         )
+//                                       ],
+//                                     ),
+//                                     child: !joinedIn &&
+//                                             snapshot.data!
+//                                                     .currNumParticipants >=
+//                                                 snapshot.data!.maxParticipants
+//                                         ? ClipRRect(
+//                                             borderRadius: BorderRadius.circular(
+//                                                 20.0), //or 15.0
+//                                             child: Container(
+//                                                 decoration: const BoxDecoration(
+//                                                     gradient: LinearGradient(
+//                                                         begin: Alignment
+//                                                             .topCenter,
+//                                                         end: Alignment
+//                                                             .bottomCenter,
+//                                                         colors: [
+//                                                       Color.fromARGB(
+//                                                           255, 80, 77, 77),
+//                                                       Color.fromARGB(
+//                                                           255, 120, 117, 117),
+//                                                     ])),
+//                                                 child: const Align(
+//                                                     alignment: Alignment.center,
+//                                                     child: Text("Full",
+//                                                         style: TextStyle(
+//                                                             color: Color
+//                                                                 .fromARGB(
+//                                                                     255,
+//                                                                     243,
+//                                                                     241,
+//                                                                     241),
+//                                                             fontWeight:
+//                                                                 FontWeight.bold,
+//                                                             fontSize: 22)))),
+//                                           )
+//                                         : ClipRRect(
+//                                             borderRadius: BorderRadius.circular(
+//                                                 20.0), //or 15.0
+//                                             child: Container(
+//                                                 decoration: BoxDecoration(
+//                                                     gradient: LinearGradient(
+//                                                   begin: Alignment.topCenter,
+//                                                   end: Alignment.bottomCenter,
+//                                                   colors: widget.mode ==
+//                                                           EventButtonMode.leave
+//                                                       ? [
+//                                                           const Color(
+//                                                               0xffff1fa7),
+//                                                           const Color.fromARGB(
+//                                                               255,
+//                                                               172,
+//                                                               115,
+//                                                               248),
+//                                                         ]
+//                                                       : [
+//                                                           const Color.fromARGB(
+//                                                               255, 81, 65, 143),
+//                                                           const Color.fromARGB(
+//                                                               255,
+//                                                               172,
+//                                                               115,
+//                                                               248)
+//                                                         ],
+//                                                 )),
+//                                                 child: ElevatedButton(
+//                                                   style: ButtonStyle(
+//                                                     backgroundColor:
+//                                                         MaterialStateProperty
+//                                                             .all(Colors
+//                                                                 .transparent),
+//                                                     shadowColor:
+//                                                         MaterialStateProperty
+//                                                             .all(Colors
+//                                                                 .transparent),
+//                                                   ),
+//                                                   child: widget.mode ==
+//                                                           EventButtonMode.leave
+//                                                       ? const Text("Leave Event",
+//                                                           style: TextStyle(
+//                                                               color:
+//                                                                   Color.fromARGB(
+//                                                                       255,
+//                                                                       243,
+//                                                                       241,
+//                                                                       241),
+//                                                               fontWeight:
+//                                                                   FontWeight
+//                                                                       .bold,
+//                                                               fontSize: 22))
+//                                                       : const Text("Join Event",
+//                                                           style: TextStyle(
+//                                                               color:
+//                                                                   Color.fromARGB(
+//                                                                       255,
+//                                                                       243,
+//                                                                       241,
+//                                                                       241),
+//                                                               fontWeight:
+//                                                                   FontWeight.bold,
+//                                                               fontSize: 22)),
+//                                                   onPressed: () {
+//                                                     // TODO state management and send network request
+//                                                     setState(() {
+//                                                       if (joinedIn) {
+//                                                         // size--; // TODO
+//                                                         widget.event =
+//                                                             quitEvent();
+//                                                       } else {
+//                                                         //size++; // TODO
+//                                                         widget.event =
+//                                                             updateEvent();
+//                                                       }
+//                                                       joinedIn = !joinedIn;
+//                                                       mode = mode ==
+//                                                               EventButtonMode
+//                                                                   .join
+//                                                           ? EventButtonMode
+//                                                               .leave
+//                                                           : EventButtonMode
+//                                                               .join;
+//                                                     });
+//                                                   },
+//                                                 ))),
+//                                   ),
+//                                 ),
+//                               ],
+//                             ))));
+//                 //return EventDetailHelper(eventInfo: snapshot.data!);
+//               } else if (snapshot.hasError) {
+//                 return const Center(
+//                     child: Text('No Events Posted Currently',
+//                         style: TextStyle(
+//                             color: Color.fromARGB(255, 81, 65, 143),
+//                             fontStyle: FontStyle.italic,
+//                             fontSize: 20)));
+//               }
+//               return Text("..");
+//             }),
+//       ])
+//     ]));
+//   }
+// }
