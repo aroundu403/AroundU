@@ -18,9 +18,25 @@ class MyEventState extends State<MyEventPage> {
   final ScrollController _controller = ScrollController();
   final ScrollPhysics _physics = const ClampingScrollPhysics();
 
-  final images = ["images/scenary.jpg", "images/tree.jpg"];
-  final titles = ["Dinner at the Ave", "Friday movie night"];
-  final sizes = [0, 3];
+  final images = [
+    "images/scenary.jpg",
+    "images/tree.jpg",
+    "images/tree.jpg",
+    "images/tree.jpg",
+    "images/tree.jpg",
+    "images/tree.jpg",
+    "images/tree.jpg"
+  ];
+  final titles = [
+    "Dinner at the Ave",
+    "Friday movie night",
+    "Friday movie night",
+    "Friday movie night",
+    "Friday movie night",
+    "Friday movie night",
+    "Friday movie night"
+  ];
+  final sizes = [0, 3, 0, 0, 0, 0, 0];
 
   final upcomingimages = [
     "images/scenary.jpg",
@@ -78,13 +94,13 @@ class MyEventState extends State<MyEventPage> {
                   Padding(padding: EdgeInsets.all(16)),
                   Align(
                     alignment: Alignment.topLeft,
-                    child: Text("My Event",
+                    child: Text("My Events",
                         style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                             fontSize: 40)),
                   ),
-                  Padding(padding: EdgeInsets.only(right: 240)),
+                  Padding(padding: EdgeInsets.only(right: 230)),
                   Align(
                     alignment: Alignment.topRight,
                     child: Icon(Icons.access_alarm_outlined,
@@ -92,100 +108,80 @@ class MyEventState extends State<MyEventPage> {
                   )
                 ],
               ),
-              ListView.builder(
-                  controller: _controller,
-                  physics: _physics,
-                  padding: const EdgeInsets.all(8),
-                  shrinkWrap: true,
-                  itemCount: images.length,
-                  scrollDirection: Axis.vertical,
-                  itemBuilder: (buildContext, index) {
-                    return Container(
-                        margin: const EdgeInsets.all(8),
-                        width: 343,
-                        height: 130,
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color.fromARGB(255, 120, 117, 117)
-                                  .withOpacity(.5),
-                              blurRadius: 20.0, // soften the shadow
-                              spreadRadius: 0.0, //extend the shadow
-                              offset: const Offset(
-                                5.0,
-                                8.0,
-                              ),
-                            )
-                          ],
-                        ),
-                        child: GestureDetector(
-                            onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const EventPage(),
+              Expanded(
+                  child: ListView.builder(
+                      controller: _controller,
+                      physics: _physics,
+                      padding: const EdgeInsets.all(8),
+                      shrinkWrap: true,
+                      itemCount: images.length,
+                      scrollDirection: Axis.vertical,
+                      itemBuilder: (buildContext, index) {
+                        return Container(
+                            margin: const EdgeInsets.all(8),
+                            width: 343,
+                            height: 150,
+                            decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color:
+                                      const Color.fromARGB(255, 120, 117, 117)
+                                          .withOpacity(.5),
+                                  blurRadius: 20.0, // soften the shadow
+                                  spreadRadius: 0.0, //extend the shadow
+                                  offset: const Offset(
+                                    5.0,
+                                    8.0,
                                   ),
-                                ),
-                            // onTap: () => Navigator.pop(context),
-                            child: Card(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      35), // if you need this
-                                  side: BorderSide(
-                                    color: Colors.grey.withOpacity(0.2),
-                                    width: 1,
-                                  ),
-                                ),
-                                child: Row(children: [
-                                  const Padding(padding: EdgeInsets.all(8)),
-                                  Expanded(
-                                      child: ClipRRect(
-                                    borderRadius:
-                                        BorderRadius.circular(10.0), //or 15.0
-                                    child: Container(
-                                      height: 90.0,
-                                      width: 90.0,
-                                      decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                              image: AssetImage(images[index]),
-                                              fit: BoxFit.fill)),
+                                )
+                              ],
+                            ),
+                            child: GestureDetector(
+                                onTap: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const EventPage(),
+                                      ),
                                     ),
-                                  )),
-                                  const Padding(padding: EdgeInsets.all(8)),
-                                  Expanded(
-                                      flex: 2,
-                                      child: Container(
-                                          padding:
-                                              const EdgeInsets.only(top: 5),
-                                          child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                const Padding(
-                                                    padding: EdgeInsets.all(5)),
-                                                Text(titles[index],
-                                                    style: const TextStyle(
-                                                        color: Color.fromARGB(
-                                                            255, 81, 65, 143),
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 18)),
-                                                const Padding(
-                                                    padding:
-                                                        EdgeInsets.all(20)),
-                                                Column(children: [
-                                                  const Padding(
-                                                      padding:
-                                                          EdgeInsets.all(3)),
-                                                  Row(children: [
-                                                    const Icon(
-                                                        Icons
-                                                            .people_alt_outlined,
-                                                        color: Colors.grey),
-                                                    Text(
-                                                        " " +
-                                                            sizes[index]
-                                                                .toString() +
-                                                            " people joined",
+                                child: Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          35), // if you need this
+                                      side: BorderSide(
+                                        color: Colors.grey.withOpacity(0.2),
+                                        width: 1,
+                                      ),
+                                    ),
+                                    child: Row(children: [
+                                      const Padding(padding: EdgeInsets.all(8)),
+                                      Expanded(
+                                          child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(
+                                            15.0), //or 15.0
+                                        child: Container(
+                                          height: 110.0,
+                                          width: 90.0,
+                                          decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                  image:
+                                                      AssetImage(images[index]),
+                                                  fit: BoxFit.fill)),
+                                        ),
+                                      )),
+                                      const Padding(padding: EdgeInsets.all(8)),
+                                      Expanded(
+                                          flex: 2,
+                                          child: Container(
+                                              padding:
+                                                  const EdgeInsets.only(top: 5),
+                                              child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    const Padding(
+                                                        padding:
+                                                            EdgeInsets.all(5)),
+                                                    Text(titles[index],
                                                         style: const TextStyle(
                                                             color:
                                                                 Color.fromARGB(
@@ -195,15 +191,45 @@ class MyEventState extends State<MyEventPage> {
                                                                     143),
                                                             fontWeight:
                                                                 FontWeight.bold,
-                                                            fontSize: 16))
-                                                  ]),
-                                                  const Padding(
-                                                      padding:
-                                                          EdgeInsets.all(3)),
-                                                ])
-                                              ])))
-                                ]))));
-                  }),
+                                                            fontSize: 18)),
+                                                    const Padding(
+                                                        padding:
+                                                            EdgeInsets.all(30)),
+                                                    Column(children: [
+                                                      const Padding(
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  3)),
+                                                      Row(children: [
+                                                        const Icon(
+                                                            Icons
+                                                                .people_alt_outlined,
+                                                            color: Colors.grey),
+                                                        Text(
+                                                            " " +
+                                                                sizes[index]
+                                                                    .toString() +
+                                                                " people joined",
+                                                            style: const TextStyle(
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        81,
+                                                                        65,
+                                                                        143),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize: 16))
+                                                      ]),
+                                                      // const Padding(
+                                                      //     padding:
+                                                      //         EdgeInsets.all(3)),
+                                                    ])
+                                                  ])))
+                                    ]))));
+                      })),
+              const Padding(padding: EdgeInsets.all(5)),
               Row(
                 children: const [
                   Padding(padding: EdgeInsets.all(16)),
@@ -217,91 +243,94 @@ class MyEventState extends State<MyEventPage> {
                   ),
                 ],
               ),
-              // GridView.builder(
-              //     itemCount: upcomingevents.length,
-              //     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              //       crossAxisCount: 2,
-              //       crossAxisSpacing: 1.0,
-              //       mainAxisSpacing: 1.0,
-              //     ),
-              //     itemBuilder: (BuildContext context, int index) {
-              //       return Container(
-              //           margin: const EdgeInsets.all(5),
-              //           // width: MediaQuery.of(context).size.width * 0.5 * 0.9,
-              //           // height: 150,
-              //           decoration: BoxDecoration(
-              //             boxShadow: [
-              //               BoxShadow(
-              //                 color: const Color.fromARGB(255, 120, 117, 117)
-              //                     .withOpacity(.5),
-              //                 blurRadius: 20.0, // soften the shadow
-              //                 spreadRadius: 0.0, //extend the shadow
-              //                 offset: const Offset(
-              //                   5.0,
-              //                   8.0,
-              //                 ),
-              //               )
-              //             ],
-              //           ),
-              //           child: GestureDetector(
-              //               onTap: () => Navigator.push(
-              //                     context,
-              //                     MaterialPageRoute(
-              //                       builder: (context) => const EventPage(),
-              //                     ),
-              //                   ),
-              //               // onTap: () => Navigator.pop(context),
-              //               child: Card(
-              //                   shape: RoundedRectangleBorder(
-              //                     borderRadius: BorderRadius.circular(
-              //                         10), // if you need this
-              //                     side: BorderSide(
-              //                       color: Colors.grey.withOpacity(0.2),
-              //                       width: 1,
-              //                     ),
-              //                   ),
-              //                   child: Column(children: [
-              //                     const Padding(padding: EdgeInsets.all(8)),
-              //                     Expanded(
-              //                         child: ClipRRect(
-              //                       borderRadius:
-              //                           BorderRadius.circular(10.0), //or 15.0
-              //                       child: Container(
-              //                         decoration: BoxDecoration(
-              //                             image: DecorationImage(
-              //                                 image: AssetImage(
-              //                                     upcomingimages[index]),
-              //                                 fit: BoxFit.fill)),
-              //                       ),
-              //                     )),
-              //                     const Padding(padding: EdgeInsets.all(8)),
-              //                     Expanded(
-              //                         flex: 2,
-              //                         child: Container(
-              //                             padding:
-              //                                 const EdgeInsets.only(top: 5),
-              //                             child: Column(
-              //                                 crossAxisAlignment:
-              //                                     CrossAxisAlignment.start,
-              //                                 children: [
-              //                                   const Padding(
-              //                                       padding: EdgeInsets.all(5)),
-              //                                   Text(upcomingevents[index],
-              //                                       style: const TextStyle(
-              //                                           color: Color.fromARGB(
-              //                                               255, 81, 65, 143),
-              //                                           fontWeight:
-              //                                               FontWeight.bold,
-              //                                           fontSize: 18)),
-              //                                   Text(times[index],
-              //                                       style: const TextStyle(
-              //                                           color: Colors.grey,
-              //                                           fontSize: 16)),
-              //                                   const Padding(
-              //                                       padding: EdgeInsets.all(3)),
-              //                                 ])))
-              //                   ]))));
-              //     })
+              Expanded(
+                  child: GridView.builder(
+                      controller: _controller,
+                      physics: _physics,
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      itemCount: upcomingevents.length,
+                      padding: const EdgeInsets.all(8),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                      ),
+                      itemBuilder: (BuildContext context, int index) {
+                        return Container(
+                            margin: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color:
+                                      const Color.fromARGB(255, 120, 117, 117)
+                                          .withOpacity(.5),
+                                  blurRadius: 20.0, // soften the shadow
+                                  spreadRadius: 0.0, //extend the shadow
+                                  offset: const Offset(
+                                    5.0,
+                                    8.0,
+                                  ),
+                                )
+                              ],
+                            ),
+                            child: GestureDetector(
+                                onTap: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const EventPage(),
+                                      ),
+                                    ),
+                                child: Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          25), // if you need this
+                                      side: BorderSide(
+                                        color: Colors.grey.withOpacity(0.2),
+                                        width: 1,
+                                      ),
+                                    ),
+                                    child: Column(children: [
+                                      const Padding(padding: EdgeInsets.all(8)),
+                                      Row(children: [
+                                        const Padding(
+                                            padding: EdgeInsets.all(8)),
+                                        Expanded(
+                                            child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                              10.0), //or 15.0
+                                          child: Container(
+                                            height: 130,
+                                            width: 50,
+                                            decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                    image: AssetImage(
+                                                        upcomingimages[index]),
+                                                    fit: BoxFit.fill)),
+                                          ),
+                                        )),
+                                        const Padding(
+                                            padding: EdgeInsets.all(8)),
+                                      ]),
+                                      const Padding(padding: EdgeInsets.all(8)),
+                                      Expanded(
+                                          flex: 2,
+                                          child: Container(
+                                              padding: const EdgeInsets.all(5),
+                                              child: Column(children: [
+                                                Text(upcomingevents[index],
+                                                    style: const TextStyle(
+                                                        color: Color.fromARGB(
+                                                            255, 81, 65, 143),
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 18)),
+                                                Text(times[index],
+                                                    style: const TextStyle(
+                                                        color: Colors.grey,
+                                                        fontSize: 16)),
+                                              ])))
+                                    ]))));
+                      }))
             ],
           ),
         )

@@ -9,7 +9,6 @@ import 'my_event.dart';
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
-  //final EventButtonMode mode = EventButtonMode.join;
   @override
   ProfileState createState() => ProfileState();
 }
@@ -132,7 +131,6 @@ class ProfileState extends State<ProfilePage> {
                                       builder: (context) => const MyEventPage(),
                                     ),
                                   ),
-                              // onTap: () => Navigator.pop(context),
                               child: Card(
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(
@@ -150,68 +148,7 @@ class ProfileState extends State<ProfilePage> {
                                               fontWeight: FontWeight.bold,
                                               fontSize: 24))))));
                     }))
-            // Align(
-            //     alignment: Alignment.bottomCenter,
-            //     child: Container(
-            //         margin: const EdgeInsets.only(bottom: 10.0),
-            //         child:
-            //             // SizedBox(
-            //             //     width: 343,
-            //             //     height: 60,
-            //             //     child: Row(children: [
-            //             //       Expanded(
-            //             //           child: Container(
-            //             //               decoration: BoxDecoration(
-            //             //                 boxShadow: [
-            //             //                   BoxShadow(
-            //             //                     color: const Color.fromARGB(
-            //             //                             255, 120, 117, 117)
-            //             //                         .withOpacity(.5),
-            //             //                     blurRadius: 20.0, // soften the shadow
-            //             //                     spreadRadius: 0.0, //extend the shadow
-            //             //                     offset: const Offset(
-            //             //                       5.0, // Move to right 10  horizontally
-            //             //                       8.0, // Move to bottom 10 Vertically
-            //             //                     ),
-            //             //                   )
-            //             //                 ],
-            //             //               ),
-            //             //               child:
-            //             ClipRRect(
-            //                 borderRadius: BorderRadius.circular(20.0), //or 15.0
-            //                 child: Container(
-            //                     decoration: const BoxDecoration(
-            //                         gradient: LinearGradient(
-            //                       begin: Alignment.topCenter,
-            //                       end: Alignment.bottomCenter,
-            //                       colors: [
-            //                         Color.fromARGB(255, 255, 255, 255),
-            //                       ],
-            //                     )),
-            //                     child: ElevatedButton(
-            //                       // style: ButtonStyle(
-            //                       //   backgroundColor:
-            //                       //       MaterialStateProperty.all(
-            //                       //           Colors.transparent),
-            //                       //   shadowColor:
-            //                       //       MaterialStateProperty.all(
-            //                       //           Colors.transparent),
-            //                       // ),
-            //                       child: const Text("My Events",
-            //                           style: TextStyle(
-            //                               color:
-            //                                   Color.fromARGB(236, 81, 65, 143),
-            //                               fontWeight: FontWeight.bold,
-            //                               fontSize: 22)),
-            //                       onPressed: () {
-            //                         // TODO state management and send network request
-            //                       },
-            //                     )))))
           ]))
-      // ))
-      //       ],
-      //     ),
-      //   )
     ])));
   }
 }
