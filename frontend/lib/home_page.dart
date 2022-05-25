@@ -2,7 +2,7 @@
 /// It also contains the access to other modules such as create event page and my event page
 /// It will be the main page that users will interact with after they have signed in.
 import 'package:aroundu/event/map_view.dart';
-import 'package:aroundu/profile.dart';
+import 'package:aroundu/user/profile.dart';
 import 'package:flutter/material.dart';
 import 'event/list_view.dart';
 
@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
                   children: const [
                     MoreButton(),
                     PostEventButton(),
-                    MyProfileButtton(),
+                    MyProfileButton(),
                   ],
                 ),
               ))
@@ -127,8 +127,8 @@ class PostEventButton extends StatelessWidget {
   }
 }
 
-class MyProfileButtton extends StatelessWidget {
-  const MyProfileButtton({Key? key}) : super(key: key);
+class MyProfileButton extends StatelessWidget {
+  const MyProfileButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
