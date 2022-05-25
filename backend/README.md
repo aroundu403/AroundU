@@ -44,6 +44,7 @@
   
 - Put the environment variables into your bash file. The backend will need those secrets to access external
   dependencies. Contact John (wangj616@uw.edu) to get the secrets.
+- Make sure you have access to our Google Cloud Project and have the GOOGLE_APPLICATION_CREDENTIAL on your local machine.
 - Run maven command listed below to compile
     - There is no additional step, once the build is successfully, you should be able to spin up the
       SparkServer
