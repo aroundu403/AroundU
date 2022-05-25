@@ -35,13 +35,13 @@ public class SparkServer {
    * running.
    *
    * @param args any excessive arguments
-   * @throws IOException
+   * @throws IOException when necessary
    */
   public static void main(String[] args) throws IOException {
     Gson gson = new Gson();
     log.info("Starting server...");
 
-    port(Integer.valueOf(System.getenv().getOrDefault("PORT", "8080")));
+    port(Integer.parseInt(System.getenv().getOrDefault("PORT", "8080")));
     // Database accessing preparation
     String dbUser = System.getenv("DB_USER");
     String dbPass = System.getenv("DB_PASS");
@@ -237,25 +237,24 @@ public class SparkServer {
     // need to add later:
     // /event/created
     // show the "created event" list
-      get(
-              "/event/created",
-              (request, response) -> {
-                  String userID = getUserID(request.headers("Authorization"), defaultApp);
-                  ArrayList<Long> eventIDs = EventController.getEventsByHost(pool, userID);
-                  ArrayList<Event> result_event = new ArrayList<>();
-                  if (eventIDs.size() > 0) {
-                      for (long curr : eventIDs) {
-                          Event event = EventController.getEventByID(pool, curr);
-                          event.participant_ids = ParticipateController.getUsersByEvent(pool, curr);
-                          result_event.add(event);
-                      }
-                      DataResponse resp = new DataResponse(200, "Success", result_event);
-                      return gson.toJson(resp);
-                  } else {
-                      return gson.toJson(new OperationResponse(403, "You did not create any event."));
-                  }
-              });
-
+    get(
+        "/event/created",
+        (request, response) -> {
+          String userID = getUserID(request.headers("Authorization"), defaultApp);
+          ArrayList<Long> eventIDs = EventController.getEventsByHost(pool, userID);
+          ArrayList<Event> result_event = new ArrayList<>();
+          if (eventIDs.size() > 0) {
+            for (long curr : eventIDs) {
+              Event event = EventController.getEventByID(pool, curr);
+              event.participant_ids = ParticipateController.getUsersByEvent(pool, curr);
+              result_event.add(event);
+            }
+            DataResponse resp = new DataResponse(200, "Success", result_event);
+            return gson.toJson(resp);
+          } else {
+            return gson.toJson(new OperationResponse(403, "You did not create any event."));
+          }
+        });
 
     /*
       ------------------------------- EVENT PARTICIPANTS RELATED -----------------------------------
@@ -265,25 +264,24 @@ public class SparkServer {
     // need to add later:
     // GET /event/guest
     // show the "my event" list
-      get(
-              "/event/guest",
-              (request, response) -> {
-                  String userID = getUserID(request.headers("Authorization"), defaultApp);
-                  ArrayList<Long> eventIDs = ParticipateController.getEventsByUser(pool, userID);
-                  ArrayList<Event> result_event = new ArrayList<>();
-                  if (eventIDs.size() > 0) {
-                      for (long curr : eventIDs) {
-                          Event event = EventController.getEventByID(pool, curr);
-                          event.participant_ids = ParticipateController.getUsersByEvent(pool, curr);
-                          result_event.add(event);
-                      }
-                      DataResponse resp = new DataResponse(200, "Success", result_event);
-                      return gson.toJson(resp);
-                  } else {
-                      return gson.toJson(new OperationResponse(403, "You did not participate in any event."));
-                  }
-              });
-
+    get(
+        "/event/guest",
+        (request, response) -> {
+          String userID = getUserID(request.headers("Authorization"), defaultApp);
+          ArrayList<Long> eventIDs = ParticipateController.getEventsByUser(pool, userID);
+          ArrayList<Event> result_event = new ArrayList<>();
+          if (eventIDs.size() > 0) {
+            for (long curr : eventIDs) {
+              Event event = EventController.getEventByID(pool, curr);
+              event.participant_ids = ParticipateController.getUsersByEvent(pool, curr);
+              result_event.add(event);
+            }
+            DataResponse resp = new DataResponse(200, "Success", result_event);
+            return gson.toJson(resp);
+          } else {
+            return gson.toJson(new OperationResponse(403, "You did not participate in any event."));
+          }
+        });
 
     // POST /event/guest
     // Participate in an event
@@ -394,46 +392,49 @@ public class SparkServer {
           }
         });
 
+    // POST /event/search
+    // Get list of events that has name containing the keyword.
+    // Request body must include String: "event_name" = "the key word"
+    // If no info given or no valid results, just return all events in recent days.
+    // http://localhost:8080/event/search
+    post(
+        "/event/search",
+        (request, response) -> {
+          Event event_info = gson.fromJson(request.body(), Event.class);
+          ArrayList<Event> result_event = new ArrayList<>();
+          ArrayList<Long> eventIDs = new ArrayList<>();
+          boolean no_input = false;
 
-      // POST /event/search
-      // Get list of events that has name containing the keyword.
-      // Request body must include String: "event_name" = "the key word"
-      // If no info given or no valid results, just return all events in recent days.
-      // http://localhost:8080/event/search
-      post(
-              "/event/search",
-              (request, response) -> {
-                  Event event_info = gson.fromJson(request.body(), Event.class);
-                  ArrayList<Event> result_event = new ArrayList<>();
-                  ArrayList<Long> eventIDs = new ArrayList<>();
-                  boolean no_input = false;
+          if (event_info.event_name != null) {
+            // first we try finding events at this location.
+            eventIDs = EventController.getEventsByKeyWord(pool, event_info.event_name);
+          }
 
-                  if (event_info.event_name != null) {
-                      // first we try finding events at this location.
-                      eventIDs = EventController.getEventsByKeyWord(pool, event_info.event_name);
-                  }
+          if (eventIDs.isEmpty()) {
+            no_input = true;
+            // no input info given or we can't find valid events, just return list of events in 14
+            // days.
+            eventIDs = EventController.getEventsInNextNDays(pool, 14);
+          }
 
-                  if (eventIDs.isEmpty()) {
-                      no_input = true;
-                      // no input info given or we can't find valid events, just return list of events in 14 days.
-                      eventIDs = EventController.getEventsInNextNDays(pool, 14);
-                  }
+          for (long curr : eventIDs) {
+            Event event = EventController.getEventByID(pool, curr);
+            event.participant_ids = ParticipateController.getUsersByEvent(pool, curr);
+            result_event.add(event);
+          }
 
-                  for (long curr : eventIDs) {
-                      Event event = EventController.getEventByID(pool, curr);
-                      event.participant_ids = ParticipateController.getUsersByEvent(pool, curr);
-                      result_event.add(event);
-                  }
-
-                  if (no_input) {
-                      DataResponse resp = new DataResponse(202, "No events meet current requirements. Here " +
-                              "are some alternative events for you:", result_event);
-                      return gson.toJson(resp);
-                  }
-                  DataResponse resp = new DataResponse(200, "Success", result_event);
-                  return gson.toJson(resp);
-              });
-
+          if (no_input) {
+            DataResponse resp =
+                new DataResponse(
+                    202,
+                    "No events meet current requirements. Here "
+                        + "are some alternative events for you:",
+                    result_event);
+            return gson.toJson(resp);
+          }
+          DataResponse resp = new DataResponse(200, "Success", result_event);
+          return gson.toJson(resp);
+        });
 
     // GET /event/search
     // Get list of events that satisfy the filter option as a list.
@@ -442,59 +443,63 @@ public class SparkServer {
     // location_name must be a valid building name/landmark
     // If no info given or no valid results, just return all events in recent days.
     // http://localhost:8080/event/search
-      get(
-              "/event/search",
-              (request, response) -> {
-                  Event event_info = gson.fromJson(request.body(), Event.class);
-                  ArrayList<Event> result_event = new ArrayList<>();
-                  ArrayList<Long> eventIDs = new ArrayList<>();
-                  ArrayList<Long> eventIDs_loc = new ArrayList<>();
-                  ArrayList<Long> eventIDs_par = new ArrayList<>();
-                  boolean no_input = false;
+    get(
+        "/event/search",
+        (request, response) -> {
+          Event event_info = gson.fromJson(request.body(), Event.class);
+          ArrayList<Event> result_event = new ArrayList<>();
+          ArrayList<Long> eventIDs = new ArrayList<>();
+          ArrayList<Long> eventIDs_loc = new ArrayList<>();
+          ArrayList<Long> eventIDs_par = new ArrayList<>();
+          boolean no_input = false;
 
-                  if (event_info.location_name != null) {
-                      // first we try finding events at this location.
-                      eventIDs_loc = EventController.getEventsByLocation(pool, event_info.location_name);
-                  }
-                  if (event_info.max_participants > 0) {
-                      eventIDs_par = EventController.getEventsByMaxPar(pool, event_info.max_participants);
-                  }
+          if (event_info.location_name != null) {
+            // first we try finding events at this location.
+            eventIDs_loc = EventController.getEventsByLocation(pool, event_info.location_name);
+          }
+          if (event_info.max_participants > 0) {
+            eventIDs_par = EventController.getEventsByMaxPar(pool, event_info.max_participants);
+          }
 
-                  if (event_info.location_name != null && (event_info.max_participants > 0)) {
-                      for (Long id : eventIDs_loc) {
-                          if (eventIDs_par.contains(id)) {
-                              eventIDs.add(id);
-                          }
-                      }
-                  }else if (event_info.location_name == null && (event_info.max_participants <= 0)) {
-                      no_input = true;
-                  }else if (eventIDs_loc.isEmpty()) {
-                      eventIDs = eventIDs_par;
-                  }else{
-                      eventIDs = eventIDs_loc;
-                  }
+          if (event_info.location_name != null && (event_info.max_participants > 0)) {
+            for (Long id : eventIDs_loc) {
+              if (eventIDs_par.contains(id)) {
+                eventIDs.add(id);
+              }
+            }
+          } else if (event_info.location_name == null && (event_info.max_participants <= 0)) {
+            no_input = true;
+          } else if (eventIDs_loc.isEmpty()) {
+            eventIDs = eventIDs_par;
+          } else {
+            eventIDs = eventIDs_loc;
+          }
 
-                  if (eventIDs.isEmpty()) {
-                      no_input = true;
-                      // no input info given or we can't find valid events, just return list of events in 14 days.
-                      eventIDs = EventController.getEventsInNextNDays(pool, 14);
-                  }
+          if (eventIDs.isEmpty()) {
+            no_input = true;
+            // no input info given or we can't find valid events, just return list of events in 14
+            // days.
+            eventIDs = EventController.getEventsInNextNDays(pool, 14);
+          }
 
-                  for (long curr : eventIDs) {
-                      Event event = EventController.getEventByID(pool, curr);
-                      event.participant_ids = ParticipateController.getUsersByEvent(pool, curr);
-                      result_event.add(event);
-                  }
+          for (long curr : eventIDs) {
+            Event event = EventController.getEventByID(pool, curr);
+            event.participant_ids = ParticipateController.getUsersByEvent(pool, curr);
+            result_event.add(event);
+          }
 
-                  if (no_input) {
-                      DataResponse resp = new DataResponse(202, "No events meet current requirements. Here " +
-                              "are some alternative events for you:", result_event);
-                      return gson.toJson(resp);
-                  }
-                  DataResponse resp = new DataResponse(200, "Success", result_event);
-                  return gson.toJson(resp);
-              });
-
+          if (no_input) {
+            DataResponse resp =
+                new DataResponse(
+                    202,
+                    "No events meet current requirements. Here "
+                        + "are some alternative events for you:",
+                    result_event);
+            return gson.toJson(resp);
+          }
+          DataResponse resp = new DataResponse(200, "Success", result_event);
+          return gson.toJson(resp);
+        });
 
     init();
   }
@@ -505,7 +510,7 @@ public class SparkServer {
    * @param token Bearer token from request.header
    * @param defaultApp FirebaseApp
    * @return a decoded userID
-   * @throws FirebaseAuthException
+   * @throws FirebaseAuthException when necessary
    */
   public static String getUserID(String token, FirebaseApp defaultApp)
       throws FirebaseAuthException {
