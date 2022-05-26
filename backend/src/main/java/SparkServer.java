@@ -305,8 +305,6 @@ public class SparkServer {
                 if (ParticipateController.userParticipateEvent(
                     pool, userID, Long.parseLong(eventID))) {
                   DataResponse resp = new DataResponse(200, "Success", eventID);
-                  event.curr_num_participants += 1;
-                  EventController.updateEvent(pool, event);
                   return gson.toJson(resp);
                 } else {
                   return gson.toJson(new OperationResponse(500, "SQL server error."));
@@ -349,8 +347,6 @@ public class SparkServer {
               if (curr.compareTo(Timestamp.valueOf(event.end_time)) < 0) {
                 if (ParticipateController.userQuitEvent(pool, userID, Long.parseLong(eventID))) {
                   DataResponse resp = new DataResponse(200, "Success", eventID);
-                  event.curr_num_participants -= 1;
-                  EventController.updateEvent(pool, event);
                   return gson.toJson(resp);
                 } else {
                   return gson.toJson(new OperationResponse(500, "SQL server error."));
