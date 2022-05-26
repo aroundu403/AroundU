@@ -130,7 +130,9 @@ public class ParticipateController {
     }
   }
 
-  /** Update the number of current participants in the event
+  /**
+   * Update the number of current participants in the event
+   *
    * @param pool used for database connection
    * @param event_id the unique representation of a user
    * @param newNumParticipant the updated number of participants
@@ -140,7 +142,7 @@ public class ParticipateController {
       DataSource pool, long event_id, int newNumParticipant) {
     try (Connection conn = pool.getConnection()) {
       String stmt =
-          String.format("UPDATE %s SET curr_num_participants = ? WHERE event_id = ?;", TABLE_NAME);
+          String.format("UPDATE events SET curr_num_participants = ? WHERE event_id = ?;");
       try (PreparedStatement updateStmt = conn.prepareStatement(stmt)) {
         updateStmt.setInt(1, newNumParticipant);
         updateStmt.setLong(2, event_id);
