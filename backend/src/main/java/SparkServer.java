@@ -293,17 +293,17 @@ public class SparkServer {
     post(
         "/event/guest",
         (request, response) -> {
-          String eventID = gson.fromJson(request.body(), String.class);
+          long eventID = gson.fromJson(request.body(), Event.class).event_id;
           String userID = getUserID(request.headers("Authorization"), defaultApp);
-          if (EventController.isEventExist(pool, Long.parseLong(eventID))) {
-            Event event = EventController.getEventByID(pool, Long.parseLong(eventID));
+          if (EventController.isEventExist(pool, eventID)) {
+            Event event = EventController.getEventByID(pool, eventID);
             // can only participate if event not filled
             if (event.max_participants >= event.curr_num_participants + 1) {
               Timestamp curr = new Timestamp(System.currentTimeMillis());
               // can only participate if the event isn't ended
               if (curr.compareTo(Timestamp.valueOf(event.end_time)) < 0) {
                 if (ParticipateController.userParticipateEvent(
-                    pool, userID, Long.parseLong(eventID))) {
+                    pool, userID, eventID)) {
                   DataResponse resp = new DataResponse(200, "Success", eventID);
                   return gson.toJson(resp);
                 } else {
@@ -332,20 +332,20 @@ public class SparkServer {
     delete(
         "/event/guest",
         (request, response) -> {
-          String eventID = gson.fromJson(request.body(), String.class);
+          long eventID = gson.fromJson(request.body(), Event.class).event_id;
           String userID = getUserID(request.headers("Authorization"), defaultApp);
           // can only quit if event exists
-          if (EventController.isEventExist(pool, Long.parseLong(eventID))) {
-            Event event = EventController.getEventByID(pool, Long.parseLong(eventID));
+          if (EventController.isEventExist(pool, eventID)) {
+            Event event = EventController.getEventByID(pool, eventID);
             // check if event have participants before searching it in participate table to avoid
             // errors
             if (event.curr_num_participants > 0
                 && ParticipateController.getEventsByUser(pool, userID)
-                    .contains(Long.parseLong(eventID))) {
+                    .contains(eventID)) {
               Timestamp curr = new Timestamp(System.currentTimeMillis());
               // can only quit if the event isn't ended
               if (curr.compareTo(Timestamp.valueOf(event.end_time)) < 0) {
-                if (ParticipateController.userQuitEvent(pool, userID, Long.parseLong(eventID))) {
+                if (ParticipateController.userQuitEvent(pool, userID, eventID)) {
                   DataResponse resp = new DataResponse(200, "Success", eventID);
                   return gson.toJson(resp);
                 } else {
