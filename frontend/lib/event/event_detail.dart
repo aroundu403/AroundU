@@ -1,6 +1,5 @@
 /// Display the detial information of an event such as event name, location, start time,
 /// end time, number of participants, description.
-//import 'dart:ffi';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -11,22 +10,23 @@ import '../main.dart';
 import 'package:aroundu/json/event.dart';
 
 Future<EventInfo> fetchEvent() async {
-  User? user = FirebaseAuth.instance.currentUser;
-  if (user == null) {
-    throw Exception("User has not logged in");
-  }
+  // User? user = FirebaseAuth.instance.currentUser;
+  // if (user == null) {
+  //   throw Exception("User has not logged in");
+  // }
 
-  String token = await user.getIdToken();
+  // String token = await user.getIdToken();
   final response = await http.get(
-      Uri(
-          host: backendAddress,
-          path: "/event/id",
-          queryParameters: {"eventid": "3"}),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token',
-      });
+    Uri(
+        host: backendAddress,
+        path: "/event/id",
+        queryParameters: {"eventid": "3"}),
+    // headers: {
+    //   'Content-Type': 'application/json',
+    //   'Accept': 'application/json',
+    //   'Authorization': 'Bearer $token',
+    // }
+  );
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
     // then parse the JSON.
@@ -40,18 +40,22 @@ Future<EventInfo> fetchEvent() async {
 }
 
 Future<EventInfo> updateEvent() async {
+  User? user = FirebaseAuth.instance.currentUser;
+  if (user == null) {
+    throw Exception("User has not logged in");
+  }
+
+  String token = await user.getIdToken();
   final response = await http.post(
-    Uri(
-        host: backendAddress,
-        path: "/event/guest",
-        queryParameters: {"eventid": "3"}),
-    // headers: <String, String>{
-    //   'Content-Type': 'application/json; charset=UTF-8',
-    // },
-    // body: jsonEncode(<int, int>{
-    //   currNumParticipants: currNumParticipants,
-    // }),
-  );
+      Uri(
+          host: backendAddress,
+          path: "/event/guest",
+          queryParameters: {"eventid": "3"}),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      });
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
     // then parse the JSON.
@@ -64,18 +68,22 @@ Future<EventInfo> updateEvent() async {
 }
 
 Future<EventInfo> quitEvent() async {
+  User? user = FirebaseAuth.instance.currentUser;
+  if (user == null) {
+    throw Exception("User has not logged in");
+  }
+
+  String token = await user.getIdToken();
   final response = await http.delete(
-    Uri(
-        host: backendAddress,
-        path: "/event/guest",
-        queryParameters: {"eventid": "3"}),
-    // headers: <String, String>{
-    //   'Content-Type': 'application/json; charset=UTF-8',
-    // },
-    // body: jsonEncode(<int, int>{
-    //   currNumParticipants: currNumParticipants,
-    // }),
-  );
+      Uri(
+          host: backendAddress,
+          path: "/event/guest",
+          queryParameters: {"eventid": "3"}),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      });
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
     // then parse the JSON.

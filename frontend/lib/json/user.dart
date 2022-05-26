@@ -1,5 +1,6 @@
 /// This is a Dart class the models detialed user information
 /// This will be a 1-1 mapping to the JSON data from backend API
+/// Named UseInfo here because UserInfo has been defined in Firebase
 class UseInfo {
   final int userId;
   final String userName;
