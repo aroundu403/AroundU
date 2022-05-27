@@ -140,7 +140,7 @@ class MyEventState extends State<MyEventPage> {
                                 onTap: () => Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => const EventPage(),
+                                        builder: (context) => const EventPage(eventId: 3,),
                                       ),
                                     ),
                                 child: Card(
@@ -277,7 +277,7 @@ class MyEventState extends State<MyEventPage> {
                                 onTap: () => Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => const EventPage(),
+                                        builder: (context) => const EventPage(eventId: 3),
                                       ),
                                     ),
                                 child: Card(
