@@ -3,8 +3,35 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import '../../main.dart';
-import 'package:aroundu/json/event.dart';
 import 'my_event.dart';
+import 'package:aroundu/json/user.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+Future<UseInfo> fetchUser() async {
+  User? user = FirebaseAuth.instance.currentUser;
+  if (user == null) {
+    throw Exception("User has not logged in");
+  }
+
+  String token = await user.getIdToken();
+  final response = await http.get(Uri(host: backendAddress, path: "/user"),
+      // queryParameters: {"eventid": "3"}),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      });
+  if (response.statusCode == 200) {
+    // If the server did return a 200 OK response,
+    // then parse the JSON.
+
+    return UseInfo.fromJson(jsonDecode(response.body)["data"]);
+  } else {
+    // If the server did not return a 200 OK response,
+    // then throw an exception.
+    throw Exception('Failed to load event');
+  }
+}
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -14,6 +41,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class ProfileState extends State<ProfilePage> {
+  late Future<UseInfo> _user;
   final cardtext = ["CREATED EVENTS", "MY EVENTS", "SETTINGS"];
 
   final ScrollController _controller = ScrollController();
@@ -22,14 +50,15 @@ class ProfileState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
+    _user = fetchUser();
   }
 
   final image = "images/scenary.jpg";
   @override
   Widget build(BuildContext context) {
     return Material(
-        child: SingleChildScrollView(
-            child: Column(children: [
+        // child: SingleChildScrollView(
+        child: Column(children: [
       Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
@@ -81,23 +110,23 @@ class ProfileState extends State<ProfilePage> {
               ),
             ),
             const Padding(padding: EdgeInsets.all(15)),
-            Align(
-                alignment: Alignment.topCenter,
-                child: Column(children: const [
-                  Text("George",
-                      style: TextStyle(
-                          color: Color.fromARGB(255, 255, 255, 255),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 32)),
-                  Padding(padding: EdgeInsets.all(5)),
-                  Text("george@pbuddy.com",
-                      style: TextStyle(
-                          color: Color.fromARGB(255, 255, 255, 255),
-                          fontSize: 24))
-                ])),
+            FutureBuilder<UseInfo>(
+                future: _user,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return UserDetailHelper(userInfo: snapshot.data!);
+                  } else if (snapshot.hasError) {
+                    return const Center(
+                        child: Text('No User Information',
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 81, 65, 143),
+                                fontStyle: FontStyle.italic,
+                                fontSize: 20)));
+                  }
+                  return const CircularProgressIndicator();
+                }),
             const Padding(padding: EdgeInsets.all(10)),
-            Align(
-                alignment: Alignment.bottomCenter,
+            Expanded(
                 child: ListView.builder(
                     controller: _controller,
                     physics: _physics,
@@ -149,6 +178,34 @@ class ProfileState extends State<ProfilePage> {
                                               fontSize: 24))))));
                     }))
           ]))
-    ])));
+    ]));
+  }
+}
+
+class UserDetailHelper extends StatefulWidget {
+  const UserDetailHelper({Key? key, required this.userInfo}) : super(key: key);
+  final UseInfo userInfo;
+
+  @override
+  State<UserDetailHelper> createState() => _UserDetailState();
+}
+
+class _UserDetailState extends State<UserDetailHelper> {
+  late UseInfo user = widget.userInfo;
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+        alignment: Alignment.topCenter,
+        child: Column(children: [
+          Text(user.userName.toString(),
+              style: const TextStyle(
+                  color: Color.fromARGB(255, 255, 255, 255),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 32)),
+          const Padding(padding: EdgeInsets.all(5)),
+          Text(user.email.toString(),
+              style: const TextStyle(
+                  color: Color.fromARGB(255, 255, 255, 255), fontSize: 24))
+        ]));
   }
 }
