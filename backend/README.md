@@ -42,7 +42,7 @@
 - [Connecting to Cloud SQL database](https://github.com/GoogleCloudPlatform/java-docs-samples/blob/main/cloud-sql/mysql/servlet/README.md)
   
 - Put the environment variables into your bash file. The backend will need those secrets to access external
-  dependencies. Contact @John to get the secrets.
+  dependencies. Contact John (wangj616@uw.edu) to get the secrets.
 - Make sure your GCP account has access to the aroundu-403 project.
 - Run maven command listed below to compile
     - There is no additional step to get extra source, once the build is successfully, you should be able to spin up the
@@ -152,8 +152,8 @@ Example request body:
     "event_name": "event3",
     "description": "This is event3.",
     "host_id": "aaa111",
-    "isPublic":1,
-    "isDeleted": 0,
+    "is_public":1,
+    "is_deleted": 0,
     "location_name": "CSE2",
     "latitude":47.653157358950686, 
     "longitude":-122.30507501538806,
@@ -161,7 +161,7 @@ Example request body:
     "end_time": "2022-06-02 12:00:00",
     "max_participants": 20, 
     "curr_num_participants": 10, 
-    "photoID": "event3.jpg",
+    "photo_id": "event3.jpg",
     "icon": "icon3.jpg",
     "address": "University of Washington, 3800 E Stevens Way NE, Seattle, WA 98195",
     "created_at": "Apr 1, 2022, 12:00:00 PM"

@@ -1,6 +1,7 @@
 package DAO;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 // Data representation of an event
 public class Event {
@@ -29,6 +30,7 @@ public class Event {
   public String created_at;
   public String deleted_at;
   public String updated_at;
+  public List<String> participant_ids;
 
   public Event() {}
 

@@ -22,18 +22,17 @@ import static spark.Spark.*;
 /**
  * This class manages all APIs, connection to the database and parsing token from firebase.
  *
- *
  * @author Wenxin Zhang, Wei Wu
  */
 @Slf4j
 public class SparkServer {
   /**
-  * This is the main method of the SparkServer class.
-  * Make sure to connect to the database before running.
-  *
-  * @param args any excessive arguments
-  * @throws IOException
-  */
+   * This is the main method of the SparkServer class. Make sure to connect to the database before
+   * running.
+   *
+   * @param args any excessive arguments
+   * @throws IOException
+   */
   public static void main(String[] args) throws IOException {
     Gson gson = new Gson();
     log.info("Starting server...");
@@ -57,17 +56,19 @@ public class SparkServer {
     FirebaseApp defaultApp = FirebaseApp.initializeApp(options);
 
     // Server side cors setting
-    options("/*", (request, response) -> {
-        String accessControlRequestHeaders = request.headers("Access-Control-Request-Headers");
+    options(
+        "/*",
+        (request, response) -> {
+          String accessControlRequestHeaders = request.headers("Access-Control-Request-Headers");
           if (accessControlRequestHeaders != null) {
-              response.header("Access-Control-Allow-Headers", accessControlRequestHeaders);
+            response.header("Access-Control-Allow-Headers", accessControlRequestHeaders);
           }
           String accessControlRequestMethod = request.headers("Access-Control-Request-Method");
           if (accessControlRequestMethod != null) {
-              response.header("Access-Control-Allow-Methods", accessControlRequestMethod);
+            response.header("Access-Control-Allow-Methods", accessControlRequestMethod);
           }
           return "OK";
-    });
+        });
     before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
 
     /*
@@ -171,19 +172,20 @@ public class SparkServer {
           Event body = gson.fromJson(request.body(), Event.class);
           long eventID = body.event_id;
           if (EventController.isEventExist(pool, eventID)) {
-              String hostID = EventController.getEventByID(pool, eventID).host_id;
-              // comparison: the user id extracted from header must be the same
-              // as the host id of this event in database
-              if (!userID.equals(hostID)) {
-                  return gson.toJson(new OperationResponse(
-                                  403, "No authentication: Only creator of this event can edit"));
-              } else {
-                  eventID = EventController.updateEvent(pool, body);
-                  DataResponse resp = new DataResponse(200, "Success", eventID);
-                  return gson.toJson(resp);
-              }
+            String hostID = EventController.getEventByID(pool, eventID).host_id;
+            // comparison: the user id extracted from header must be the same
+            // as the host id of this event in database
+            if (!userID.equals(hostID)) {
+              return gson.toJson(
+                  new OperationResponse(
+                      403, "No authentication: Only creator of this event can edit"));
+            } else {
+              eventID = EventController.updateEvent(pool, body);
+              DataResponse resp = new DataResponse(200, "Success", eventID);
+              return gson.toJson(resp);
+            }
           } else {
-              return gson.toJson(new OperationResponse(400, "Event not exist"));
+            return gson.toJson(new OperationResponse(400, "Event not exist"));
           }
         });
 
@@ -325,38 +327,37 @@ public class SparkServer {
       ------------------------------- EVENT LISTS/SEARCHING RELATED -----------------------------------
     */
 
-      // GET /event/list
-      // Get id of events that are within n days as a list.
-      // http://localhost:8080/event/list  e.g within next 2 weeks
-      get(
-              "/event/list",
-              (request, response) -> {
-                  //String nday = request.queryParams("nday");
-                  ArrayList<Long> eventIDs =
-                          EventController.getEventsInNextNDays(pool, 14);
-                  ArrayList<Event> result_event = new ArrayList<>();
-                  if (eventIDs.size() > 0) {
-                      for (long curr : eventIDs) {
-                          result_event.add(EventController.getEventByID(pool, curr));
-                      }
-                      DataResponse resp = new DataResponse(200, "Success", result_event);
-                      return gson.toJson(resp);
-                  } else {
-                      return gson.toJson(
-                              new OperationResponse(400, "No Event in the next " + 14 + " days."));
-                  }
-              });
+    // GET /event/list
+    // Get id of events that are within n days as a list.
+    // http://localhost:8080/event/list  e.g within next 2 weeks
+    get(
+        "/event/list",
+        (request, response) -> {
+          // String nday = request.queryParams("nday");
+          ArrayList<Long> eventIDs = EventController.getEventsInNextNDays(pool, 14);
+          ArrayList<Event> result_event = new ArrayList<>();
+          if (eventIDs.size() > 0) {
+            for (long curr : eventIDs) {
+              Event event = EventController.getEventByID(pool, curr);
+              event.participant_ids = ParticipateController.getUsersByEvent(pool, curr);
+              result_event.add(event);
+            }
+            DataResponse resp = new DataResponse(200, "Success", result_event);
+            return gson.toJson(resp);
+          } else {
+            return gson.toJson(new OperationResponse(400, "No Event in the next " + 14 + " days."));
+          }
+        });
 
     // GET /event/search
     // Get id of events that satisfy the filter option as a list.
-
-
 
     init();
   }
 
   /**
    * Decodes and returns a user id through FirebaseAuth
+   *
    * @param token Bearer token from request.header
    * @param defaultApp FirebaseApp
    * @return a decoded userID

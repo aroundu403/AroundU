@@ -1,5 +1,7 @@
 # AroundU
 
+![Fimga Design](./figma.png)
+
 **Team Members:**
 | Name | Role | 
 | --- | ----------- | 
@@ -15,7 +17,10 @@
 > A platform for college student to post and find events within the university community.
 
 **Documentation**
-The detailed onboaring document is in `/frontend` and `/backend`. Refer to those README document for setup, build, test,
+- User Documentaion
+  - The detailed user manual is in [User Documentation](./UserDocumentation.md)
+- Development Documentation: 
+  - The detailed onboaring document is in `/frontend` and `/backend`. Refer to those README document for setup, build, test,
 and deploy application. For technical documentation, please refer to our Notion documents regarding API and Database
 doc.
 
@@ -89,6 +94,3 @@ progress. He contributed to our project by developing the team vision not just t
 
 See `/backend` and `/frontend` directory for details on required installations, setups, and running steps.
 
-## User Manual:
-
-See `UserDocumentation.md` for details.
