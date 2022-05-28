@@ -64,9 +64,11 @@ Please include the following information, so we can better locate the bug:
 
 After you submit a new issue, our team will do our best to investigate and give you respond as soon as possible.
 
-## Known bugs
+## Known issues
 
 1. When first enter into the map view, user current location was not shown. Have to manually click the recenter button
    to show user location icon.
 2. The front end is partially relies on mock data and isn't fully connected to backend. Some states wouldn't be
    persisted to backend.
+3. The image picker in create event page currently isn't support on web version since the underlying library only supports iOS and Andriod.
+4. To use the data and time pikcer on web version, use two fingers to scroll the screen.
