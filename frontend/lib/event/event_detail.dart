@@ -121,43 +121,44 @@ class EventState extends State<EventPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Stack(
+      body: Stack(
       children: [
-        Column(
-          children: [
-            const Padding(padding: EdgeInsets.all(15)),
-            // back to preview page button
-            Row(
-              children: [
-                const Padding(padding: EdgeInsets.all(5)),
-                Align(
-                    alignment: Alignment.topLeft,
-                    child: GestureDetector(
-                        onTap: () => Navigator.pop(context),
-                        child: const Icon(
-                          Icons.chevron_left,
-                          size: 36,
-                          color: Color.fromARGB(255, 81, 65, 143),
-                        )))
-              ],
-            ),
-            const SizedBox(height: 4),
-            FutureBuilder<EventInfo>(
-                future: _event,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return EventDetailHelper(eventInfo: snapshot.data!);
-                  } else if (snapshot.hasError) {
-                    return const Center(
-                        child: Text('Event not found',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 81, 65, 143),
-                                fontStyle: FontStyle.italic,
-                                fontSize: 20)));
-                  }
-                  return const CircularProgressIndicator();
-                }),
-          ],
+        SafeArea(
+          child: Column(
+            children: [
+              // back to preview page button
+              Row(
+                children: [
+                  const Padding(padding: EdgeInsets.all(5)),
+                  Align(
+                      alignment: Alignment.topLeft,
+                      child: GestureDetector(
+                          onTap: () => Navigator.pop(context),
+                          child: const Icon(
+                            Icons.chevron_left,
+                            size: 36,
+                            color: Color.fromARGB(255, 81, 65, 143),
+                          )))
+                ],
+              ),
+              const SizedBox(height: 4),
+              FutureBuilder<EventInfo>(
+                  future: _event,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return EventDetailHelper(eventInfo: snapshot.data!);
+                    } else if (snapshot.hasError) {
+                      return const Center(
+                          child: Text('Event not found',
+                              style: TextStyle(
+                                  color: Color.fromARGB(255, 81, 65, 143),
+                                  fontStyle: FontStyle.italic,
+                                  fontSize: 20)));
+                    }
+                    return const CircularProgressIndicator();
+                  }),
+            ],
+          ),
         ),
         FutureBuilder<EventInfo>(
           future: _event,

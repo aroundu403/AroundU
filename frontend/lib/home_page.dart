@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
                 children: const [
                   MoreButton(),
                   PostEventButton(),
-                  MyProfileButtton(),
+                  MyProfileButton(),
                 ],
               ),
             )
