@@ -212,7 +212,7 @@ class _EventListState extends State<EventList> {
                   onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const EventPage(),
+                          builder: (context) => EventPage(eventId: 3), //eventId: widget.events[index].eventId),
                         ),
                       ),
                   child: Card(

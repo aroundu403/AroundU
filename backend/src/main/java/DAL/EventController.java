@@ -1,6 +1,8 @@
 package DAL; // This class will control the event modules with database
 
 import DAO.Event;
+import DAO.Location;
+import org.apache.commons.lang3.NotImplementedException;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -29,8 +31,8 @@ public class EventController {
       String stmt =
           String.format(
               "INSERT INTO %s (event_code, event_name, description, host_id, is_public, is_deleted, location_name, latitude, "
-                  + "longitude, start_time, end_time, max_participants, curr_num_participants, photo_id, icon, address, created_at) "
-                  + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+                  + "longitude, start_time, end_time, max_participants, curr_num_participants, address, created_at) "
+                  + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
               TABLE_NAME);
       try (PreparedStatement createEventStmt = conn.prepareStatement(stmt)) {
         createEventStmt.setString(1, event.event_code);
@@ -46,12 +48,10 @@ public class EventController {
         createEventStmt.setTimestamp(11, Timestamp.valueOf(event.end_time));
         createEventStmt.setInt(12, event.max_participants);
         createEventStmt.setInt(13, event.curr_num_participants);
-        createEventStmt.setString(14, event.photo_id);
-        createEventStmt.setString(15, event.icon);
-        createEventStmt.setString(16, event.address);
-        createEventStmt.setTimestamp(17, new Timestamp(System.currentTimeMillis()));
-        System.out.println(stmt);
+        createEventStmt.setString(14, event.address);
+        createEventStmt.setTimestamp(15, new Timestamp(System.currentTimeMillis()));
         createEventStmt.executeUpdate();
+        resetIdIndex(pool);
       }
       try (PreparedStatement getIDStmt =
           conn.prepareStatement("SELECT LAST_INSERT_ID() from events")) {
@@ -165,6 +165,7 @@ public class EventController {
         updateEventStmt.setInt(2, 1);
         updateEventStmt.setLong(3, event_id);
         updateEventStmt.executeUpdate();
+        resetIdIndex(pool);
         return true;
       }
     } catch (SQLException e) {
@@ -230,6 +231,211 @@ public class EventController {
         }
         return eventIDs;
       }
+    }
+  }
+
+  /**
+   * Returns a list of event_ids will start within the next 14 days within the current mapbox
+   *
+   * @param pool used for database connection
+   * @param topLeft on the mapbox
+   * @param topRight on the mapbox
+   * @param botLeft on the mapbox
+   * @param botRight on the mapbox
+   * @return a list of event_ids
+   * @throws SQLException
+   */
+  public static ArrayList<Long> getEventsInMapBox(
+      DataSource pool, Location topLeft, Location topRight, Location botLeft, Location botRight)
+      throws SQLException {
+    ArrayList<Long> eventIDs = new ArrayList<>();
+    try (Connection conn = pool.getConnection()) {
+      String stmt =
+          String.format(
+              "SELECT event_id FROM %s WHERE latitude BETWEEN ? and ? AND longitude BETWEEN ? and ?;",
+              TABLE_NAME);
+      try (PreparedStatement getEventsStmt = conn.prepareStatement(stmt)) {
+        getEventsStmt.setFloat(1, topLeft.longitude);
+        getEventsStmt.setFloat(2, topRight.longitude);
+        getEventsStmt.setFloat(3, botLeft.latitude);
+        getEventsStmt.setFloat(2, topLeft.latitude);
+        ResultSet eventResults = getEventsStmt.executeQuery();
+
+        while (eventResults.next()) {
+          eventIDs.add(eventResults.getLong(1));
+        }
+
+        ArrayList<Long> eventIDIn2Weeks = getEventsInNextNDays(pool, 14);
+        eventIDs.retainAll(eventIDIn2Weeks);
+        return eventIDs;
+      }
+    }
+  }
+
+  /**
+   * Returns a list of event_ids will start within the next two weeks within the number of given
+   * miles
+   *
+   * @param pool used for database connection
+   * @param location the given location
+   * @param miles the range to search
+   * @return a list of event_ids
+   * @throws SQLException
+   */
+  public static ArrayList<Long> getNearbyEvents(DataSource pool, Location location, int miles)
+      throws SQLException {
+    ArrayList<Long> eventIDs = new ArrayList<>();
+    try (Connection conn = pool.getConnection()) {
+      String stmt =
+          String.format(
+              "SELECT event_id,\n"
+                  + " ( 3959 * acos( cos( radians(?)) cos(radians(latitude)) * cos(radians(longitude) - radians(?) )\n"
+                  + "  + sin( radians(?) ) * sin( radians( latitude ) ) ) ) AS distance FROM %s HAVING distance < ?;",
+              TABLE_NAME);
+      try (PreparedStatement getEventsStmt = conn.prepareStatement(stmt)) {
+        getEventsStmt.setFloat(1, location.latitude);
+        getEventsStmt.setFloat(2, location.longitude);
+        getEventsStmt.setFloat(3, location.latitude);
+        getEventsStmt.setInt(4, miles);
+        ResultSet eventResults = getEventsStmt.executeQuery();
+        while (eventResults.next()) {
+          eventIDs.add(eventResults.getLong(1));
+          double distance = eventResults.getDouble(2);
+        }
+      }
+      ArrayList<Long> eventIDIn2Weeks = getEventsInNextNDays(pool, 14);
+      eventIDs.retainAll(eventIDIn2Weeks);
+      return eventIDs;
+    }
+  }
+
+  /**
+   * Returns a list of future event_id that is at a geo location.
+   *
+   * @param pool used for database connection
+   * @param location_name the location name given
+   * @return a list of events
+   */
+  public static ArrayList<Long> getEventsByLocation(DataSource pool, String location_name)
+      throws SQLException {
+    ArrayList<Long> eventIDs = new ArrayList<>();
+    try (Connection conn = pool.getConnection()) {
+      String stmt =
+          String.format(
+              "SELECT event_id FROM %s WHERE location_name = ? AND is_deleted = 0;", TABLE_NAME);
+      try (PreparedStatement getEventsStmt = conn.prepareStatement(stmt)) {
+        getEventsStmt.setString(1, location_name);
+        ResultSet eventResults = getEventsStmt.executeQuery();
+        while (eventResults.next()) {
+          eventIDs.add(eventResults.getLong(1));
+        }
+        eventResults.close();
+      }
+      ArrayList<Long> eventIDIn2Weeks = getEventsInNextNDays(pool, 14);
+      eventIDs.retainAll(eventIDIn2Weeks);
+      return eventIDs;
+    }
+  }
+
+  /**
+   * Returns a list of future event_id that is at a geo location.
+   *
+   * @param pool used for database connection
+   * @param max_participants the max number of participants
+   * @return a list of events
+   */
+  public static ArrayList<Long> getEventsByMaxPar(DataSource pool, int max_participants)
+      throws SQLException {
+    ArrayList<Long> eventIDs = new ArrayList<>();
+    try (Connection conn = pool.getConnection()) {
+      String stmt =
+          String.format(
+              "SELECT event_id FROM %s WHERE max_participants <= ? AND is_deleted = 0;",
+              TABLE_NAME);
+      try (PreparedStatement getEventsStmt = conn.prepareStatement(stmt)) {
+        getEventsStmt.setInt(1, max_participants);
+        ResultSet eventResults = getEventsStmt.executeQuery();
+        while (eventResults.next()) {
+          eventIDs.add(eventResults.getLong(1));
+        }
+        eventResults.close();
+      }
+      ArrayList<Long> eventIDIn2Weeks = getEventsInNextNDays(pool, 14);
+      eventIDs.retainAll(eventIDIn2Weeks);
+      return eventIDs;
+    }
+  }
+
+  /**
+   * Returns a list of event_id that a host created
+   *
+   * @param pool used for database connection
+   * @param host_id the unique representation of a user
+   * @return a list of events
+   */
+  public static ArrayList<Long> getEventsByHost(DataSource pool, String host_id)
+      throws SQLException {
+    ArrayList<Long> eventIDs = new ArrayList<>();
+    try (Connection conn = pool.getConnection()) {
+      String stmt =
+          String.format(
+              "SELECT event_id FROM %s WHERE host_id = ? AND is_deleted = 0;", TABLE_NAME);
+      try (PreparedStatement getEventsStmt = conn.prepareStatement(stmt)) {
+        getEventsStmt.setString(1, host_id);
+        ResultSet eventResults = getEventsStmt.executeQuery();
+        while (eventResults.next()) {
+          eventIDs.add(eventResults.getLong(1));
+        }
+        eventResults.close();
+      }
+      return eventIDs;
+    }
+  }
+
+  /**
+   * Returns a list future of event_id that a host created
+   *
+   * @param pool used for database connection
+   * @param keyword the keyword given for searching event
+   * @return a list of events
+   */
+  public static ArrayList<Long> getEventsByKeyWord(DataSource pool, String keyword)
+      throws SQLException {
+    ArrayList<Long> eventIDs = new ArrayList<>();
+    try (Connection conn = pool.getConnection()) {
+      String stmt =
+          String.format(
+              "SELECT event_id FROM %s WHERE event_name LIKE ? AND is_deleted = 0;", TABLE_NAME);
+      try (PreparedStatement getEventsStmt = conn.prepareStatement(stmt)) {
+        getEventsStmt.setString(1, "%" + keyword + "%");
+        ResultSet eventResults = getEventsStmt.executeQuery();
+        while (eventResults.next()) {
+          eventIDs.add(eventResults.getLong(1));
+        }
+        eventResults.close();
+      }
+      ArrayList<Long> eventIDIn2Weeks = getEventsInNextNDays(pool, 14);
+      eventIDs.retainAll(eventIDIn2Weeks);
+      return eventIDs;
+    }
+  }
+
+  /**
+   * Reset the auto_increment index of the table
+   *
+   * @param pool used for database connection
+   * @throws SQLException
+   */
+  public static void resetIdIndex(DataSource pool) throws SQLException {
+    try (Connection conn = pool.getConnection()) {
+      PreparedStatement countStmt = conn.prepareStatement("SELECT COUNT(event_id) FROM events;");
+      ResultSet countResult = countStmt.executeQuery();
+      countResult.next();
+      int cardinality = countResult.getInt(1);
+      PreparedStatement resetIndexStmt =
+          conn.prepareStatement("ALTER TABLE events AUTO_INCREMENT = ?;");
+      resetIndexStmt.setInt(1, cardinality + 1);
+      resetIndexStmt.executeUpdate();
     }
   }
 }

@@ -3,6 +3,7 @@
 /// It will be the main page that users will interact with after they have signed in.
 import 'package:aroundu/event/create_event_page.dart';
 import 'package:aroundu/event/map_view.dart';
+import 'package:aroundu/user/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'event/list_view.dart';
@@ -98,8 +99,8 @@ class MoreButton extends StatelessWidget {
         child: Material(
           color: const Color.fromARGB(255, 248, 249, 255),
           child: InkWell(
-            splashColor: Theme.of(context).focusColor, 
-            onTap: () {}, 
+            splashColor: Theme.of(context).focusColor,
+            onTap: () {},
             child: const Icon(Icons.more_vert),
           ),
         ),
@@ -155,8 +156,8 @@ class PostEventButton extends StatelessWidget {
   }
 }
 
-class MyProfileButtton extends StatelessWidget {
-  const MyProfileButtton({Key? key}) : super(key: key);
+class MyProfileButton extends StatelessWidget {
+  const MyProfileButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -177,12 +178,37 @@ class MyProfileButtton extends StatelessWidget {
         child: Material(
           color: const Color.fromARGB(255, 248, 249, 255),
           child: InkWell(
-            splashColor: Theme.of(context).focusColor, 
-            onTap: () {}, 
+            splashColor: Theme.of(context).focusColor,
+            onTap: () {
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => const ProfilePage()),
+              // );
+              Navigator.of(context).push(createRoute(const ProfilePage()));
+            },
             child: const Icon(Icons.person),
           ),
         ),
       ),
+    );
+  }
+
+  Route createRoute(Widget page) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(1.0, 0.0);
+        const end = Offset.zero;
+        const curve = Curves.ease;
+
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
     );
   }
 }

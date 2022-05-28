@@ -12,10 +12,14 @@ import com.google.firebase.auth.FirebaseToken;
 import com.google.gson.Gson;
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.sql.Array;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Comparator;
+
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.FirebaseApp;
+import jnr.ffi.Struct;
 import lombok.extern.slf4j.Slf4j;
 
 import static spark.Spark.*;
@@ -31,17 +35,20 @@ public class SparkServer {
    * running.
    *
    * @param args any excessive arguments
-   * @throws IOException
+   * @throws IOException when necessary
    */
   public static void main(String[] args) throws IOException {
     Gson gson = new Gson();
     log.info("Starting server...");
 
-    port(Integer.valueOf(System.getenv().getOrDefault("PORT", "8080")));
+    port(Integer.parseInt(System.getenv().getOrDefault("PORT", "8080")));
     // Database accessing preparation
     String dbUser = System.getenv("DB_USER");
     String dbPass = System.getenv("DB_PASS");
     String dbName = System.getenv("DB_NAME");
+    if (args.length != 0 && args[0].equals("test")) {
+      dbName = System.getenv("DB_TEST_NAME");
+    }
     String instanceConnectionName = System.getenv("INSTANCE_CONNECTION_NAME");
 
     // String kmsUri = System.getenv("CLOUD_KMS_URI");   // for data encryption
@@ -196,17 +203,17 @@ public class SparkServer {
     delete(
         "/event",
         (request, response) -> {
-          String eventID = gson.fromJson(request.body(), String.class);
+          long eventID = gson.fromJson(request.body(), Event.class).event_id;
           String userID = getUserID(request.headers("Authorization"), defaultApp);
           // can only delete if event exists
-          if (EventController.isEventExist(pool, Long.parseLong(eventID))) {
-            Event event = EventController.getEventByID(pool, Long.parseLong(eventID));
+          if (EventController.isEventExist(pool, eventID)) {
+            Event event = EventController.getEventByID(pool, eventID);
             // can only delete if is the creator
             if (event.host_id.equals(userID)) {
               Timestamp curr = new Timestamp(System.currentTimeMillis());
               // can only delete if the event isn't started
               if (curr.compareTo(Timestamp.valueOf(event.start_time)) < 0) {
-                if (EventController.deleteEvent(pool, Long.parseLong(eventID))) {
+                if (EventController.deleteEvent(pool, eventID)) {
                   DataResponse resp = new DataResponse(200, "Success", null);
                   event.deleted_at = curr.toString();
                   EventController.updateEvent(pool, event);
@@ -228,8 +235,26 @@ public class SparkServer {
         });
 
     // need to add later:
-    // VIEW /event
+    // /event/created
     // show the "created event" list
+    get(
+        "/event/created",
+        (request, response) -> {
+          String userID = getUserID(request.headers("Authorization"), defaultApp);
+          ArrayList<Long> eventIDs = EventController.getEventsByHost(pool, userID);
+          ArrayList<Event> result_event = new ArrayList<>();
+          if (eventIDs.size() > 0) {
+            for (long curr : eventIDs) {
+              Event event = EventController.getEventByID(pool, curr);
+              event.participant_ids = ParticipateController.getUsersByEvent(pool, curr);
+              result_event.add(event);
+            }
+            DataResponse resp = new DataResponse(200, "Success", result_event);
+            return gson.toJson(resp);
+          } else {
+            return gson.toJson(new OperationResponse(403, "You did not create any event."));
+          }
+        });
 
     /*
       ------------------------------- EVENT PARTICIPANTS RELATED -----------------------------------
@@ -239,6 +264,24 @@ public class SparkServer {
     // need to add later:
     // GET /event/guest
     // show the "my event" list
+    get(
+        "/event/guest",
+        (request, response) -> {
+          String userID = getUserID(request.headers("Authorization"), defaultApp);
+          ArrayList<Long> eventIDs = ParticipateController.getEventsByUser(pool, userID);
+          ArrayList<Event> result_event = new ArrayList<>();
+          if (eventIDs.size() > 0) {
+            for (long curr : eventIDs) {
+              Event event = EventController.getEventByID(pool, curr);
+              event.participant_ids = ParticipateController.getUsersByEvent(pool, curr);
+              result_event.add(event);
+            }
+            DataResponse resp = new DataResponse(200, "Success", result_event);
+            return gson.toJson(resp);
+          } else {
+            return gson.toJson(new OperationResponse(403, "You did not participate in any event."));
+          }
+        });
 
     // POST /event/guest
     // Participate in an event
@@ -250,20 +293,18 @@ public class SparkServer {
     post(
         "/event/guest",
         (request, response) -> {
-          String eventID = gson.fromJson(request.body(), String.class);
+          long eventID = gson.fromJson(request.body(), Event.class).event_id;
           String userID = getUserID(request.headers("Authorization"), defaultApp);
-          if (EventController.isEventExist(pool, Long.parseLong(eventID))) {
-            Event event = EventController.getEventByID(pool, Long.parseLong(eventID));
+          if (EventController.isEventExist(pool, eventID)) {
+            Event event = EventController.getEventByID(pool, eventID);
             // can only participate if event not filled
             if (event.max_participants >= event.curr_num_participants + 1) {
               Timestamp curr = new Timestamp(System.currentTimeMillis());
               // can only participate if the event isn't ended
               if (curr.compareTo(Timestamp.valueOf(event.end_time)) < 0) {
                 if (ParticipateController.userParticipateEvent(
-                    pool, userID, Long.parseLong(eventID))) {
+                    pool, userID, eventID)) {
                   DataResponse resp = new DataResponse(200, "Success", eventID);
-                  event.curr_num_participants += 1;
-                  EventController.updateEvent(pool, event);
                   return gson.toJson(resp);
                 } else {
                   return gson.toJson(new OperationResponse(500, "SQL server error."));
@@ -291,23 +332,21 @@ public class SparkServer {
     delete(
         "/event/guest",
         (request, response) -> {
-          String eventID = gson.fromJson(request.body(), String.class);
+          long eventID = gson.fromJson(request.body(), Event.class).event_id;
           String userID = getUserID(request.headers("Authorization"), defaultApp);
           // can only quit if event exists
-          if (EventController.isEventExist(pool, Long.parseLong(eventID))) {
-            Event event = EventController.getEventByID(pool, Long.parseLong(eventID));
+          if (EventController.isEventExist(pool, eventID)) {
+            Event event = EventController.getEventByID(pool, eventID);
             // check if event have participants before searching it in participate table to avoid
             // errors
             if (event.curr_num_participants > 0
                 && ParticipateController.getEventsByUser(pool, userID)
-                    .contains(Long.parseLong(eventID))) {
+                    .contains(eventID)) {
               Timestamp curr = new Timestamp(System.currentTimeMillis());
               // can only quit if the event isn't ended
               if (curr.compareTo(Timestamp.valueOf(event.end_time)) < 0) {
-                if (ParticipateController.userQuitEvent(pool, userID, Long.parseLong(eventID))) {
+                if (ParticipateController.userQuitEvent(pool, userID, eventID)) {
                   DataResponse resp = new DataResponse(200, "Success", eventID);
-                  event.curr_num_participants -= 1;
-                  EventController.updateEvent(pool, event);
                   return gson.toJson(resp);
                 } else {
                   return gson.toJson(new OperationResponse(500, "SQL server error."));
@@ -328,7 +367,7 @@ public class SparkServer {
     */
 
     // GET /event/list
-    // Get id of events that are within n days as a list.
+    // Get list of events that are within n days as a list.
     // http://localhost:8080/event/list  e.g within next 2 weeks
     get(
         "/event/list",
@@ -349,8 +388,114 @@ public class SparkServer {
           }
         });
 
+    // POST /event/search
+    // Get list of events that has name containing the keyword.
+    // Request body must include String: "event_name" = "the key word"
+    // If no info given or no valid results, just return all events in recent days.
+    // http://localhost:8080/event/search
+    post(
+        "/event/search",
+        (request, response) -> {
+          Event event_info = gson.fromJson(request.body(), Event.class);
+          ArrayList<Event> result_event = new ArrayList<>();
+          ArrayList<Long> eventIDs = new ArrayList<>();
+          boolean no_input = false;
+
+          if (event_info.event_name != null) {
+            // first we try finding events at this location.
+            eventIDs = EventController.getEventsByKeyWord(pool, event_info.event_name);
+          }
+
+          if (eventIDs.isEmpty()) {
+            no_input = true;
+            // no input info given or we can't find valid events, just return list of events in 14
+            // days.
+            eventIDs = EventController.getEventsInNextNDays(pool, 14);
+          }
+
+          for (long curr : eventIDs) {
+            Event event = EventController.getEventByID(pool, curr);
+            event.participant_ids = ParticipateController.getUsersByEvent(pool, curr);
+            result_event.add(event);
+          }
+
+          if (no_input) {
+            DataResponse resp =
+                new DataResponse(
+                    202,
+                    "No events meet current requirements. Here "
+                        + "are some alternative events for you:",
+                    result_event);
+            return gson.toJson(resp);
+          }
+          DataResponse resp = new DataResponse(200, "Success", result_event);
+          return gson.toJson(resp);
+        });
+
     // GET /event/search
-    // Get id of events that satisfy the filter option as a list.
+    // Get list of events that satisfy the filter option as a list.
+    // Can contain information: max_participants, location_name.
+    // max_participants: 2-15, inclusive or INFINITE (just use 100000000)
+    // location_name must be a valid building name/landmark
+    // If no info given or no valid results, just return all events in recent days.
+    // http://localhost:8080/event/search
+    get(
+        "/event/search",
+        (request, response) -> {
+          Event event_info = gson.fromJson(request.body(), Event.class);
+          ArrayList<Event> result_event = new ArrayList<>();
+          ArrayList<Long> eventIDs = new ArrayList<>();
+          ArrayList<Long> eventIDs_loc = new ArrayList<>();
+          ArrayList<Long> eventIDs_par = new ArrayList<>();
+          boolean no_input = false;
+
+          if (event_info.location_name != null) {
+            // first we try finding events at this location.
+            eventIDs_loc = EventController.getEventsByLocation(pool, event_info.location_name);
+          }
+          if (event_info.max_participants > 0) {
+            eventIDs_par = EventController.getEventsByMaxPar(pool, event_info.max_participants);
+          }
+
+          if (event_info.location_name != null && (event_info.max_participants > 0)) {
+            for (Long id : eventIDs_loc) {
+              if (eventIDs_par.contains(id)) {
+                eventIDs.add(id);
+              }
+            }
+          } else if (event_info.location_name == null && (event_info.max_participants <= 0)) {
+            no_input = true;
+          } else if (eventIDs_loc.isEmpty()) {
+            eventIDs = eventIDs_par;
+          } else {
+            eventIDs = eventIDs_loc;
+          }
+
+          if (eventIDs.isEmpty()) {
+            no_input = true;
+            // no input info given or we can't find valid events, just return list of events in 14
+            // days.
+            eventIDs = EventController.getEventsInNextNDays(pool, 14);
+          }
+
+          for (long curr : eventIDs) {
+            Event event = EventController.getEventByID(pool, curr);
+            event.participant_ids = ParticipateController.getUsersByEvent(pool, curr);
+            result_event.add(event);
+          }
+
+          if (no_input) {
+            DataResponse resp =
+                new DataResponse(
+                    202,
+                    "No events meet current requirements. Here "
+                        + "are some alternative events for you:",
+                    result_event);
+            return gson.toJson(resp);
+          }
+          DataResponse resp = new DataResponse(200, "Success", result_event);
+          return gson.toJson(resp);
+        });
 
     init();
   }
@@ -361,7 +506,7 @@ public class SparkServer {
    * @param token Bearer token from request.header
    * @param defaultApp FirebaseApp
    * @return a decoded userID
-   * @throws FirebaseAuthException
+   * @throws FirebaseAuthException when necessary
    */
   public static String getUserID(String token, FirebaseApp defaultApp)
       throws FirebaseAuthException {
@@ -369,4 +514,9 @@ public class SparkServer {
     FirebaseToken decodedToken = FirebaseAuth.getInstance(defaultApp).verifyIdToken(token);
     return decodedToken.getUid();
   }
+
+  //  /** Stop the server. */
+  //  public static void stopServer() {
+  //    System.exit(0);
+  //  }
 }

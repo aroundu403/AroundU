@@ -39,8 +39,8 @@ building from source code. Double think before you go into the setup hell**
 - Make sure your GCP account has access to the `aroundu-403` project
 - Login your GCP account in your gcloud cli
 - Install the Vscode Flutter plugin so you have more development support
-- (Optional) Run `firebase init` to setup additional Firebase support (e.g. emulators and debuggers)
-- Run `flutter pub get` to install all the FLutter dependences
+- Run `firebase init` to setup additional Firebase support (e.g. emulators and debuggers)
+- Run `flutter pub get` to install all the Flutter dependencies
 - Run `flutter run` to spin up the Flutter project.
 - Troubleshoot any environment problem. (You are likely going to run into environment problems)
 
@@ -68,9 +68,9 @@ Select a debugging environment and run Flutter by:
 ```
 flutter run
 ```
-It is earier to run the application on Chrome since the start-up time is faster. </br>
-It is also possible to run the applciation on iOS devices and simulator. Developers need to have Xcode and a testing iOS device in their hand. The run cyle is much longer when running on iOS. </br>
-We recommand developing on web and testing on iOS devices to perform sanity check.
+It is earlier to run the application on Chrome since the start-up time is faster. </br>
+It is also possible to run the application on iOS devices and simulator. Developers need to have Xcode and a testing iOS device in their hand. The run cycle is much longer when running on iOS. </br>
+We recommend developing on web and testing on iOS devices to perform sanity check.
 
 ## How to test the system
 
