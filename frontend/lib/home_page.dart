@@ -40,35 +40,38 @@ class _HomePageState extends State<HomePage> {
             )
           ),
           // map view and list view toggle button
-          Align(
-            alignment: Alignment.topLeft,
-            child: Container(
-              margin: const EdgeInsets.only(left: 15, top: 10),
-              child: FlutterToggleTab(  
-                width: 20,  
-                borderRadius: 40,  
-                selectedIndex: _viewMode == ViewMode.map ? 0 : 1, 
-                selectedTextStyle: TextStyle(
-                  color: Theme.of(context).focusColor,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600
+          SafeArea(
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Container(
+                margin: const EdgeInsets.only(left: 15, top: 10),
+                child: FlutterToggleTab(  
+                  width: 25,  
+                  borderRadius: 40,  
+                  selectedIndex: _viewMode == ViewMode.map ? 0 : 1, 
+                  selectedTextStyle: TextStyle(
+                    color: Theme.of(context).focusColor,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600
+                  ),
+                  unSelectedTextStyle: TextStyle(
+                    color: Theme.of(context).primaryColor.withAlpha(170),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600
+                  ),
+                  labels: const ["Map","List"],  
+                  selectedLabelIndex: (index) { 
+                    setState(() {
+                      _viewMode = index == 0 ? ViewMode.map : ViewMode.list;
+                    });
+                  },
                 ),
-                unSelectedTextStyle: TextStyle(
-                  color: Theme.of(context).primaryColor.withAlpha(170),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600
-                ),
-                labels: const ["Map","List"],  
-                selectedLabelIndex: (index) { 
-                  setState(() {
-                    _viewMode = index == 0 ? ViewMode.map : ViewMode.list;
-                  });
-                },
               ),
             ),
           )
         ],
       ),
+      
     );
   }
 }

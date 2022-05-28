@@ -7,79 +7,73 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:path/path.dart';
+
+// The quality of image
+const int imageQuality = 25;
 
 class ImageUploads extends StatefulWidget {
-  ImageUploads({Key? key}) : super(key: key);
+  const ImageUploads({Key? key}) : super(key: key);
 
   @override
-  _ImageUploadsState createState() => _ImageUploadsState();
+  ImageUploadsState createState() => ImageUploadsState();
 }
 
-class _ImageUploadsState extends State<ImageUploads> {
+class ImageUploadsState extends State<ImageUploads> {
 
   File? _photo;
   final ImagePicker _picker = ImagePicker();
 
   Future imgFromGallery() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-
-    setState(() {
-      if (pickedFile != null) {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery, imageQuality: imageQuality);
+    if (pickedFile != null) {
+      setState(() {
         _photo = File(pickedFile.path);
-      } else {
-        print('No image selected.');
-      }
-    });
+      });
+    } else {
+      throw Exception('No image selected.');
+    }
   }
 
   Future imgFromCamera() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
-
-    setState(() {
-      if (pickedFile != null) {
+    final pickedFile = await _picker.pickImage(source: ImageSource.camera, imageQuality: imageQuality);
+    if (pickedFile != null) {
+      setState(() {
         _photo = File(pickedFile.path);
-      } else {
-        print('No image selected.');
-      }
-    });
+      });
+    } else {
+      throw Exception('No image selected.');
+    }
   }
 
-  Future uploadFile() async {
+  Future uploadFile(int eventId) async {
     if (_photo == null) return;
 
     try {
-      final ref = FirebaseStorage.instance.ref().child('event1/image1');
+      final ref = FirebaseStorage.instance.ref().child('event$eventId/image1');
       await ref.putFile(_photo!);
     } catch (e) {
-      print('file upload error occured');
+      throw Exception('file upload error occured');
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: GestureDetector(
-        onTap: () {
-          _showPicker(context);
-        },
-        // todo need to be replaced with box widget
-        child: DottedBorder(
-          borderType: BorderType.RRect,
-          radius: const Radius.circular(20),
-          dashPattern: const [6, 6, 6, 6],
-          color: Colors.grey,
-          strokeWidth: 1,
-          child: ClipRRect(
-            borderRadius: const BorderRadius.all(Radius.circular(20)),
-            child: _photo != null ? 
-              Image.file(
-                _photo!,
-                width: 300,
-                height: 200,
-                fit: BoxFit.fitHeight,
-              ) : 
-              Container(
+      child: _photo == null ? 
+        GestureDetector(
+          onTap: () {
+            _showPicker(context);
+          },
+          // todo need to be replaced with box widget
+          child: DottedBorder(
+            borderType: BorderType.RRect,
+            radius: const Radius.circular(20),
+            dashPattern: const [6, 6, 6, 6],
+            color: Colors.grey,
+            strokeWidth: 1,
+            child: ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(20)),
+              child: SizedBox(
                 width: 300,
                 height: 200,
                 child: Icon(
@@ -87,10 +81,16 @@ class _ImageUploadsState extends State<ImageUploads> {
                   color: Colors.grey[800],
                 ),
               ),
-          ),
-        ),
-      ),
-    );
+            ),
+          )
+        )
+        :
+        Image.file(
+          _photo!,
+          height: 250,
+          fit: BoxFit.fitHeight,
+        )
+      );
   }
 
   // pop up a modal sheet for user to select which method they would like to pick the image

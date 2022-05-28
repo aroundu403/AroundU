@@ -2,12 +2,13 @@
 /// Create event page allows user to create an event by providing the event infomation such as
 /// event title, desription, location, and time.
 import 'dart:convert';
+
 import 'package:aroundu/component/image_upload.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sprintf/sprintf.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../component/address_search.dart';
 import '../component/event_input_card.dart';
 import '../json/place.dart';
@@ -30,42 +31,45 @@ class _CreateEeventPageState extends State<CreateEeventPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints viewportConstraints) {
-          return SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: viewportConstraints.maxHeight,
-              ),
-              child: IntrinsicHeight(
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      children: [
-                        const Padding(padding: EdgeInsets.only(left: 5, top: 20, bottom: 20)),
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: GestureDetector(
-                              onTap: () => Navigator.pop(context),
-                              child: Icon(
-                                Icons.chevron_left,
-                                size: 36,
-                                color: Theme.of(context).backgroundColor,
-                              ))),
-                      ],
-                    ),
-                    const Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 20, right: 20, top: 20),
-                        child: EventInputs(),
-                      )
-                    ),
-                  ],
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints viewportConstraints) {
+            return SingleChildScrollView(
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: viewportConstraints.maxHeight,
+                ),
+                child: IntrinsicHeight(
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        children: [
+                          const Padding(padding: EdgeInsets.only(left: 5, top: 20, bottom: 20)),
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: GestureDetector(
+                                onTap: () => Navigator.pop(context),
+                                child: Icon(
+                                  Icons.chevron_left,
+                                  size: 36,
+                                  color: Theme.of(context).backgroundColor,
+                                ))),
+                        ],
+                      ),
+                      const Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+                          child: EventInputs(),
+                        )
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
@@ -79,6 +83,8 @@ class EventInputs extends StatefulWidget {
 }
 
 class _EventInputsState extends State<EventInputs> {
+  // This allows us to identify children in the widget tree
+  final _imageUploadState = GlobalKey<ImageUploadsState>();
   final _formKey = GlobalKey<FormState>();
   // Input controllers
   late TextEditingController _titleController;
@@ -90,7 +96,7 @@ class _EventInputsState extends State<EventInputs> {
   late TextEditingController _endTimeController;
   double _maxCapcityValue = 10;
   bool isLoading = false;
-  late Place _place;
+  Place? _place;
 
   @override
   void initState() {
@@ -131,28 +137,50 @@ class _EventInputsState extends State<EventInputs> {
         const SnackBar(content: Text('Creating Event')),
       );
       final response = await http.post(
-      Uri(
-        host: backendAddress,
-        path: "event",
-      ),
-      headers: <String, String> {
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode(<String, dynamic>{
-        'event_name': _titleController.text,
-        'description': _descriController.text,
-        'is_public': 1,
-        'location_name': _place.name,
-        'latitude': _place.location.latitude,
-        'longitude': _place.location.longitude,
-        'start_time': _startDateController.text + ' ' + _startTimeController.text + ':00',
-        'end_time': _endDateController.text + ' ' + _endTimeController.text + ':00',
-        'max_participants': _maxCapcityValue,
-        'address': _place.address
+        Uri(
+          scheme: "https",
+          host: backendAddress,
+          path: "/event",
+        ),
+        headers: <String, String> {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(<String, dynamic>{
+          'event_name': _titleController.text,
+          'description': _descriController.text,
+          'is_public': 1,
+          'location_name': _place!.name,
+          'latitude': _place!.location.latitude,
+          'longitude': _place!.location.longitude,
+          'start_time': _startDateController.text + ' ' + _startTimeController.text + ':00',
+          'end_time': _endDateController.text + ' ' + _endTimeController.text + ':00',
+          'max_participants': _maxCapcityValue,
+          'address': _place!.address
       }));
+
+      if (response.statusCode == 200) {
+        int eventId = jsonDecode(response.body)["data"];
+        await _imageUploadState.currentState!.uploadFile(eventId);
+        // return to the home page after image upload
+        Navigator.pop(context);
+      }
+    } else {
+      // warm the user about invalid input with short toast.
+      Fluttertoast.showToast(
+        msg: "Invalid Input",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        backgroundColor: Colors.black.withAlpha(150),
+        timeInSecForIosWeb: 3,
+        fontSize: 20.0
+      );
     }
+  }
+
+  String? digits(int value, int length) {
+    return '$value'.padLeft(length, "0");
   }
 
   @override
@@ -173,23 +201,11 @@ class _EventInputsState extends State<EventInputs> {
       )
     );
 
-    var dateInputDecoration = InputDecoration(
-      hintText: "Date",
-      focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
+    var placeInputDecoration = InputDecoration(
+      suffixIcon: IconButton(
+      onPressed: _addressController.clear,
+        icon: const Icon(Icons.clear),
       ),
-      enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
-      ),
-      errorBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
-      ),
-      focusedErrorBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
-      )
-    );
-    var timeInputDecoration = InputDecoration(
-      hintText: "Time",
       focusedBorder: OutlineInputBorder(
         borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
       ),
@@ -221,171 +237,100 @@ class _EventInputsState extends State<EventInputs> {
             }
             return null;
           },
+          autovalidateMode: AutovalidateMode.onUserInteraction,
         ),
       ]
     );
 
     // start date and time picker
-    var stateDateTime = Row(
-      children: [
-        // The start title should be centered in the 2/12 flex space
-        Expanded(
-          flex: 2,
-          child: Center(
-            child: Text(
-              "Start:",
-              style: TextStyle(
-                color: Theme.of(context).primaryColor,
-                fontWeight: FontWeight.w700,
-                fontSize: 16,
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(width: 10),
-        // create data picker by using the flutter_date_picker
-        Expanded(
-          flex: 5,
-          child: TextFormField(
-            controller: _startDateController,
-            cursorColor: Theme.of(context).primaryColor,
-            decoration: dateInputDecoration,
-            onTap: () {
-              // pop up a date picker on the bottom of the screen
-              DatePicker.showDatePicker(
-                context,
-                theme: const DatePickerTheme(
-                  containerHeight: 210.0,
-                ),
-                showTitleActions: true,
-                minTime: DateTime(2022, 1, 1),
-                maxTime: DateTime(2030, 12, 31), 
-                onConfirm: (date) {
-                  setState(() {
-                    _startDateController.text = '${date.year}-${date.month}-${date.day}';
-                  });
-                }, 
-                currentTime: DateTime.now(), 
-                locale: LocaleType.en
-              );
-            },
-            validator: (date) {
-              if (date == null || date.isEmpty) {
-                return "Select a start date";
-              }
-              return null;
-            }
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          flex: 5,
-          child: TextFormField(
-            controller: _startTimeController,
-            cursorColor: Theme.of(context).primaryColor,
-            decoration: timeInputDecoration,
-            onTap: () {
-              DatePicker.showTimePicker(
-                context,
-                onConfirm: (date) {
-                  setState(() {
-                    _startTimeController.text = sprintf('%02i:%02i', [date.hour, date.minute]);
-                  });
-                },
-                currentTime: DateTime.now(), 
-                locale: LocaleType.en,
-                showSecondsColumn: false,
-              );
-            },
-            validator: (time) {
-              if (time == null || time.isEmpty) {
-                return "Select a start time";
-              }
-              return null;
-            }
-          ),
-        ),
-      ],
+    var stateDateTime = DateTimePicker(
+      leadingTitle: "Start",
+      dateController: _startDateController, 
+      timeController: _startTimeController, 
+      onDateConfirm: (date) {
+        _startDateController.text = sprintf("%02i-%02i-%02i", [date.year, date.month, date.day]);
+      }, 
+      onTimeConfirm: (date) {
+        _startTimeController.text = sprintf('%02i:%02i', [date.hour, date.minute]).trim();
+      },
+      dateValidator: (date) {
+        if (date == null || date.isEmpty) {
+          return "Select date";
+        }
+
+        DateTime dateTime = DateTime.parse(date);
+        if (dateTime.difference(DateTime.now()).inDays < 0) {
+          return "Select future date";
+        }
+        return null;
+      },
+      timeValidaotor: (time) {
+        if (time == null || time.isEmpty) {
+          return "Select time";
+        }
+        
+        if (_startDateController.text.isNotEmpty) {
+          DateTime dateTime = DateTime.parse(_startDateController.text + ' ' + time + ":00");
+          if (dateTime.isBefore(DateTime.now())) {
+            return "Select future time";
+          }
+        }
+        return null;
+      },
     );
     
     // end data and time picker
-    var endDateTime = Row(
-      children: [
-        Expanded(
-          flex: 2,
-          child: Center(
-            child: Text(
-              "End: ",
-              style: TextStyle(
-                color: Theme.of(context).primaryColor,
-                fontWeight: FontWeight.w700,
-                fontSize: 16,
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          flex: 5,
-          child: TextFormField(
-            controller: _endDateController,
-            cursorColor: Theme.of(context).primaryColor,
-            decoration: dateInputDecoration,
-            onTap: () {
-              DatePicker.showDatePicker(
-                context,
-                theme: const DatePickerTheme(
-                  containerHeight: 210.0,
-                ),
-                showTitleActions: true,
-                minTime: DateTime(2022, 1, 1),
-                maxTime: DateTime(2030, 12, 31), 
-                onConfirm: (date) {
-                  setState(() {
-                    _endDateController.text = '${date.year}-${date.month}-${date.day}';
-                  });
-                }, 
-                currentTime: DateTime.now(), 
-                locale: LocaleType.en
-              );
-            },
-            validator: (date) {
-              if (date == null || date.isEmpty) {
-                return "Select a end date";
-              }
-              return null;
-            }
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          flex: 5,
-          child: TextFormField(
-            controller: _endTimeController,
-            cursorColor: Theme.of(context).primaryColor,
-            decoration: timeInputDecoration,
-            onTap: () {
-              DatePicker.showTimePicker(
-                context,
-                onConfirm: (date) {
-                  setState(() {
-                    _endTimeController.text = sprintf('%02i:%02i', [date.hour, date.minute]);
-                  });
-                },
-                currentTime: DateTime.now(), 
-                locale: LocaleType.en,
-                showSecondsColumn: false,
-              );
-            },
-            validator: (time) {
-              if (time == null || time.isEmpty) {
-                return "Select a end date";
-              }
-              return null;
-            }
-          ),
-        ),
-      ],
+    var endDateTime = DateTimePicker(
+      leadingTitle: "End ",
+      dateController: _endDateController, 
+      timeController: _endTimeController, 
+      onDateConfirm: (date) {
+        _endDateController.text = sprintf("%02i-%02i-%02i", [date.year, date.month, date.day]);
+      }, 
+      onTimeConfirm: (date) {
+        _endTimeController.text = sprintf('%02i:%02i', [date.hour, date.minute]).trim();
+      },
+      dateValidator: (date) {
+        if (date == null || date.isEmpty) {
+          return "Select date";
+        }
+
+        DateTime dateTime = DateTime.parse(date);
+        if (dateTime.difference(DateTime.now()).inDays < 0) {
+          return "Select future date";
+        }
+        
+        if (_startDateController.text.isNotEmpty) {
+          DateTime startDate = DateTime.parse(_startDateController.text);
+          if (dateTime.difference(startDate).inDays < 0) {
+            return "Invalid end date";
+          }
+        }
+
+        return null;
+      },
+      timeValidaotor: (time) {
+        if (time == null || time.isEmpty) {
+          return "Select time";
+        }
+        DateTime? end;
+        if (_endDateController.text.isNotEmpty) {
+          end = DateTime.parse(_endDateController.text + ' ' + time + ":00");
+          if (end.isBefore(DateTime.now())) {
+            return "Select future time";
+          }
+        }
+
+        if (_startDateController.text.isNotEmpty && _startTimeController.text.isNotEmpty &&
+          _endDateController.text.isNotEmpty) {
+          DateTime start = DateTime.parse(_startDateController.text + ' ' + _startTimeController.text + ":00");
+          if (end!.isBefore(start)) {
+            return "Invalid end time";
+          }
+        }
+
+        return null;
+      },
     );
 
     // start & end data picker
@@ -406,15 +351,15 @@ class _EventInputsState extends State<EventInputs> {
         const SizedBox(height: 15),
         TypeAheadFormField(
           validator: (place) {
-            if (place == null || place.isEmpty) {
+            if (place == null || place.isEmpty || _place == null) {
               return "Please select a validate event location";
             }
             return null;
           },
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           textFieldConfiguration: TextFieldConfiguration(
             controller: _addressController,
-            autofocus: true,
-            decoration: eventInputDecoration
+            decoration: placeInputDecoration,
           ),
           // use Google Map place autocomplete API to search for places
           suggestionsCallback: (query) async {
@@ -469,7 +414,7 @@ class _EventInputsState extends State<EventInputs> {
               flex: 1,
               child: Center(
                 child: Text(
-                  '$_maxCapcityValue',
+                  _maxCapcityValue.toInt().toString(),
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 16,
@@ -500,6 +445,7 @@ class _EventInputsState extends State<EventInputs> {
             }
             return null;
           },
+          autovalidateMode: AutovalidateMode.onUserInteraction,
         )
       ]
     );
@@ -560,7 +506,7 @@ class _EventInputsState extends State<EventInputs> {
               ],
             ),
             const SizedBox(height: 20),
-            ImageUploads(),
+            ImageUploads(key: _imageUploadState),
             const SizedBox(height: 20),
             eventTitle,
             const SizedBox(height: 20),

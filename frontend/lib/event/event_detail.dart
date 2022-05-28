@@ -72,7 +72,7 @@ class EventState extends State<EventPage> {
                     return EventDetailHelper(eventInfo: snapshot.data!);
                   } else if (snapshot.hasError) {
                     return const Center(
-                        child: Text('No Events Posted Currently',
+                        child: Text('Event not found',
                             style: TextStyle(
                                 color: Color.fromARGB(255, 81, 65, 143),
                                 fontStyle: FontStyle.italic,
