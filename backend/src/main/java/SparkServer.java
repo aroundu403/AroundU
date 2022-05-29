@@ -295,30 +295,29 @@ public class SparkServer {
         (request, response) -> {
           long eventID = gson.fromJson(request.body(), Event.class).event_id;
           String userID = getUserID(request.headers("Authorization"), defaultApp);
-          if (EventController.isEventExist(pool, eventID)) {
-            Event event = EventController.getEventByID(pool, eventID);
-            // can only participate if event not filled
-            if (event.max_participants >= event.curr_num_participants + 1) {
-              Timestamp curr = new Timestamp(System.currentTimeMillis());
-              // can only participate if the event isn't ended
-              if (curr.compareTo(Timestamp.valueOf(event.end_time)) < 0) {
-                if (ParticipateController.userParticipateEvent(
-                    pool, userID, eventID)) {
-                  DataResponse resp = new DataResponse(200, "Success", eventID);
-                  return gson.toJson(resp);
-                } else {
-                  return gson.toJson(new OperationResponse(500, "SQL server error."));
-                }
-              } else {
-                return gson.toJson(new OperationResponse(403, "The event is ended."));
-              }
-            } else {
-              return gson.toJson(new OperationResponse(402, "The event is filled."));
-            }
-          } else {
+          if (!EventController.isEventExist(pool, eventID)) {
             return gson.toJson(new OperationResponse(400, "Event not exist"));
           }
-        });
+
+          Event event = EventController.getEventByID(pool, eventID);
+          // can only participate if event not filled
+          if (event.max_participants < event.curr_num_participants + 1) {
+            return gson.toJson(new OperationResponse(402, "The event is filled."));
+          }
+
+          Timestamp curr = new Timestamp(System.currentTimeMillis());
+          // can only participate if the event isn't ended
+          if (curr.compareTo(Timestamp.valueOf(event.end_time)) >= 0) {
+            return gson.toJson(new OperationResponse(403, "The event is ended."));
+          }
+
+          if (!ParticipateController.userParticipateEvent(pool, userID, eventID)) {
+            return gson.toJson(new OperationResponse(500, "SQL server error."));
+          }
+
+          DataResponse resp = new DataResponse(200, "Success", eventID);
+          return gson.toJson(resp);
+    });
 
     // DELETE /event/guest
     // Quit an participated event
