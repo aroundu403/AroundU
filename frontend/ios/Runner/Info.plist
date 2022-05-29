@@ -49,5 +49,11 @@
 	<false/>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Enable photo library to upload event photos</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Enable camera access to upload event photos</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>We need your microphone to take video from camera</string>
 </dict>
 </plist>

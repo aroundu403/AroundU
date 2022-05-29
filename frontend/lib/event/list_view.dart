@@ -105,39 +105,41 @@ class _ListViewHomeState extends State<ListViewHome> {
             Color.fromARGB(255, 163, 232, 236),
           ],
         )),
-        child: SingleChildScrollView(
-            child: Column(children: [
-          const Padding(padding: EdgeInsets.all(30)),
-          const Text("Event List",
-              style: TextStyle(
-                  color: Color.fromARGB(255, 81, 65, 143),
-                  fontWeight: FontWeight.bold,
-                  fontStyle: FontStyle.italic,
-                  fontSize: 36)),
-          // build the list view once the event list data arrives
-          FutureBuilder<List<EventInfo>>(
-              future: _events,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-
-                  return EventList(events: snapshot.data!);
-                } else if (snapshot.hasError) {
-                  return const Center(
-                      child: Text('No Events Posted Currently',
-                          style: TextStyle(
-                              color: Color.fromARGB(255, 81, 65, 143),
-                              fontStyle: FontStyle.italic,
-                              fontSize: 20)));
-                }
-                return const CircularProgressIndicator();
-              }),
-          ElevatedButton(
-            onPressed: () {
-              context.read<AuthenticationService>().signOut();
-            },
-            child: const Text("Sign out"),
-          )
-        ])));
+        child: SafeArea(
+          child: SingleChildScrollView(
+              child: Column(children: [
+            const Padding(padding: EdgeInsets.all(30)),
+            const Text("Event List",
+                style: TextStyle(
+                    color: Color.fromARGB(255, 81, 65, 143),
+                    fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.italic,
+                    fontSize: 36)),
+            // build the list view once the event list data arrives
+            FutureBuilder<List<EventInfo>>(
+                future: _events,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+        
+                    return EventList(events: snapshot.data!);
+                  } else if (snapshot.hasError) {
+                    return const Center(
+                        child: Text('No Events Posted Currently',
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 81, 65, 143),
+                                fontStyle: FontStyle.italic,
+                                fontSize: 20)));
+                  }
+                  return const CircularProgressIndicator();
+                }),
+            ElevatedButton(
+              onPressed: () {
+                context.read<AuthenticationService>().signOut();
+              },
+              child: const Text("Sign out"),
+            )
+          ])),
+        ));
   }
 }
 

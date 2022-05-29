@@ -14,7 +14,8 @@ We are planning to support public iOS version in the future. Stay Tuned!
 - /lib: source code folder
     - /auth：user authorization module
     - /event: event related module
-    - /json: dart objects that model data transfer entities.
+    - /json: dart objects that model data transfer entities
+    - /component: helpers widgets that are used to build components of a page
     - main.dart: the entry point of Flutter project
     - home_page: home page after user has logged in.
     - firebase_options.dart: platform dependent Firebase configuration
@@ -110,3 +111,15 @@ firebase deploy
 
 ## How to deploy to iOS:
 Coming soon...
+
+## Develoer Hints:
+### CORS error when running local application:
+This is the problem with Chrome default CORS policy. To disable this behavior, run use the `flutter_cors` script
+```
+# to install
+dart pub global activate flutter_cors
+# to disable
+fluttercors --disable
+# to enable
+fluttercors --enable
+```
