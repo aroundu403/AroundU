@@ -1,6 +1,3 @@
-/// Display the detial information of an event such as event name, location, start time,
-/// end time, number of participants, description.
-import 'dart:ui';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -243,7 +240,7 @@ class _EventDetailState extends State<EventDetailHelper> {
           ],
         ),
         // Event images
-        Container(
+        SizedBox(
           width: 343,
           height: 150,
           child: Row(

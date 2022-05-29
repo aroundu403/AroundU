@@ -65,7 +65,7 @@ class _MapViewState extends State<MapView> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => EventPage(eventId: 3,),
+        builder: (context) => const EventPage(eventId: 3,),
       ),
     );
   }

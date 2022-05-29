@@ -10,7 +10,7 @@ import 'package:http/http.dart' as http;
 
 // ignore: must_be_immutable
 class ListViewHome extends StatefulWidget {
-  ListViewHome({Key? key}) : super(key: key);
+  const ListViewHome({Key? key}) : super(key: key);
 
   @override
   State<ListViewHome> createState() => _ListViewHomeState();
@@ -212,7 +212,7 @@ class _EventListState extends State<EventList> {
                   onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => EventPage(eventId: 3), //eventId: widget.events[index].eventId),
+                          builder: (context) => const EventPage(eventId: 3), //eventId: widget.events[index].eventId),
                         ),
                       ),
                   child: Card(
