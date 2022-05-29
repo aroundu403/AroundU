@@ -3,6 +3,7 @@
 /// It will be the main page that users will interact with after they have signed in.
 import 'package:aroundu/event/create_event_page.dart';
 import 'package:aroundu/event/map_view.dart';
+import 'package:aroundu/user/my_event.dart';
 import 'package:aroundu/user/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
@@ -25,43 +26,40 @@ class _HomePageState extends State<HomePage> {
       body: Stack(
         children: [
           // render map view or list view based on current view  mode
-          _viewMode == ViewMode.map ? const MapView() : ListViewHome(),
+          _viewMode == ViewMode.map ? const MapView() : const ListViewHome(),
           Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              margin: const EdgeInsets.only(bottom: 20.0),
-              child: Row (
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: const [
-                  MoreButton(),
-                  PostEventButton(),
-                  MyProfileButton(),
-                ],
-              ),
-            )
-          ),
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                margin: const EdgeInsets.only(bottom: 20.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: const [
+                    MoreButton(),
+                    PostEventButton(),
+                    MyProfileButton(),
+                  ],
+                ),
+              )),
           // map view and list view toggle button
           SafeArea(
             child: Align(
               alignment: Alignment.topLeft,
               child: Container(
                 margin: const EdgeInsets.only(left: 15, top: 10),
-                child: FlutterToggleTab(  
-                  width: 25,  
-                  borderRadius: 40,  
-                  selectedIndex: _viewMode == ViewMode.map ? 0 : 1, 
+                child: FlutterToggleTab(
+                  width: 25,
+                  borderRadius: 40,
+                  selectedIndex: _viewMode == ViewMode.map ? 0 : 1,
                   selectedTextStyle: TextStyle(
-                    color: Theme.of(context).focusColor,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600
-                  ),
+                      color: Theme.of(context).focusColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600),
                   unSelectedTextStyle: TextStyle(
-                    color: Theme.of(context).primaryColor.withAlpha(170),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600
-                  ),
-                  labels: const ["Map","List"],  
-                  selectedLabelIndex: (index) { 
+                      color: Theme.of(context).primaryColor.withAlpha(170),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600),
+                  labels: const ["Map", "List"],
+                  selectedLabelIndex: (index) {
                     setState(() {
                       _viewMode = index == 0 ? ViewMode.map : ViewMode.list;
                     });
@@ -72,7 +70,6 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
-      
     );
   }
 }
@@ -100,11 +97,33 @@ class MoreButton extends StatelessWidget {
           color: const Color.fromARGB(255, 248, 249, 255),
           child: InkWell(
             splashColor: Theme.of(context).focusColor,
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context)
+                  .push(createRouteFromLeftToRight(const MyEventPage()));
+            },
             child: const Icon(Icons.more_vert),
           ),
         ),
       ),
+    );
+  }
+
+  Route createRouteFromLeftToRight(Widget page) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(-1.0, 0.0);
+        const end = Offset.zero;
+        const curve = Curves.ease;
+
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
     );
   }
 }
@@ -184,7 +203,8 @@ class MyProfileButton extends StatelessWidget {
               //   context,
               //   MaterialPageRoute(builder: (context) => const ProfilePage()),
               // );
-              Navigator.of(context).push(createRoute(const ProfilePage()));
+              Navigator.of(context)
+                  .push(createRouteFromRightToLeft(const ProfilePage()));
             },
             child: const Icon(Icons.person),
           ),
@@ -193,7 +213,7 @@ class MyProfileButton extends StatelessWidget {
     );
   }
 
-  Route createRoute(Widget page) {
+  Route createRouteFromRightToLeft(Widget page) {
     return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => page,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {

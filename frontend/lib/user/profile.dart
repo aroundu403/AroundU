@@ -91,7 +91,7 @@ class ProfileState extends State<ProfilePage> {
               ],
             ),
             const SizedBox(height: 4),
-            Container(
+            SizedBox(
               width: 150,
               height: 150,
               child: Row(

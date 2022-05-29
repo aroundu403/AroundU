@@ -14,7 +14,7 @@ import 'package:http/http.dart' as http;
 
 // ignore: must_be_immutable
 class ListViewHome extends StatefulWidget {
-  ListViewHome({Key? key}) : super(key: key);
+  const ListViewHome({Key? key}) : super(key: key);
 
   @override
   State<ListViewHome> createState() => _ListViewHomeState();
@@ -167,7 +167,7 @@ class _EventListState extends State<EventList> {
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxHeight: 140),
                   child: Container(
-                    padding: const EdgeInsets.only(top: 10, bottom: 10, left: 12, right: 12),
+                    padding: const EdgeInsets.all(10),
                     child: EventCardLayout(
                       eventInfo: widget.events[index],
                     ),

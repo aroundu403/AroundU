@@ -1,6 +1,3 @@
-/// Display the detial information of an event such as event name, location, start time,
-/// end time, number of participants, description.
-import 'dart:ui';
 
 import 'package:aroundu/component/event_image.dart';
 import 'package:aroundu/component/image_upload.dart';
