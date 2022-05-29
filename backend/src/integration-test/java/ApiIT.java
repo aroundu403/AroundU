@@ -27,16 +27,27 @@ public class ApiIT {
   }
 
   /*
-        ------------------------------- TESTING EVENT RELATED APIs -----------------------------------
-   */
+       ------------------------------- TESTING USER API -----------------------------------
+  */
+
+  @Test
+  public void testGetUserByID() {
+    given()
+        .given()
+        .header("Authorization", header)
+        .when()
+        .get("user")
+        .then()
+        .assertThat()
+        .body(containsString("Success"));
+  }
+
+  /*
+       ------------------------------- TESTING EVENT RELATED APIs -----------------------------------
+  */
   @Test
   public void testGetEventByID() {
     given().when().get("event/id?eventid=1").then().assertThat().body(containsString("test111"));
-  }
-
-  @Test
-  public void testGetEventsInNextNDays() {
-    given().when().get("event/list").then().assertThat().body(containsString("message"));
   }
 
   @Test
@@ -109,20 +120,76 @@ public class ApiIT {
         .body(containsString("403"));
   }
 
- /*
-       ------------------------------- TESTING USER API -----------------------------------
+  @Test
+  public void testGetEventsInNextNDays() {
+    given().when().get("event/list").then().assertThat().body(containsString("message"));
+  }
+
+  @Test
+  public void testGetEventCreated() {
+    given()
+        .given()
+        .header("Authorization", header)
+        .when()
+        .get("event/created")
+        .then()
+        .assertThat()
+        .body(containsString("Success"));
+  }
+
+  /*
+    ------------------------------- EVENT PARTICIPANTS RELATED -----------------------------------
+
   */
 
   @Test
-  public void testGetUserByID() {
+  public void testGetMyEvents() {
     given()
-            .given()
-            .header("Authorization", header)
-            .when()
-            .get("user")
-            .then()
-            .assertThat()
-            .body(containsString("Success"));
+        .header("Authorization", header)
+        .when()
+        .get("event/guest")
+        .then()
+        .assertThat()
+        .body(containsString("Success"));
+  }
+
+  @Test
+  public void testParticipateEvent() {
+    Event event = new Event();
+    event.event_id = 2;
+    given()
+        .header("Authorization", header)
+        .when()
+        .contentType("application/json")
+        .body(event)
+        .post("event/guest")
+        .then()
+        .assertThat()
+        .body(containsString("Success"));
+  }
+
+  @Test
+  public void testLeaveEvent() {
+    Event event = new Event();
+    event.event_id = 1;
+    // join frist
+    given()
+        .header("Authorization", header)
+        .when()
+        .contentType("application/json")
+        .body(event)
+        .post("event/guest");
+
+    // the test quit
+    given()
+        .header("Authorization", header)
+        .when()
+        .contentType("application/json")
+        .body(event)
+        .delete("event/guest")
+        .then()
+        .assertThat()
+        .body(containsString("Success"));
   }
 
   /**
@@ -152,7 +219,4 @@ public class ApiIT {
     }
     return null;
   }
-
-  @After
-  public void cleanUp() {}
 }

@@ -318,7 +318,7 @@ public class SparkServer {
         });
 
     // DELETE /event/guest
-    // Quit an participated event
+    // Quit a participated event
     // please use postman to test, dropbox select delete
     // need to provide event id in request body
     // make sure the user have participated in this event before testing, or you will get error code
