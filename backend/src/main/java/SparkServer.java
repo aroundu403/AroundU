@@ -111,6 +111,9 @@ public class SparkServer {
           String userID = getUserID(request.headers("Authorization"), defaultApp);
           User body = gson.fromJson(request.body(), User.class);
           body.user_id = userID;
+            if (body.user_name == null || body.email == null || body.user_id == null) {
+                return gson.toJson(new OperationResponse(400, "Invalid parameter"));
+            }
           if (!UserController.isUserExist(pool, userID)) {
             if (UserController.addUser(pool, body)) {
               DataResponse resp = new DataResponse(200, "Success", userID);
