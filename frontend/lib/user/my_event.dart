@@ -224,7 +224,8 @@ class _CreatedEventListState extends State<CreatedEvents> {
           )
         ],
       ),
-      Expanded(
+      SizedBox(
+          height: 400,
           child: ListView.builder(
               controller: _controller,
               physics: _physics,
@@ -394,95 +395,97 @@ class _ParticipatedEventListState extends State<ParticipatedEvents> {
           ),
         ],
       ),
-      Expanded(
-          child: GridView.builder(
-              controller: _controller,
-              physics: _physics,
-              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              itemCount: widget.participatedEvents.length,
-              padding: const EdgeInsets.all(8),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-              ),
-              itemBuilder: (BuildContext context, int index) {
-                return Container(
-                    margin: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color.fromARGB(255, 120, 117, 117)
-                              .withOpacity(.5),
-                          blurRadius: 20.0, // soften the shadow
-                          spreadRadius: 0.0, //extend the shadow
-                          offset: const Offset(
-                            5.0,
-                            8.0,
-                          ),
-                        )
-                      ],
-                    ),
-                    child: GestureDetector(
-                        onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const EventPage(eventId: 3),
-                              ),
+      SizedBox(
+            height: 400,
+            child: GridView.builder(
+                controller: _controller,
+                physics: _physics,
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                itemCount: widget.participatedEvents.length,
+                padding: const EdgeInsets.all(8),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                ),
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                      margin: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color.fromARGB(255, 120, 117, 117)
+                                .withOpacity(.5),
+                            blurRadius: 20.0, // soften the shadow
+                            spreadRadius: 0.0, //extend the shadow
+                            offset: const Offset(
+                              5.0,
+                              8.0,
                             ),
-                        child: Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(25), // if you need this
-                              side: BorderSide(
-                                color: Colors.grey.withOpacity(0.2),
-                                width: 1,
+                          )
+                        ],
+                      ),
+                      child: GestureDetector(
+                          onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const EventPage(eventId: 3),
+                                ),
                               ),
-                            ),
-                            child: Column(children: [
-                              const Padding(padding: EdgeInsets.all(8)),
-                              Row(children: [
+                          child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.circular(25), // if you need this
+                                side: BorderSide(
+                                  color: Colors.grey.withOpacity(0.2),
+                                  width: 1,
+                                ),
+                              ),
+                              child: Column(children: [
+                                const Padding(padding: EdgeInsets.all(8)),
+                                Row(children: [
+                                  const Padding(padding: EdgeInsets.all(8)),
+                                  Expanded(
+                                      child: ClipRRect(
+                                    borderRadius:
+                                        BorderRadius.circular(10.0), //or 15.0
+                                    child: Container(
+                                      height: 130,
+                                      width: 50,
+                                      decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                              image: AssetImage(images[
+                                                  index]), // TODO: image process
+                                              fit: BoxFit.fill)),
+                                    ),
+                                  )),
+                                  const Padding(padding: EdgeInsets.all(8)),
+                                ]),
                                 const Padding(padding: EdgeInsets.all(8)),
                                 Expanded(
-                                    child: ClipRRect(
-                                  borderRadius:
-                                      BorderRadius.circular(10.0), //or 15.0
-                                  child: Container(
-                                    height: 130,
-                                    width: 50,
-                                    decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                            image: AssetImage(images[
-                                                index]), // TODO: image process
-                                            fit: BoxFit.fill)),
-                                  ),
-                                )),
-                                const Padding(padding: EdgeInsets.all(8)),
-                              ]),
-                              const Padding(padding: EdgeInsets.all(8)),
-                              Expanded(
-                                  flex: 2,
-                                  child: Container(
-                                      padding: const EdgeInsets.all(5),
-                                      child: Column(children: [
-                                        Text(
-                                            widget.participatedEvents[index]
-                                                .eventName,
-                                            style:
-                                                const TextStyle(
-                                                    color: Color.fromARGB(
-                                                        255, 81, 65, 143),
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 18)),
-                                        Text(
-                                            widget.participatedEvents[index]
-                                                .startTime,
-                                            style: const TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 16)),
-                                      ])))
-                            ]))));
-              }))
+                                    flex: 2,
+                                    child: Container(
+                                        padding: const EdgeInsets.all(5),
+                                        child: Column(children: [
+                                          Text(
+                                              widget.participatedEvents[index]
+                                                  .eventName,
+                                              style:
+                                                  const TextStyle(
+                                                      color: Color.fromARGB(
+                                                          255, 81, 65, 143),
+                                                      fontWeight: FontWeight.bold,
+                                                      fontSize: 18)),
+                                          Text(
+                                              widget.participatedEvents[index]
+                                                  .startTime,
+                                              style: const TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 16)),
+                                        ])))
+                              ]))));
+                }),
+          )
     ]);
   }
 }
