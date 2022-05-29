@@ -1,6 +1,7 @@
 /// main.dart is the entry point for a Flutter project
 /// It intializes top-level depedencies and defines Firebase Authenication Service will be used by other widgets
 /// It also defines the how the top-level widget will be built
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -31,7 +32,7 @@ ThemeData theme = ThemeData(
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // load the config file
-  await dotenv.load(fileName: "env");
+  await dotenv.load(fileName: "env", mergeWith: Platform.environment);
   
   // initalize firebase with platform sepcific config
   await Firebase.initializeApp(
