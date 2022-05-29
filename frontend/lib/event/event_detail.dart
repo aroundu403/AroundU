@@ -2,10 +2,14 @@
 /// end time, number of participants, description.
 import 'dart:ui';
 
+import 'package:aroundu/component/event_image.dart';
+import 'package:aroundu/component/image_upload.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:sprintf/sprintf.dart';
 import 'dart:async';
 import '../main.dart';
 import 'package:aroundu/json/event.dart';
@@ -131,14 +135,14 @@ class EventState extends State<EventPage> {
                 children: [
                   const Padding(padding: EdgeInsets.all(5)),
                   Align(
-                      alignment: Alignment.topLeft,
-                      child: GestureDetector(
-                          onTap: () => Navigator.pop(context),
-                          child: const Icon(
-                            Icons.chevron_left,
-                            size: 36,
-                            color: Color.fromARGB(255, 81, 65, 143),
-                          )))
+                    alignment: Alignment.topLeft,
+                    child: GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: const Icon(
+                        Icons.chevron_left,
+                        size: 36,
+                        color: Color.fromARGB(255, 81, 65, 143),
+                      )))
                 ],
               ),
               const SizedBox(height: 4),
@@ -199,6 +203,11 @@ class _EventDetailState extends State<EventDetailHelper> {
   late EventInfo event = widget.eventInfo;
   bool showMore = false;
 
+  String formatDateTime(String time) {
+    DateTime dateTime = DateTime.parse(time);
+    return sprintf("%02i-%02i-%02i %02i:%02i", [dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute]);
+  }
+
   final List<String> participants = [
     "images/scenary.jpg",
     "images/tree.jpg",
@@ -208,213 +217,191 @@ class _EventDetailState extends State<EventDetailHelper> {
   ];
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(children: [
-        // Event Title
-        Row(
-          children: [
-            const Padding(padding: EdgeInsets.all(16)),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Text(event.eventName,
-                  style: const TextStyle(
-                      color: Color.fromARGB(255, 81, 65, 143),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 27)),
-            )
-          ],
-        ),
-        // number of spot avaible
-        Row(
-          children: [
-            const Padding(padding: EdgeInsets.all(18)),
-            Align(
-              alignment: Alignment.topLeft,
-              child: event.currNumParticipants >= event.maxParticipants
-                  ? const Text("Closed",
-                      style: TextStyle(color: Colors.red, fontSize: 15))
-                  : Text(
-                      (event.maxParticipants - event.currNumParticipants)
-                              .toString() +
-                          " spots available",
-                      style:
-                          const TextStyle(color: Colors.green, fontSize: 15)),
-            )
-          ],
-        ),
-        // Event images
-        Container(
-          width: 343,
-          height: 150,
-          child: Row(
-            children: [
-              Expanded(
-                  child: ClipRRect(
-                borderRadius: BorderRadius.circular(10.0), //or 15.0
-                child: Container(
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage(image), fit: BoxFit.fill)), // TODO
+
+    var purpleBoldFont = const TextStyle(
+      color: Color.fromARGB(255, 81, 65, 143),
+      fontWeight: FontWeight.bold,
+      fontSize: 18
+    );
+
+    var userProfileImages = Row(
+      children: [
+        const Align(
+          alignment: Alignment.topLeft,
+          child: Icon(
+            Icons.people_alt_outlined,
+            color: Color.fromARGB(255, 81, 65, 143))),
+        const SizedBox(width: 10),
+        Text(event.currNumParticipants.toString() + " people joined",
+          style: const TextStyle(
+            color: Color.fromARGB(255, 81, 65, 143),
+            fontWeight: FontWeight.bold,
+            fontSize: 18
+          )),
+        const SizedBox(width: 24),
+        SizedBox(
+          width: 50,
+          height: 25,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: 3,
+            itemBuilder: (context, index) {
+              return Align(
+                widthFactor: 0.6,
+                child: CircleAvatar(
+                  radius: 12,
+                  backgroundImage: AssetImage(participants[index]),
                 ),
-              )),
+              );
+            })),
+        TextButton(
+          onPressed: () {
+            setState(() {
+              showMore = !showMore;
+            });
+          },
+          child: showMore
+            ? const Text("hide all",
+              style: TextStyle(
+                color: Color.fromARGB(255, 190, 114, 230),
+                fontStyle: FontStyle.italic,
+                decoration: TextDecoration.underline,
+                fontSize: 15))
+            : const Text("show all",
+              style: TextStyle(
+                color: Color.fromARGB(255, 190, 114, 230),
+                fontStyle: FontStyle.italic,
+                decoration: TextDecoration.underline,
+                fontSize: 15)),
+        )
+      ],
+    );
+    return SingleChildScrollView(
+      child: Container(
+        margin: const EdgeInsets.only(left: 20, right: 20),
+        child: Column(
+          children: [
+          // Event Title
+          Align(
+            alignment: Alignment.topLeft,
+            child: Text(event.eventName,
+              style: const TextStyle(
+                  color: Color.fromARGB(255, 81, 65, 143),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 27)),
+          ),
+          // number of spot avaible
+          const SizedBox(height: 10),
+          Align(
+            alignment: Alignment.topLeft,
+            child: event.currNumParticipants >= event.maxParticipants
+              ? const Text(
+                "Full",
+                style: TextStyle(color: Colors.red, fontSize: 15))
+              : Text(
+                (event.maxParticipants - event.currNumParticipants).toString() +
+                  " spots available",
+                style:const TextStyle(color: Colors.green, fontSize: 15)),
+          ),
+          const SizedBox(height: 20),
+          // Event images
+          Container(
+            height: 200,
+            alignment: Alignment.center,
+            child: EventImage(eventId: event.eventId)
+          ),
+          const SizedBox(height: 20),
+          // start time and end time widget
+          Row(
+            children: [
+              const Align(
+                alignment: Alignment.topLeft,
+                child: Icon(
+                  Icons.access_time_rounded,
+                  color: Color.fromARGB(255, 81, 65, 143))),
+              const SizedBox(width: 10),
+              Column(
+                children: [
+                  Text(
+                    formatDateTime(event.startTime),
+                    style: purpleBoldFont
+                  ),
+                  Text(
+                    formatDateTime(event.endTime),
+                    style: purpleBoldFont
+                  )
+                ],
+              )
             ],
           ),
-        ),
-        const SizedBox(height: 20),
-        // start time and end time widget
-        Row(
-          children: [
-            const Padding(padding: EdgeInsets.all(10)),
-            const Align(
-                alignment: Alignment.topLeft,
-                child: Icon(Icons.access_time_rounded,
-                    color: Color.fromARGB(255, 81, 65, 143))),
-            const Padding(padding: EdgeInsets.all(5)),
-            Column(
-              children: [
-                Text(event.startTime,
-                    style: const TextStyle(
-                        color: Color.fromARGB(255, 81, 65, 143),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18)),
-                Text(event.endTime,
-                    style: const TextStyle(
-                        color: Color.fromARGB(255, 81, 65, 143),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18))
-              ],
-            )
-          ],
-        ),
-        const SizedBox(height: 10),
-        // number of participant
-        Row(
-          children: [
-            const Padding(padding: EdgeInsets.all(10)),
-            const Align(
-                alignment: Alignment.topLeft,
-                child: Icon(Icons.people_alt_outlined,
-                    color: Color.fromARGB(255, 81, 65, 143))),
-            const Padding(padding: EdgeInsets.all(5)),
-            Text(event.currNumParticipants.toString() + " people joined",
-                style: const TextStyle(
-                    color: Color.fromARGB(255, 81, 65, 143),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18)),
-            const Padding(padding: EdgeInsets.all(12)),
+          const SizedBox(height: 10),
+          // number of participant
+          userProfileImages,
+          if (showMore)
             SizedBox(
-                width: 50,
-                height: 25,
-                child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 3,
-                    itemBuilder: (context, index) {
-                      return Align(
-                        widthFactor: 0.6,
-                        child: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          radius: 12,
-                          child: CircleAvatar(
-                            radius: 12,
-                            backgroundImage: AssetImage(participants[index]),
-                          ),
-                        ),
-                      );
-                    })),
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  showMore = !showMore;
-                });
-              },
-              child: showMore
-                  ? const Text("hide all",
-                      style: TextStyle(
-                          color: Color.fromARGB(255, 190, 114, 230),
-                          fontStyle: FontStyle.italic,
-                          decoration: TextDecoration.underline,
-                          fontSize: 15))
-                  : const Text("show all",
-                      style: TextStyle(
-                          color: Color.fromARGB(255, 190, 114, 230),
-                          fontStyle: FontStyle.italic,
-                          decoration: TextDecoration.underline,
-                          fontSize: 15)),
-            )
-          ],
-        ),
-        if (showMore)
-          SizedBox(
-            height: 100.0,
-            width: 350,
-            child: GridView.builder(
-                itemCount: participants.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 10,
-                  crossAxisSpacing: 1.0,
-                  mainAxisSpacing: 1.0,
-                ),
-                itemBuilder: (BuildContext context, int index) {
-                  return CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 8,
-                    child: CircleAvatar(
-                      radius: 12,
-                      backgroundImage: AssetImage(participants[index]), // TODO
-                    ),
-                  );
-                }),
-          ),
-        const SizedBox(height: 10),
-        // event address
-        Row(
-          children: [
-            const Padding(padding: EdgeInsets.all(10)),
-            const Align(
+              height: 100.0,
+              width: 350,
+              child: GridView.builder(
+                  itemCount: participants.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 10,
+                    crossAxisSpacing: 1.0,
+                    mainAxisSpacing: 1.0,
+                  ),
+                  itemBuilder: (BuildContext context, int index) {
+                    return CircleAvatar(
+                      backgroundColor: Colors.white,
+                      radius: 8,
+                      child: CircleAvatar(
+                        radius: 12,
+                        backgroundImage: AssetImage(participants[index]), // TODO
+                      ),
+                    );
+                  }),
+            ),
+          const SizedBox(height: 10),
+          // event address
+          Row(
+            children: [
+              const Align(
                 alignment: Alignment.topLeft,
                 child: Icon(Icons.location_on_outlined,
-                    color: Color.fromARGB(255, 81, 65, 143))),
-            const Padding(padding: EdgeInsets.all(5)),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.85,
-              child: Text(event.address,
-                  style: const TextStyle(
-                      color: Color.fromARGB(255, 81, 65, 143),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18)),
-            ),
-          ],
-        ),
-        const SizedBox(height: 10),
-        // event description
-        Row(
-          children: const [
-            Padding(padding: EdgeInsets.all(10)),
-            Align(
+                  color: Color.fromARGB(255, 81, 65, 143))),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(event.address, style: purpleBoldFont, overflow: TextOverflow.clip)
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          // event description
+          Row(
+            children: [
+              const Align(
                 alignment: Alignment.topLeft,
-                child: Icon(Icons.event_note_outlined,
-                    color: Color.fromARGB(255, 81, 65, 143))),
-            Padding(padding: EdgeInsets.all(5)),
-            Text("Event Details",
-                style: TextStyle(
-                    color: Color.fromARGB(255, 81, 65, 143),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18)),
-          ],
-        ),
-        const SizedBox(height: 10),
-        Row(
-          children: [
-            const Padding(padding: EdgeInsets.all(10)),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.9,
-              child: Text(event.description,
-                  style: const TextStyle(color: Colors.black, fontSize: 16)),
-            )
-          ],
-        ),
-        const Padding(padding: EdgeInsets.all(15)),
-      ]),
+                child: Icon(
+                  Icons.event_note_outlined,
+                  color: Color.fromARGB(255, 81, 65, 143))),
+              const Padding(padding: EdgeInsets.all(5)),
+              Text("Event Details", style: purpleBoldFont),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              const Padding(padding: EdgeInsets.all(10)),
+              Expanded(
+                child: Text(
+                  event.description,
+                  overflow: TextOverflow.clip,
+                  style: const TextStyle(color: Colors.black, fontSize: 16)
+                ),
+              )
+            ],
+          ),
+          const Padding(padding: EdgeInsets.all(15)),
+        ]),
+      ),
     );
   }
 }

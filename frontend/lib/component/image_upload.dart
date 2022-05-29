@@ -3,6 +3,7 @@
 /// Handles getting the image from on-device storage and upload to Firestorage.
 /// Note this widget isn't supported in Flutter web
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';

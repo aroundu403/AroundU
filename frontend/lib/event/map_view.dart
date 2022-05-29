@@ -53,12 +53,6 @@ class _MapViewState extends State<MapView> {
   _onMapCreate(MapboxMapController controller) async {
     _mapController = controller;
     _mapController!.onSymbolTapped.add(_onSymbolTapped);
-    // // Acquire current location (returns the LatLng instance)
-    // final location = await acquireCurrentLocation();
-    
-    // await controller.animateCamera(
-    //   CameraUpdate.newLatLng(location!),
-    // );
   }
 
   void _onSymbolTapped(Symbol symbol) {
@@ -94,7 +88,7 @@ class _MapViewState extends State<MapView> {
 
   @override
   void dispose() {
-    _mapController!.dispose();
+    //_mapController!.dispose();
     super.dispose();
   }
 }
