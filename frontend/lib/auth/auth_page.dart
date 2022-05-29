@@ -3,6 +3,7 @@
 /// After user clicks the submit button, it will send network requests to Firebase and our backend service
 import 'dart:convert';
 import 'dart:io';
+import 'package:aroundu/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -174,9 +175,7 @@ class _AuthGateState extends State<AuthGate> {
                                   border: OutlineInputBorder(),
                                 ),
                                 validator: (value) =>
-                                    value != null && value.isNotEmpty
-                                        ? null
-                                        : 'Required',
+                                    value != null && value.isNotEmpty ? null : 'Required',
                               ) : const SizedBox(height: 0),
                               mode == AuthMode.register ? const SizedBox(height: 20) : const SizedBox(height: 0),
                               // email input box
@@ -187,9 +186,7 @@ class _AuthGateState extends State<AuthGate> {
                                   border: OutlineInputBorder(),
                                 ),
                                 validator: (value) =>
-                                    value != null && value.isNotEmpty
-                                        ? null
-                                        : 'Required',
+                                    value != null && value.isNotEmpty ? null : 'Required',
                               ),
                               const SizedBox(height: 20),
                               TextFormField(
@@ -200,9 +197,7 @@ class _AuthGateState extends State<AuthGate> {
                                   border: OutlineInputBorder(),
                                 ),
                                 validator: (value) =>
-                                    value != null && value.isNotEmpty
-                                        ? null
-                                        : 'Required',
+                                    value != null && value.isNotEmpty ? null : 'Required',
                               ),
                             ],
                             ),
@@ -362,7 +357,6 @@ class _AuthGateState extends State<AuthGate> {
   Future<void> _emailAndPassword() async {
     if (formKey.currentState?.validate() ?? false) {
       setIsLoading();
-
       try {
         if (mode == AuthMode.login) {
           await _auth.signInWithEmailAndPassword(
@@ -370,15 +364,18 @@ class _AuthGateState extends State<AuthGate> {
             password: passwordController.text,
           );
         } else {
+          String name = nameController.text;
+          String email = emailController.text;
           final UserCredential credential= await _auth.createUserWithEmailAndPassword(
             email: emailController.text,
             password: passwordController.text,
           );
+
           // set user name if firebase returned user isn't null
           final User? user = credential.user;
           if (user != null) {
-            await user.updateDisplayName(nameController.text);
-            await _sychronizeUserInfo(user);
+            await user.updateDisplayName(name);
+            await _sychronizeUserInfo(user, name, email);
           }
         }
       } on FirebaseAuthException catch (e) {
@@ -395,9 +392,44 @@ class _AuthGateState extends State<AuthGate> {
     }
   }
 
+  // Future<void> _emailAndPassword2() async {
+  //   if (formKey.currentState?.validate() ?? false) {
+  //     setIsLoading();
+
+  //       if (mode == AuthMode.login) {
+  //         final result = await _auth.signInWithEmailAndPassword(
+  //           email: emailController.text,
+  //           password: passwordController.text,
+  //         // ignore: invalid_return_type_for_catch_error
+  //         ).catchError((e) => {
+  //           setState(() {
+  //             error = '$e';
+  //           })
+  //         });
+  //       } else {
+  //         _auth.createUserWithEmailAndPassword(
+  //           email: emailController.text,
+  //           password: passwordController.text,
+  //         )
+  //         .then((credential) => {
+  //           final User? user = credential.user;
+  //           if (user != null) {
+  //             user.updateDisplayName(nameController.text)
+  //           }
+  //         })
+  //         .then((value) => null);
+  //         // set user name if firebase returned user isn't null
+  //         final User? user = credential.user;
+  //         if (user != null) {
+  //           await user.updateDisplayName(nameController.text);
+  //           await _sychronizeUserInfo(user);
+  //         }
+  //       }
+  //   }
+  // }
+
   // Call sign-in with Google service to use google credential to sign-in
   Future<void> _signInWithGoogle() async {
-    setIsLoading();
     try {
       // Trigger the authentication flow
       final googleUser = await GoogleSignIn().signIn();
@@ -418,34 +450,32 @@ class _AuthGateState extends State<AuthGate> {
     } on FirebaseAuthException catch (e) {
       setState(() {
         error = '${e.message}';
+        isLoading = false;
       });
-    } finally {
-      setIsLoading();
     }
   }
   
   // sychronize user information with our backend database
-  Future<void> _sychronizeUserInfo(User user) async{
+  Future<void> _sychronizeUserInfo(User user, String name, String email) async {
     String token = await user.getIdToken();
     if (token.isNotEmpty) {
-      http.post(url, 
-        headers: {
-          'Content-Type': 'application/json',
+      final response = await http.post(
+        Uri(
+          scheme: "https",
+          host: backendAddress,
+          path: "/user",
+        ),
+        headers: <String, String> {
+          'Content-Type': 'application/json; charset=UTF-8',
           'Accept': 'application/json',
           'Authorization': 'Bearer $token',
         },
-        body: jsonEncode(<String, String>{
-          'user_id': user.uid,
-          'user_email': user.email!,
-          'user_name': user.displayName!,
+        body: jsonEncode({
+          "user_id": user.uid,
+          "user_name": name,
+          "email": email,
         })
-      ).then((response) => {
-        if (response.statusCode != 200) {
-          setState(() {
-            error = 'Fail to put user information into the backend';
-          })
-        }
-      });
+      );
     }
   }
 }

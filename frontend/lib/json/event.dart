@@ -3,7 +3,6 @@
 class EventInfo {
 
   final int eventId;
-  final String eventCode;
   final String eventName;
   final String description;
   final String hostId; // the user id of the event creator
@@ -20,16 +19,13 @@ class EventInfo {
   final int maxParticipants;
   final int currNumParticipants;
 
-  final String photoID;
-  final String icon;
-
   final String startTime;
   final String endTime;
   final String createdAt;
+  final List<String> participantIds;
 
   const EventInfo({
     required this.eventId,
-    required this.eventCode,
     required this.eventName,
     required this.description,
     required this.hostId,
@@ -41,18 +37,16 @@ class EventInfo {
     required this.longitude,
     required this.maxParticipants,
     required this.currNumParticipants,
-    required this.photoID,
-    required this.icon,
     required this.address,
     required this.startTime,
     required this.endTime,
     required this.createdAt,
+    required this.participantIds, 
   });
 
   factory EventInfo.fromJson(Map<String, dynamic> json) {
     return EventInfo(
       eventId: json['event_id'],
-      eventCode: json['event_code'],
       eventName: json['event_name'],
       description: json['description'],
       hostId: json['host_id'],
@@ -65,12 +59,11 @@ class EventInfo {
       maxParticipants: json['max_participants'],
       currNumParticipants: json['curr_num_participants'],
 
-      photoID: json['photo_id'],
-      icon: json['icon'],
       address: json['address'],
       startTime: json['start_time'],
       endTime: json['end_time'],
       createdAt: json['created_at'],
+      participantIds: json.containsKey('participant_ids') ? List<String>.from(json['participant_ids']) : <String>[],
     );
   }
 }
