@@ -4,22 +4,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
+import '../json/event.dart';
 import 'event_detail.dart';
+import 'api_calls.dart';
 
 // MapBox style url which serves a map style configuration file
 const styleString = 'mapbox://styles/johnwang66/cl2y95qa3000l15p6c38ppu7v';
-
-const events = [
-  LatLng(47.655, -122.305),
-  LatLng(47.653, -122.310),
-  LatLng(47.657, -122.306),
-];
-
-const eventNames = [
-  "Game Night",
-  "Ski Carpool",
-  "Boba Meetup"
-];
 
 class MapView extends StatefulWidget {
   const MapView({ Key? key }) : super(key: key);
@@ -32,21 +22,24 @@ class _MapViewState extends State<MapView> {
   MapboxMapController? _mapController;
 
   _onStyleLoadedCallback() async {
-    int i = 0;
-    for (LatLng event in events) {
-      await _mapController!.addSymbol(
+    List<EventInfo> events = await fetchEvents();
+    List<SymbolOptions> symbols = <SymbolOptions>[];
+    List<Map<String, int>> symbolIds = <Map<String, int>>[];
+    for (int i = 0; i < events.length; i++) {
+      symbolIds.add({"eventId": events[i].eventId});
+      symbols.add(
         SymbolOptions(
           iconImage: 'embassy',
           iconColor: '#006992',
           iconSize: 2.0,
-          geometry: event,
-          textField: eventNames[i],
+          geometry: LatLng(events[i].latitude, events[i].longitude),
+          textField: events[i].eventName,
           textColor: '#000000',
           textOffset: const Offset(0, -1.4),
-        ),
+        )
       );
-      i++;
     }
+    _mapController!.addSymbols(symbols, symbolIds);
   }
 
   /// After map has been initialized, register controller and callback functions
@@ -59,7 +52,7 @@ class _MapViewState extends State<MapView> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const EventPage(eventId: 3,),
+        builder: (context) => EventPage(eventId: symbol.data!['eventId']),
       ),
     );
   }

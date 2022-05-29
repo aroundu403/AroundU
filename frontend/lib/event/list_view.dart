@@ -1,16 +1,11 @@
 /// Display the events in list view with event title and image.
 import 'package:aroundu/component/event_image.dart';
-import 'package:aroundu/component/image_upload.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import '../auth/auth_service.dart';
-import '../main.dart';
-import 'dart:convert';
 import 'package:aroundu/json/event.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'api_calls.dart';
 import 'event_detail.dart';
-import 'package:http/http.dart' as http;
 
 // ignore: must_be_immutable
 class ListViewHome extends StatefulWidget {
@@ -34,24 +29,7 @@ class _ListViewHomeState extends State<ListViewHome> {
   @override
   void initState() {
     super.initState();
-    _events = _fetchEvents();
-  }
-
-  // fetch the list of event from the backend API
-  Future<List<EventInfo>> _fetchEvents() async {
-    final response = await http.get(
-      Uri(host: backendAddress, path: "/event/list"),
-    );
-
-    if (response.statusCode == 200) {
-      var jsonEvents = jsonDecode(response.body)['data'] as List;
-      // prase the json strings into event objects
-      return jsonEvents.map((event) => EventInfo.fromJson(event)).toList();
-    } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      throw Exception('Failed to load events');
-    }
+    _events = fetchEvents();
   }
 
   @override
@@ -153,7 +131,7 @@ class _EventListState extends State<EventList> {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => EventPage(eventId: 15), //eventId: widget.events[index].eventId),
+                  builder: (context) => EventPage(eventId: widget.events[index].eventId),
                 ),
               ),
               child: Card(
@@ -217,18 +195,21 @@ Widget build(BuildContext context) {
           ),
           Row(
             children: [
-              const Icon(
-                Icons.location_pin,
-                color: Color.fromARGB(255, 81, 65, 143)
+              Container(
+                padding: const EdgeInsets.all(3),
+                child: const Icon(
+                  Icons.location_pin,
+                  color: Color.fromARGB(255, 81, 65, 143)
+                ),
               ),
               Expanded(
                 child: Text(
-                  widget.eventInfo.address,
+                  widget.eventInfo.locationName,
                   overflow: TextOverflow.clip,
                   style: const TextStyle(
                     color: Color.fromARGB(255, 81, 65, 143),
                     fontWeight: FontWeight.bold,
-                    fontSize: 12
+                    fontSize: 16
                   ),
                 ),
               )
@@ -236,7 +217,7 @@ Widget build(BuildContext context) {
           const SizedBox(height: 10),
           SizedBox(
             width: 300.0,
-            child: widget.eventInfo.participantIds.length > 0 ?
+            child: widget.eventInfo.participantIds.isNotEmpty ?
               SizedBox(
                 width: double.infinity,
                 height: 40,

@@ -1,7 +1,5 @@
-
+/// Display the event detail information on a single page
 import 'package:aroundu/component/event_image.dart';
-import 'package:aroundu/component/image_upload.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
@@ -26,6 +24,11 @@ Future<EventInfo> fetchEvent(int id) async {
       path: "/event/id", 
       queryParameters: {"eventid": id.toString()}
     ),
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    },
   );
   if (response.statusCode == 200) {
     return EventInfo.fromJson(jsonDecode(response.body)["data"]);

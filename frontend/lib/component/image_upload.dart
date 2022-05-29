@@ -3,7 +3,6 @@
 /// Handles getting the image from on-device storage and upload to Firestorage.
 /// Note this widget isn't supported in Flutter web
 import 'dart:io';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -100,26 +99,24 @@ class ImageUploadsState extends State<ImageUploads> {
       context: context,
       builder: (BuildContext bc) {
         return SafeArea(
-          child: Container(
-            child: Wrap(
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.photo_library),
-                  title: const Text('Gallery'),
-                  onTap: () {
-                    imgFromGallery();
-                    Navigator.of(context).pop();
-                  }),
-                ListTile(
-                  leading: const Icon(Icons.photo_camera),
-                  title: const Text('Camera'),
-                  onTap: () {
-                    imgFromCamera();
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ),
+          child: Wrap(
+            children: [
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Gallery'),
+                onTap: () {
+                  imgFromGallery();
+                  Navigator.of(context).pop();
+                }),
+              ListTile(
+                leading: const Icon(Icons.photo_camera),
+                title: const Text('Camera'),
+                onTap: () {
+                  imgFromCamera();
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
           ),
         );
     });
