@@ -2,7 +2,7 @@
 /// Create event page allows user to create an event by providing the event infomation such as
 /// event title, desription, location, and time.
 import 'dart:convert';
-
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:aroundu/component/image_upload.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -232,8 +232,8 @@ class _EventInputsState extends State<EventInputs> {
           validator: (title) {
             if (title == null || title.isEmpty) {
               return "Please entry a title";
-            } else if (title.length > 50) {
-              return "Title exceeds 50 characters";
+            } else if (title.length > 30) {
+              return "Title exceeds 30 characters";
             }
             return null;
           },
@@ -506,7 +506,7 @@ class _EventInputsState extends State<EventInputs> {
               ],
             ),
             const SizedBox(height: 20),
-            ImageUploads(key: _imageUploadState),
+            !kIsWeb ? ImageUploads(key: _imageUploadState) : const SizedBox(),
             const SizedBox(height: 20),
             eventTitle,
             const SizedBox(height: 20),

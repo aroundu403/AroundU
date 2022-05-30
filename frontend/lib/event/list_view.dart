@@ -174,7 +174,7 @@ Widget build(BuildContext context) {
     children: [
     Expanded(
       flex: 2,
-      child: EventImage(eventId: widget.eventInfo.eventId)
+      child: EventImage(eventId: widget.eventInfo.eventId, boxFit: BoxFit.cover)
     ),
     const SizedBox(width: 4),
     Expanded(

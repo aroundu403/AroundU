@@ -308,7 +308,7 @@ class _EventDetailState extends State<EventDetailHelper> {
           Container(
             height: 200,
             alignment: Alignment.center,
-            child: EventImage(eventId: event.eventId)
+            child: EventImage(eventId: event.eventId, boxFit: BoxFit.contain)
           ),
           const SizedBox(height: 20),
           // start time and end time widget
