@@ -89,10 +89,10 @@ class MyEventState extends State<MyEventPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        decoration: const BoxDecoration(
+            gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
           // ignore: prefer_const_literals_to_create_immutables
@@ -101,9 +101,8 @@ class MyEventState extends State<MyEventPage> {
             Color.fromARGB(255, 92, 74, 210),
             Color.fromARGB(210, 112, 188, 236),
           ],
-      )),
-      child: ListView(
-        children: [
+        )),
+        child: ListView(children: [
           const Padding(padding: EdgeInsets.all(10)),
           Column(
             children: [
@@ -111,40 +110,37 @@ class MyEventState extends State<MyEventPage> {
                 alignment: Alignment.topLeft,
                 child: Container(
                   padding: const EdgeInsets.only(left: 20, top: 10),
-                  child: const Text(
-                    "My Events",
-                    style: TextStyle(
-                      fontFamily: 'Inter',
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 40
-                  )),
+                  child: const Text("My Events",
+                      style: TextStyle(
+                          fontFamily: 'Inter',
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 40)),
                 ),
               ),
               FutureBuilder<List<EventInfo>>(
-                future: createdEvents,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return MyEvents(createdEvents: snapshot.data!);
-                  } else if (snapshot.hasError) {
-                    return const SizedBox(
-                      width: 100,
-                      child: Center(
-                        child: Text('No Created Events Currently',
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 81, 65, 143),
-                            fontStyle: FontStyle.italic,
-                            fontSize: 20))),
+                  future: createdEvents,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return MyEvents(createdEvents: snapshot.data!);
+                    } else if (snapshot.hasError) {
+                      return const SizedBox(
+                        width: 100,
+                        child: Center(
+                            child: Text('No Created Events Currently',
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 81, 65, 143),
+                                    fontStyle: FontStyle.italic,
+                                    fontSize: 20))),
+                      );
+                    }
+                    return const Center(
+                      child: SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: CircularProgressIndicator()),
                     );
-                  }
-                  return const Center(
-                    child: SizedBox(
-                      width: 40,
-                      height: 40,
-                      child: CircularProgressIndicator()
-                    ),
-                  );
-                }),
+                  }),
             ],
           ),
           Column(
@@ -163,32 +159,29 @@ class MyEventState extends State<MyEventPage> {
                 ],
               ),
               FutureBuilder<List<EventInfo>>(
-                future: participatedEvents,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return ParticipatedEvents(
-                      participatedEvents: snapshot.data!);
-                  } else if (snapshot.hasError) {
-                    return const Center(
-                      child: Text(
-                        'No Events to participate Currently',
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 81, 65, 143),
-                          fontStyle: FontStyle.italic,
-                          fontSize: 20
-                        )));
-                  }
-                  return const SizedBox();
-                }),
+                  future: participatedEvents,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return ParticipatedEvents(
+                          participatedEvents: snapshot.data!);
+                    } else if (snapshot.hasError) {
+                      return const Center(
+                          child: Text('No Events to participate Currently',
+                              style: TextStyle(
+                                  color: Color.fromARGB(255, 81, 65, 143),
+                                  fontStyle: FontStyle.italic,
+                                  fontSize: 20)));
+                    }
+                    return const SizedBox();
+                  }),
             ],
           )
-    ]));
+        ]));
   }
 }
 
 class MyEvents extends StatefulWidget {
-  const MyEvents({Key? key, required this.createdEvents})
-      : super(key: key);
+  const MyEvents({Key? key, required this.createdEvents}) : super(key: key);
   final List<EventInfo> createdEvents;
 
   @override
@@ -207,93 +200,96 @@ class _MyEventListState extends State<MyEvents> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      physics: const NeverScrollableScrollPhysics(),
-      controller: _controller,
-      padding: const EdgeInsets.all(8),
-      shrinkWrap: true,
-      itemCount: widget.createdEvents.length,
-      scrollDirection: Axis.vertical,
-      itemBuilder: (buildContext, index) {
-        return Container(
-          margin: const EdgeInsets.all(8),
-          width: 343,
-          height: 150,
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: const Color.fromARGB(255, 120, 117, 117).withOpacity(.5),
-                blurRadius: 20.0, // soften the shadow
-                spreadRadius: 0.0, //extend the shadow
-                offset: const Offset(
-                  5.0,
-                  8.0,
-                ),
-              )
-            ],
-          ),
-          child: GestureDetector(
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => EventPage(
-                  eventId: widget.createdEvents[index].eventId,
-                ),
+        physics: const NeverScrollableScrollPhysics(),
+        controller: _controller,
+        padding: const EdgeInsets.all(8),
+        shrinkWrap: true,
+        itemCount: widget.createdEvents.length,
+        scrollDirection: Axis.vertical,
+        itemBuilder: (buildContext, index) {
+          return Container(
+              margin: const EdgeInsets.all(8),
+              width: 343,
+              height: 150,
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color.fromARGB(255, 120, 117, 117)
+                        .withOpacity(.5),
+                    blurRadius: 20.0, // soften the shadow
+                    spreadRadius: 0.0, //extend the shadow
+                    offset: const Offset(
+                      5.0,
+                      8.0,
+                    ),
+                  )
+                ],
               ),
-            ),
-            child: Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-                side: BorderSide(
-                  color: Colors.grey.withOpacity(0.2),
-                  width: 1,
-                ),
-              ),
-              child: Row(children: [
-                const Padding(padding: EdgeInsets.all(8)),
-                Expanded(
-                  flex: 1,
-                  child: EventImage(eventId: widget.createdEvents[index].eventId),
-                ),
-                const Padding(padding: EdgeInsets.all(8)),
-                Expanded(
-                  flex: 2,
-                  child: Container(
-                    padding: const EdgeInsets.only(top: 5),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+              child: GestureDetector(
+                  onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EventPage(
+                            eventId: widget.createdEvents[index].eventId,
+                          ),
+                        ),
+                      ),
+                  child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        side: BorderSide(
+                          color: Colors.grey.withOpacity(0.2),
+                          width: 1,
+                        ),
+                      ),
+                      child: Row(children: [
                         const Padding(padding: EdgeInsets.all(8)),
-                        Text(
-                          widget.createdEvents[index].eventName,
-                          style: TextStyle(
-                            color: Theme.of(context).backgroundColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18
-                          )),
-                        const Padding(padding: EdgeInsets.all(25)),
-                        Column(children: [
-                          const Padding( padding: EdgeInsets.all(3)),
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.people_alt_outlined,
-                                color: Colors.grey
-                              ),
-                              Text(" " +
-                                widget.createdEvents[index]
-                                .currNumParticipants
-                                .toString() +
-                                " people joined",
-                                style: const TextStyle(
-                                  color: Color.fromARGB(255, 81, 65, 143),
-                                  fontWeight:FontWeight.bold,
-                                  fontSize: 16
-                                ))
-                          ]),
-                        ])
-                        ])))
-                ]))));
-            });
+                        Expanded(
+                          flex: 1,
+                          child: EventImage(
+                              eventId: widget.createdEvents[index].eventId),
+                        ),
+                        const Padding(padding: EdgeInsets.all(8)),
+                        Expanded(
+                            flex: 2,
+                            child: Container(
+                                padding: const EdgeInsets.only(top: 5),
+                                child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Padding(padding: EdgeInsets.all(8)),
+                                      Text(
+                                          widget.createdEvents[index].eventName,
+                                          style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .backgroundColor,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18)),
+                                      const Padding(
+                                          padding: EdgeInsets.all(25)),
+                                      Column(children: [
+                                        const Padding(
+                                            padding: EdgeInsets.all(3)),
+                                        Row(children: [
+                                          const Icon(Icons.people_alt_outlined,
+                                              color: Colors.grey),
+                                          Text(
+                                              " " +
+                                                  widget.createdEvents[index]
+                                                      .currNumParticipants
+                                                      .toString() +
+                                                  " people joined",
+                                              style: const TextStyle(
+                                                  color: Color.fromARGB(
+                                                      255, 81, 65, 143),
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16))
+                                        ]),
+                                      ])
+                                    ])))
+                      ]))));
+        });
   }
 }
 
@@ -304,78 +300,76 @@ class ParticipatedEvents extends StatelessWidget {
 
   String formatDateTime(String time) {
     DateTime dateTime = DateTime.parse(time);
-    return sprintf("%02i-%02i %02i:%02i", [dateTime.month, dateTime.day, dateTime.hour, dateTime.minute]);
+    return sprintf("%02i-%02i %02i:%02i",
+        [dateTime.month, dateTime.day, dateTime.hour, dateTime.minute]);
   }
 
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      scrollDirection: Axis.vertical,
-      itemCount: participatedEvents.length,
-      padding: const EdgeInsets.all(8),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-      ),
-      itemBuilder: (BuildContext context, int index) {
-        return Container(
-          margin: const EdgeInsets.all(6),
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: const Color.fromARGB(255, 120, 117, 117).withOpacity(.5),
-                blurRadius: 20.0, // soften the shadow
-                spreadRadius: 0.0, //extend the shadow
-                offset: const Offset(5.0,8.0),
-              )
-            ],
-          ),
-          child: GestureDetector(
-            onTap: () => Navigator.push(context,
-              MaterialPageRoute(builder: (context) =>
-                  EventPage(eventId: participatedEvents[index].eventId),
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
+        itemCount: participatedEvents.length,
+        padding: const EdgeInsets.all(8),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+        ),
+        itemBuilder: (BuildContext context, int index) {
+          return Container(
+              margin: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color.fromARGB(255, 120, 117, 117)
+                        .withOpacity(.5),
+                    blurRadius: 20.0, // soften the shadow
+                    spreadRadius: 0.0, //extend the shadow
+                    offset: const Offset(5.0, 8.0),
+                  )
+                ],
               ),
-            ),
-            child: Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-                side: BorderSide(
-                  color: Colors.grey.withOpacity(0.2),
-                  width: 1,
-                ),
-              ),
-              child: Container(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  children: [
-                  Expanded(
-                    flex: 6,
-                    child: EventImage(eventId: participatedEvents[index].eventId)
-                  ),
-                  const Expanded(
-                    flex: 1, 
-                    child: SizedBox()
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Text(
-                      participatedEvents[index].eventName,
-                      style: const TextStyle(
-                        color: Color.fromARGB(255, 81, 65, 143),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18
-                  ))),
-                  Expanded(
-                    flex: 1,
-                    child: Text(
-                      formatDateTime(participatedEvents[index].startTime),
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 14
-                  )))
-                ]),
-              ))));
-      });
+              child: GestureDetector(
+                  onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EventPage(
+                              eventId: participatedEvents[index].eventId),
+                        ),
+                      ),
+                  child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        side: BorderSide(
+                          color: Colors.grey.withOpacity(0.2),
+                          width: 1,
+                        ),
+                      ),
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        child: Column(children: [
+                          Expanded(
+                              flex: 6,
+                              child: EventImage(
+                                  eventId: participatedEvents[index].eventId)),
+                          const Padding(padding: EdgeInsets.all(3)),
+                          Expanded(
+                              flex: 1,
+                              child: Text(participatedEvents[index].eventName,
+                                  style: const TextStyle(
+                                      color: Color.fromARGB(255, 81, 65, 143),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16))),
+                          const Padding(padding: EdgeInsets.all(2)),
+                          Expanded(
+                              flex: 1,
+                              child: Text(
+                                  formatDateTime(
+                                      participatedEvents[index].startTime),
+                                  style: const TextStyle(
+                                      color: Colors.grey, fontSize: 14)))
+                        ]),
+                      ))));
+        });
   }
 }

@@ -18,12 +18,11 @@ Future<EventInfo> fetchEvent(int id) async {
   }
 
   String token = await user.getIdToken();
-  final response =  await http.get(
+  final response = await http.get(
     Uri(
-      host: backendAddress, 
-      path: "/event/id", 
-      queryParameters: {"eventid": id.toString()}
-    ),
+        host: backendAddress,
+        path: "/event/id",
+        queryParameters: {"eventid": id.toString()}),
     headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -48,19 +47,16 @@ Future<EventInfo> joinEvent(int eventId) async {
 
   String token = await user.getIdToken();
   final response = await http.post(
-    Uri(
-      host: backendAddress,
-      path: "/event/guest",
-    ),
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token',
-    },
-    body: jsonEncode({
-      "event_id": eventId
-    })
-  );
+      Uri(
+        host: backendAddress,
+        path: "/event/guest",
+      ),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({"event_id": eventId}));
   if (response.statusCode == 200) {
     return fetchEvent(eventId);
   } else {
@@ -79,19 +75,16 @@ Future<EventInfo> quitEvent(int eventId) async {
 
   String token = await user.getIdToken();
   final response = await http.delete(
-    Uri(
-      host: backendAddress,
-      path: "/event/guest",
-    ),
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token',
-    },
-    body: jsonEncode({
-      "event_id": eventId
-    })
-  );
+      Uri(
+        host: backendAddress,
+        path: "/event/guest",
+      ),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({"event_id": eventId}));
   if (response.statusCode == 200) {
     // After user has joined the event, refesh the event info
     return await fetchEvent(eventId);
@@ -116,7 +109,7 @@ class EventState extends State<EventPage> {
     _event = fetchEvent(widget.eventId);
   }
 
-  void updateEvent(Future<EventInfo> event){
+  void updateEvent(Future<EventInfo> event) {
     setState(() {
       _event = event;
     });
@@ -125,7 +118,7 @@ class EventState extends State<EventPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
+        body: Stack(
       children: [
         SafeArea(
           child: Column(
@@ -135,14 +128,14 @@ class EventState extends State<EventPage> {
                 children: [
                   const Padding(padding: EdgeInsets.all(5)),
                   Align(
-                    alignment: Alignment.topLeft,
-                    child: GestureDetector(
-                      onTap: () => Navigator.pop(context),
-                      child: const Icon(
-                        Icons.chevron_left,
-                        size: 36,
-                        color: Color.fromARGB(255, 81, 65, 143),
-                      )))
+                      alignment: Alignment.topLeft,
+                      child: GestureDetector(
+                          onTap: () => Navigator.pop(context),
+                          child: const Icon(
+                            Icons.chevron_left,
+                            size: 36,
+                            color: Color.fromARGB(255, 81, 65, 143),
+                          )))
                 ],
               ),
               const SizedBox(height: 4),
@@ -165,25 +158,25 @@ class EventState extends State<EventPage> {
           ),
         ),
         FutureBuilder<EventInfo>(
-          future: _event,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              var event = snapshot.data!;
-              // Todo add mode full
-              var buttonMode = event.currNumParticipants < event.maxParticipants ? EventButtonMode.join : EventButtonMode.leave;
-              return Align(
-                alignment: Alignment.bottomCenter,
-                child: JoinLeaveEventButton(
-                  mode: buttonMode, 
-                  eventId: event.eventId, 
-                  updateEvent: updateEvent
-                )
-              );
-            } else {
-              return const SizedBox();
-            }
-          }
-        )
+            future: _event,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                var event = snapshot.data!;
+                // Todo add mode full
+                var buttonMode =
+                    event.currNumParticipants < event.maxParticipants
+                        ? EventButtonMode.join
+                        : EventButtonMode.leave;
+                return Align(
+                    alignment: Alignment.bottomCenter,
+                    child: JoinLeaveEventButton(
+                        mode: buttonMode,
+                        eventId: event.eventId,
+                        updateEvent: updateEvent));
+              } else {
+                return const SizedBox();
+              }
+            })
       ],
     ));
   }
@@ -205,55 +198,61 @@ class _EventDetailState extends State<EventDetailHelper> {
 
   String formatDateTime(String time) {
     DateTime dateTime = DateTime.parse(time);
-    return sprintf("%02i-%02i-%02i %02i:%02i", [dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute]);
+    return sprintf("%02i-%02i-%02i %02i:%02i", [
+      dateTime.year,
+      dateTime.month,
+      dateTime.day,
+      dateTime.hour,
+      dateTime.minute
+    ]);
   }
 
-  final List<String> participants = [
-    "images/scenary.jpg",
-    "images/tree.jpg",
-    "images/scenary.jpg",
-    "images/scenary.jpg",
-    "images/tree.jpg",
-  ];
+  // final List<String> participants = [
+  //   "images/scenary.jpg",
+  //   "images/tree.jpg",
+  //   "images/scenary.jpg",
+  //   "images/scenary.jpg",
+  //   "images/tree.jpg",
+  // ];
   @override
   Widget build(BuildContext context) {
-
     var purpleBoldFont = const TextStyle(
-      color: Color.fromARGB(255, 81, 65, 143),
-      fontWeight: FontWeight.bold,
-      fontSize: 18
-    );
+        color: Color.fromARGB(255, 81, 65, 143),
+        fontWeight: FontWeight.bold,
+        fontSize: 18);
 
     var userProfileImages = Row(
       children: [
         const Align(
-          alignment: Alignment.topLeft,
-          child: Icon(
-            Icons.people_alt_outlined,
-            color: Color.fromARGB(255, 81, 65, 143))),
+            alignment: Alignment.topLeft,
+            child: Icon(Icons.people_alt_outlined,
+                color: Color.fromARGB(255, 81, 65, 143))),
         const SizedBox(width: 10),
         Text(event.currNumParticipants.toString() + " people joined",
-          style: const TextStyle(
-            color: Color.fromARGB(255, 81, 65, 143),
-            fontWeight: FontWeight.bold,
-            fontSize: 18
-          )),
+            style: const TextStyle(
+                color: Color.fromARGB(255, 81, 65, 143),
+                fontWeight: FontWeight.bold,
+                fontSize: 18)),
         const SizedBox(width: 24),
         SizedBox(
-          width: 50,
-          height: 25,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: 3,
-            itemBuilder: (context, index) {
-              return Align(
-                widthFactor: 0.6,
-                child: CircleAvatar(
-                  radius: 12,
-                  backgroundImage: AssetImage(participants[index]),
-                ),
-              );
-            })),
+            width: 175,
+            child: event.currNumParticipants > 0
+                ? SizedBox(
+                    width: double.infinity,
+                    height: 25,
+                    child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: event.currNumParticipants,
+                        itemBuilder: (context, index) {
+                          return const Align(
+                            widthFactor: 0.6,
+                            child: CircleAvatar(
+                              radius: 12,
+                              backgroundImage: AssetImage("images/tree.jpg"),
+                            ),
+                          );
+                        }))
+                : const SizedBox()),
         TextButton(
           onPressed: () {
             setState(() {
@@ -261,75 +260,66 @@ class _EventDetailState extends State<EventDetailHelper> {
             });
           },
           child: showMore
-            ? const Text("hide all",
-              style: TextStyle(
-                color: Color.fromARGB(255, 190, 114, 230),
-                fontStyle: FontStyle.italic,
-                decoration: TextDecoration.underline,
-                fontSize: 15))
-            : const Text("show all",
-              style: TextStyle(
-                color: Color.fromARGB(255, 190, 114, 230),
-                fontStyle: FontStyle.italic,
-                decoration: TextDecoration.underline,
-                fontSize: 15)),
+              ? const Text("hide all",
+                  style: TextStyle(
+                      color: Color.fromARGB(255, 190, 114, 230),
+                      fontStyle: FontStyle.italic,
+                      decoration: TextDecoration.underline,
+                      fontSize: 15))
+              : const Text("show all",
+                  style: TextStyle(
+                      color: Color.fromARGB(255, 190, 114, 230),
+                      fontStyle: FontStyle.italic,
+                      decoration: TextDecoration.underline,
+                      fontSize: 15)),
         )
       ],
     );
     return SingleChildScrollView(
       child: Container(
         margin: const EdgeInsets.only(left: 20, right: 20),
-        child: Column(
-          children: [
+        child: Column(children: [
           // Event Title
           Align(
             alignment: Alignment.topLeft,
             child: Text(event.eventName,
-              style: const TextStyle(
-                  color: Color.fromARGB(255, 81, 65, 143),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 27)),
+                style: const TextStyle(
+                    color: Color.fromARGB(255, 81, 65, 143),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 27)),
           ),
           // number of spot avaible
           const SizedBox(height: 10),
           Align(
             alignment: Alignment.topLeft,
             child: event.currNumParticipants >= event.maxParticipants
-              ? const Text(
-                "Full",
-                style: TextStyle(color: Colors.red, fontSize: 15))
-              : Text(
-                (event.maxParticipants - event.currNumParticipants).toString() +
-                  " spots available",
-                style:const TextStyle(color: Colors.green, fontSize: 15)),
+                ? const Text("Full",
+                    style: TextStyle(color: Colors.red, fontSize: 15))
+                : Text(
+                    (event.maxParticipants - event.currNumParticipants)
+                            .toString() +
+                        " spots available",
+                    style: const TextStyle(color: Colors.green, fontSize: 15)),
           ),
           const SizedBox(height: 20),
           // Event images
           Container(
-            height: 200,
-            alignment: Alignment.center,
-            child: EventImage(eventId: event.eventId)
-          ),
+              height: 200,
+              alignment: Alignment.center,
+              child: EventImage(eventId: event.eventId)),
           const SizedBox(height: 20),
           // start time and end time widget
           Row(
             children: [
               const Align(
-                alignment: Alignment.topLeft,
-                child: Icon(
-                  Icons.access_time_rounded,
-                  color: Color.fromARGB(255, 81, 65, 143))),
+                  alignment: Alignment.topLeft,
+                  child: Icon(Icons.access_time_rounded,
+                      color: Color.fromARGB(255, 81, 65, 143))),
               const SizedBox(width: 10),
               Column(
                 children: [
-                  Text(
-                    formatDateTime(event.startTime),
-                    style: purpleBoldFont
-                  ),
-                  Text(
-                    formatDateTime(event.endTime),
-                    style: purpleBoldFont
-                  )
+                  Text(formatDateTime(event.startTime), style: purpleBoldFont),
+                  Text(formatDateTime(event.endTime), style: purpleBoldFont)
                 ],
               )
             ],
@@ -338,39 +328,42 @@ class _EventDetailState extends State<EventDetailHelper> {
           // number of participant
           userProfileImages,
           if (showMore)
-            SizedBox(
-              height: 100.0,
-              width: 350,
-              child: GridView.builder(
-                  itemCount: participants.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 10,
-                    crossAxisSpacing: 1.0,
-                    mainAxisSpacing: 1.0,
-                  ),
-                  itemBuilder: (BuildContext context, int index) {
-                    return CircleAvatar(
-                      backgroundColor: Colors.white,
-                      radius: 8,
-                      child: CircleAvatar(
-                        radius: 12,
-                        backgroundImage: AssetImage(participants[index]),
-                      ),
-                    );
-                  }),
-            ),
+            event.currNumParticipants > 0
+                ? SizedBox(
+                    height: 100.0,
+                    width: 350,
+                    child: GridView.builder(
+                        itemCount: event.currNumParticipants,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 10,
+                          crossAxisSpacing: 1.0,
+                          mainAxisSpacing: 1.0,
+                        ),
+                        itemBuilder: (BuildContext context, int index) {
+                          return const CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 8,
+                            child: CircleAvatar(
+                              radius: 12,
+                              backgroundImage: AssetImage("images/tree.jpg"),
+                            ),
+                          );
+                        }),
+                  )
+                : const SizedBox(),
           const SizedBox(height: 10),
           // event address
           Row(
             children: [
               const Align(
-                alignment: Alignment.topLeft,
-                child: Icon(Icons.location_on_outlined,
-                  color: Color.fromARGB(255, 81, 65, 143))),
+                  alignment: Alignment.topLeft,
+                  child: Icon(Icons.location_on_outlined,
+                      color: Color.fromARGB(255, 81, 65, 143))),
               const SizedBox(width: 10),
               Expanded(
-                child: Text(event.address, style: purpleBoldFont, overflow: TextOverflow.clip)
-              ),
+                  child: Text(event.address,
+                      style: purpleBoldFont, overflow: TextOverflow.clip)),
             ],
           ),
           const SizedBox(height: 10),
@@ -378,10 +371,9 @@ class _EventDetailState extends State<EventDetailHelper> {
           Row(
             children: [
               const Align(
-                alignment: Alignment.topLeft,
-                child: Icon(
-                  Icons.event_note_outlined,
-                  color: Color.fromARGB(255, 81, 65, 143))),
+                  alignment: Alignment.topLeft,
+                  child: Icon(Icons.event_note_outlined,
+                      color: Color.fromARGB(255, 81, 65, 143))),
               const Padding(padding: EdgeInsets.all(5)),
               Text("Event Details", style: purpleBoldFont),
             ],
@@ -391,11 +383,9 @@ class _EventDetailState extends State<EventDetailHelper> {
             children: [
               const Padding(padding: EdgeInsets.all(10)),
               Expanded(
-                child: Text(
-                  event.description,
-                  overflow: TextOverflow.clip,
-                  style: const TextStyle(color: Colors.black, fontSize: 16)
-                ),
+                child: Text(event.description,
+                    overflow: TextOverflow.clip,
+                    style: const TextStyle(color: Colors.black, fontSize: 16)),
               )
             ],
           ),
@@ -409,7 +399,12 @@ class _EventDetailState extends State<EventDetailHelper> {
 enum EventButtonMode { join, leave, full }
 
 class JoinLeaveEventButton extends StatelessWidget {
-  const JoinLeaveEventButton({Key? key, required this.mode, required this.updateEvent, required this.eventId}) : super(key: key);
+  const JoinLeaveEventButton(
+      {Key? key,
+      required this.mode,
+      required this.updateEvent,
+      required this.eventId})
+      : super(key: key);
 
   final EventButtonMode mode;
   final int eventId;
@@ -425,89 +420,87 @@ class JoinLeaveEventButton extends StatelessWidget {
     );
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 10.0),
-      child: SizedBox(
-          width: 343,
-          height: 60,
-          child: Row(
-            children: [
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    boxShadow: [boxShadow]
+        margin: const EdgeInsets.only(bottom: 10.0),
+        child: SizedBox(
+            width: 343,
+            height: 60,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(boxShadow: [boxShadow]),
+                    child: mode == EventButtonMode.full
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(20.0),
+                            child: Container(
+                                decoration: const BoxDecoration(
+                                    gradient: LinearGradient(
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                        colors: [
+                                      Color.fromARGB(255, 80, 77, 77),
+                                      Color.fromARGB(255, 120, 117, 117),
+                                    ])),
+                                child: const Align(
+                                    alignment: Alignment.center,
+                                    child: Text("Full",
+                                        style: TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 243, 241, 241),
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 22)))),
+                          )
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(20.0), //or 15.0
+                            child: Container(
+                                decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: mode == EventButtonMode.leave
+                                      ? [
+                                          const Color(0xffff1fa7),
+                                          const Color.fromARGB(
+                                              255, 172, 115, 248),
+                                        ]
+                                      : [
+                                          const Color.fromARGB(
+                                              255, 81, 65, 143),
+                                          const Color.fromARGB(
+                                              255, 172, 115, 248)
+                                        ],
+                                )),
+                                child: ElevatedButton(
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                        Colors.transparent),
+                                    shadowColor: MaterialStateProperty.all(
+                                        Colors.transparent),
+                                  ),
+                                  child: mode == EventButtonMode.leave
+                                      ? const Text("Leave Event",
+                                          style: TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 243, 241, 241),
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 22))
+                                      : const Text("Join Event",
+                                          style: TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 243, 241, 241),
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 22)),
+                                  onPressed: () {
+                                    if (mode == EventButtonMode.join) {
+                                      updateEvent(joinEvent(eventId));
+                                    } else {
+                                      updateEvent(quitEvent(eventId));
+                                    }
+                                  },
+                                ))),
                   ),
-                  child: mode == EventButtonMode.full ? 
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(20.0),
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Color.fromARGB(255, 80, 77, 77), 
-                            Color.fromARGB(255, 120, 117, 117),
-                        ])),
-                      child: const Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          "Full",
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 243, 241, 241),
-                            fontWeight:FontWeight.bold,
-                            fontSize: 22
-                          )))),
-                  )
-              : ClipRRect(
-                borderRadius: BorderRadius.circular(20.0), //or 15.0
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: mode == EventButtonMode.leave ?
-                        [
-                          const Color(0xffff1fa7),
-                          const Color.fromARGB(255, 172, 115, 248),
-                        ]
-                        : 
-                        [
-                          const Color.fromARGB(255, 81, 65, 143),
-                          const Color.fromARGB(255, 172, 115, 248)
-                        ],
-                    )
-                  ),
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor:MaterialStateProperty.all(Colors.transparent),
-                      shadowColor: MaterialStateProperty.all(Colors.transparent),
-                    ),
-                    child: mode == EventButtonMode.leave ? 
-                    const Text("Leave Event",
-                      style: TextStyle(
-                        color:Color.fromARGB(255,243,241,241),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22
-                      ))
-                    : 
-                    const Text(
-                      "Join Event",
-                      style: TextStyle(
-                        color:Color.fromARGB(255,243,241,241),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22
-                    )),
-                    onPressed: () {
-                      if (mode == EventButtonMode.join) {
-                        updateEvent(joinEvent(eventId));
-                      } else {
-                        updateEvent(quitEvent(eventId));
-                      }
-                    },
-                  ))),
-          ),
-        ),
-      ],
-    )));
+                ),
+              ],
+            )));
   }
 }
