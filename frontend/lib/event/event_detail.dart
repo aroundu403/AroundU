@@ -354,7 +354,7 @@ class _EventDetailState extends State<EventDetailHelper> {
                       radius: 8,
                       child: CircleAvatar(
                         radius: 12,
-                        backgroundImage: AssetImage(participants[index]), // TODO
+                        backgroundImage: AssetImage(participants[index]),
                       ),
                     );
                   }),
