@@ -125,11 +125,12 @@ class MyEventState extends State<MyEventPage> {
                       return MyEvents(createdEvents: snapshot.data!);
                     } else if (snapshot.hasError) {
                       return const SizedBox(
-                        width: 100,
+                        height: 300,
+                        width: 300,
                         child: Center(
                             child: Text('No Created Events Currently',
                                 style: TextStyle(
-                                    color: Color.fromARGB(255, 81, 65, 143),
+                                    color: Colors.white,
                                     fontStyle: FontStyle.italic,
                                     fontSize: 20))),
                       );
@@ -165,12 +166,14 @@ class MyEventState extends State<MyEventPage> {
                       return ParticipatedEvents(
                           participatedEvents: snapshot.data!);
                     } else if (snapshot.hasError) {
-                      return const Center(
-                          child: Text('No Events to participate Currently',
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 81, 65, 143),
-                                  fontStyle: FontStyle.italic,
-                                  fontSize: 20)));
+                      return const SizedBox(
+                          height: 300,
+                          child: Center(
+                              child: Text('No Events to participate Currently',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontStyle: FontStyle.italic,
+                                      fontSize: 20))));
                     }
                     return const SizedBox();
                   }),

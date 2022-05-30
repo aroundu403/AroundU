@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'dart:async';
 import '../../main.dart';
 import '../auth/auth_service.dart';
-import 'my_event.dart';
 import 'package:aroundu/json/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -126,40 +125,56 @@ class ProfileState extends State<ProfilePage> {
                   }
                   return const CircularProgressIndicator();
                 }),
-            const Padding(padding: EdgeInsets.all(10)),
-            Container(
-                margin: const EdgeInsets.all(8),
-                width: 343,
-                height: 100,
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color.fromARGB(255, 120, 117, 117)
-                          .withOpacity(.5),
-                      blurRadius: 20.0, // soften the shadow
-                      spreadRadius: 0.0, //extend the shadow
-                      offset: const Offset(5.0, 8.0),
-                    )
-                  ],
-                ),
-                child: GestureDetector(
-                    onTap: () =>
-                        context.read<AuthenticationService>().signOut(),
-                    child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(35), // if you need this
-                          side: BorderSide(
-                            color: Colors.grey.withOpacity(0.2),
-                            width: 1,
-                          ),
-                        ),
-                        child: const Center(
-                            child: Text("Sign out",
-                                style: TextStyle(
-                                    color: Color.fromARGB(255, 81, 65, 143),
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 24))))))
+            const Padding(padding: EdgeInsets.all(180)),
+            SizedBox(
+                width: 260,
+                height: 50,
+                child: Row(children: [
+                  Expanded(
+                      child: Container(
+                          decoration: BoxDecoration(boxShadow: [
+                            BoxShadow(
+                              color: const Color.fromARGB(255, 120, 117, 117)
+                                  .withOpacity(.5),
+                              blurRadius: 20.0, // soften the shadow
+                              spreadRadius: 0.0, //extend the shadow
+                              offset: const Offset(5.0, 8.0),
+                            )
+                          ]),
+                          child: ClipRRect(
+                              borderRadius:
+                                  BorderRadius.circular(30.0), //or 15.0
+                              child: Container(
+                                  decoration: const BoxDecoration(
+                                      gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      Color.fromARGB(255, 81, 65, 143),
+                                      Color.fromARGB(255, 172, 115, 248)
+                                    ],
+                                  )),
+                                  child: ElevatedButton(
+                                    style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              Colors.transparent),
+                                      shadowColor: MaterialStateProperty.all(
+                                          Colors.transparent),
+                                    ),
+                                    child: const Center(
+                                        child: Text("Sign out",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20))),
+                                    onPressed: () {
+                                      context
+                                          .read<AuthenticationService>()
+                                          .signOut();
+                                    },
+                                  )))))
+                ]))
           ]))
     ]));
   }
