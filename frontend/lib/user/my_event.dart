@@ -264,36 +264,55 @@ class ParticipatedEvents extends StatelessWidget {
                   )
                 ],
               ),
-              child: Container(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  children: [
-                  Expanded(
-                    flex: 6,
-                    child: EventImage(eventId: participatedEvents[index].eventId, boxFit: BoxFit.cover)
+              child: GestureDetector(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EventPage(
+                      eventId: participatedEvents[index].eventId,
+                    ),
                   ),
-                  const Expanded(
-                    flex: 1, 
-                    child: SizedBox()
+                ),
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    side: BorderSide(
+                      color: Colors.grey.withOpacity(0.2),
+                      width: 1,
+                    ),
                   ),
-                  Expanded(
-                    flex: 1,
-                    child: Text(
-                      participatedEvents[index].eventName,
-                      style: const TextStyle(
-                        color: Color.fromARGB(255, 81, 65, 143),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18
-                  ))),
-                  Expanded(
-                    flex: 1,
-                    child: Text(
-                      formatDateTime(participatedEvents[index].startTime),
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 14
-                  )))
-                ]),
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      children: [
+                      Expanded(
+                        flex: 6,
+                        child: EventImage(eventId: participatedEvents[index].eventId, boxFit: BoxFit.cover)
+                      ),
+                      const Expanded(
+                        flex: 1, 
+                        child: SizedBox()
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          participatedEvents[index].eventName,
+                          style: const TextStyle(
+                            color: Color.fromARGB(255, 81, 65, 143),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18
+                      ))),
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          formatDateTime(participatedEvents[index].startTime),
+                          style: const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 14
+                      )))
+                    ]),
+                  ),
+                ),
               ));
       });
   }
