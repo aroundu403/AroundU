@@ -1,4 +1,5 @@
 /// Display the event detail information on a single page
+import 'dart:html';
 import 'package:aroundu/component/event_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -69,6 +70,7 @@ Future<EventInfo> joinEvent(int eventId) async {
 /// throws execption when fail to leave event or encounter network errors
 Future<EventInfo> quitEvent(int eventId) async {
   User? user = FirebaseAuth.instance.currentUser;
+
   if (user == null) {
     throw Exception("User has not logged in");
   }
@@ -163,10 +165,20 @@ class EventState extends State<EventPage> {
               if (snapshot.hasData) {
                 var event = snapshot.data!;
                 // Todo add mode full
-                var buttonMode =
-                    event.currNumParticipants < event.maxParticipants
-                        ? EventButtonMode.join
-                        : EventButtonMode.leave;
+                List<String> participants = event.participantIds;
+                User? user = FirebaseAuth.instance.currentUser;
+
+                var initialState = participants.contains(user?.uid);
+                var buttonMode;
+                //event.currNumParticipants < event.maxParticipants
+                if (initialState) {
+                  buttonMode = EventButtonMode.leave;
+                } else if (event.currNumParticipants >= event.maxParticipants) {
+                  buttonMode = EventButtonMode.full;
+                } else {
+                  buttonMode = EventButtonMode.join;
+                }
+
                 return Align(
                     alignment: Alignment.bottomCenter,
                     child: JoinLeaveEventButton(
@@ -398,17 +410,38 @@ class _EventDetailState extends State<EventDetailHelper> {
 
 enum EventButtonMode { join, leave, full }
 
-class JoinLeaveEventButton extends StatelessWidget {
+class JoinLeaveEventButton extends StatefulWidget {
   const JoinLeaveEventButton(
-      {Key? key,
-      required this.mode,
+      {required this.mode,
       required this.updateEvent,
-      required this.eventId})
+      required this.eventId,
+      Key? key})
       : super(key: key);
-
   final EventButtonMode mode;
   final int eventId;
   final Function updateEvent;
+  @override
+  JoinLeaveEventButtonState createState() => JoinLeaveEventButtonState();
+}
+
+class JoinLeaveEventButtonState extends State<JoinLeaveEventButton> {
+  late EventButtonMode mode;
+  late int eventId;
+  late Function updateEvent;
+  void initState() {
+    super.initState();
+    mode = widget.mode;
+    eventId = widget.eventId;
+    updateEvent = widget.updateEvent;
+  }
+  // const JoinLeaveEventButton(
+  //     {Key? key,
+  //     required this.mode,
+  //     required this.updateEvent,
+  //     required this.eventId})
+  //     : super(key: key);
+
+  // EventButtonMode mode;
 
   @override
   Widget build(BuildContext context) {
@@ -493,8 +526,14 @@ class JoinLeaveEventButton extends StatelessWidget {
                                   onPressed: () {
                                     if (mode == EventButtonMode.join) {
                                       updateEvent(joinEvent(eventId));
+                                      setState(() {
+                                        mode = EventButtonMode.leave;
+                                      });
                                     } else {
                                       updateEvent(quitEvent(eventId));
+                                      setState(() {
+                                        mode = EventButtonMode.join;
+                                      });
                                     }
                                   },
                                 ))),
