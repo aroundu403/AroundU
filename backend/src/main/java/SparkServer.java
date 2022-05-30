@@ -111,9 +111,9 @@ public class SparkServer {
           String userID = getUserID(request.headers("Authorization"), defaultApp);
           User body = gson.fromJson(request.body(), User.class);
           body.user_id = userID;
-            if (body.user_name == null || body.email == null || body.user_id == null) {
-                return gson.toJson(new OperationResponse(400, "Invalid parameter"));
-            }
+          if (body.user_name == null || body.email == null || body.user_id == null) {
+            return gson.toJson(new OperationResponse(400, "Invalid parameter"));
+          }
           if (!UserController.isUserExist(pool, userID)) {
             if (UserController.addUser(pool, body)) {
               DataResponse resp = new DataResponse(200, "Success", userID);
@@ -304,9 +304,12 @@ public class SparkServer {
             if (event.max_participants >= event.curr_num_participants + 1) {
               Timestamp curr = new Timestamp(System.currentTimeMillis());
               // can only participate if the event isn't ended
+              if (!ParticipateController.checkUserJoinedEvent(pool, userID, eventID)) {
+                return gson.toJson(
+                    new OperationResponse(409, "This user is already in the event."));
+              }
               if (curr.compareTo(Timestamp.valueOf(event.end_time)) < 0) {
-                if (ParticipateController.userParticipateEvent(
-                    pool, userID, eventID)) {
+                if (ParticipateController.userParticipateEvent(pool, userID, eventID)) {
                   DataResponse resp = new DataResponse(200, "Success", eventID);
                   return gson.toJson(resp);
                 } else {
@@ -343,8 +346,7 @@ public class SparkServer {
             // check if event have participants before searching it in participate table to avoid
             // errors
             if (event.curr_num_participants > 0
-                && ParticipateController.getEventsByUser(pool, userID)
-                    .contains(eventID)) {
+                && ParticipateController.getEventsByUser(pool, userID).contains(eventID)) {
               Timestamp curr = new Timestamp(System.currentTimeMillis());
               // can only quit if the event isn't ended
               if (curr.compareTo(Timestamp.valueOf(event.end_time)) < 0) {
