@@ -162,6 +162,7 @@ public class SparkServer {
           if (body.start_time.compareTo(body.end_time) < 0) {
             body.host_id = userID;
             long eventID = EventController.createEvent(pool, body);
+            ParticipateController.userParticipateEvent(pool, userID, eventID);
             DataResponse resp = new DataResponse(200, "Success", eventID);
             return gson.toJson(resp);
           } else {
