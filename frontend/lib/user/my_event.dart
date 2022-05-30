@@ -1,3 +1,4 @@
+import 'package:aroundu/component/event_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../event/event_detail.dart';
@@ -86,112 +87,77 @@ class MyEventState extends State<MyEventPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                begin: Alignment.topRight,
-                end: Alignment.bottomLeft,
-                // ignore: prefer_const_literals_to_create_immutables
-                colors: [
-                  Color.fromARGB(255, 81, 65, 143),
-                  Color.fromARGB(255, 92, 74, 210),
-                  Color.fromARGB(210, 112, 188, 236),
-                ],
-              )),
-              child: Column(
-                children: [
-                  const Padding(padding: EdgeInsets.all(15)),
-                  // back to preview page button
-                  Row(children: [
-                    const Padding(padding: EdgeInsets.all(5)),
-                    Align(
-                        alignment: Alignment.topLeft,
-                        child: GestureDetector(
-                            onTap: () => Navigator.pop(context),
-                            child: const Icon(
-                              Icons.chevron_left,
-                              size: 36,
-                              color: Colors.white,
-                            )))
-                  ]),
-              const Padding(padding: EdgeInsets.all(5)),
-              FutureBuilder<List<EventInfo>>(
-                  future: createdEvents,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return CreatedEvents(createdEvents: snapshot.data!);
-                    } else if (snapshot.hasError) {
-                      return const Center(
-                        child: Text('No Created Events Currently',
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 81, 65, 143),
-                            fontStyle: FontStyle.italic,
-                            fontSize: 20)));
-                    }
-                    return const CircularProgressIndicator();
-                  }),
-              FutureBuilder<List<EventInfo>>(
-                  future: participatedEvents,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return ParticipatedEvents(
-                        participatedEvents: snapshot.data!);
-                    } else if (snapshot.hasError) {
-                      return const Center(
-                        child: Text('No Events to participate Currently',
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 81, 65, 143),
-                            fontStyle: FontStyle.italic,
-                            fontSize: 20)));
-                    }
-                    return const CircularProgressIndicator();
-                  }),
-            ],
-          ),
-        )
-      ],
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          // ignore: prefer_const_literals_to_create_immutables
+          colors: [
+            Color.fromARGB(255, 81, 65, 143),
+            Color.fromARGB(255, 92, 74, 210),
+            Color.fromARGB(210, 112, 188, 236),
+          ],
       )),
-    );
+      child: ListView(
+        children: [
+          const Padding(padding: EdgeInsets.all(10)),
+          FutureBuilder<List<EventInfo>>(
+            future: createdEvents,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return MyEvents(createdEvents: snapshot.data!);
+              } else if (snapshot.hasError) {
+                return const Center(
+                  child: Text('No Created Events Currently',
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 81, 65, 143),
+                      fontStyle: FontStyle.italic,
+                      fontSize: 20)));
+              }
+              return const Center(
+                child: SizedBox(
+                  width: 40,
+                  height: 40,
+                  child: CircularProgressIndicator()
+                ),
+              );
+            }),
+          FutureBuilder<List<EventInfo>>(
+            future: participatedEvents,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return ParticipatedEvents(
+                  participatedEvents: snapshot.data!);
+              } else if (snapshot.hasError) {
+                return const Center(
+                  child: Text(
+                    'No Events to participate Currently',
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 81, 65, 143),
+                      fontStyle: FontStyle.italic,
+                      fontSize: 20
+                    )));
+              }
+              return const SizedBox();
+            })
+    ]));
   }
 }
 
-class CreatedEvents extends StatefulWidget {
-  const CreatedEvents({Key? key, required this.createdEvents})
+class MyEvents extends StatefulWidget {
+  const MyEvents({Key? key, required this.createdEvents})
       : super(key: key);
   final List<EventInfo> createdEvents;
 
   @override
-  State<CreatedEvents> createState() => _CreatedEventListState();
+  State<MyEvents> createState() => _MyEventListState();
 }
 
-class _CreatedEventListState extends State<CreatedEvents> {
-  final List<String> images = [
-    "images/scenary.jpg",
-    "images/scenary_red.jpg",
-    "images/waterfall.jpg",
-    "images/tree.jpg",
-    "images/tree.jpg",
-    "images/tree.jpg",
-    "images/tree.jpg",
-    "images/tree.jpg",
-    "images/tree.jpg",
-    "images/tree.jpg",
-    "images/tree.jpg",
-    "images/tree.jpg",
-    "images/tree.jpg",
-    "images/tree.jpg",
-    "images/tree.jpg",
-    "images/tree.jpg"
-  ];
-
+class _MyEventListState extends State<MyEvents> {
   final ScrollController _controller = ScrollController();
-  final ScrollPhysics _physics = const ClampingScrollPhysics();
 
   @override
   void dispose() {
@@ -201,130 +167,109 @@ class _CreatedEventListState extends State<CreatedEvents> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      Row(
-        children: const [
-          Padding(padding: EdgeInsets.all(16)),
-          Align(
-            alignment: Alignment.topLeft,
-            child: Text(
-              "My Created Events",
+    return Column(
+      children: [
+        Align(
+          alignment: Alignment.topLeft,
+          child: Container(
+            padding: const EdgeInsets.only(left: 20, top: 10),
+            child: const Text(
+              "My Events",
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
-                fontSize: 40)),
+                fontSize: 30
+            )),
           ),
-          Padding(padding: EdgeInsets.only(right: 230)),
-          Align(
-            alignment: Alignment.topRight,
-            child: Icon(
-              Icons.access_alarm_outlined,
-              color: Color(0xff8DFFF2), 
-              size: 40
+        ),
+      ListView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        controller: _controller,
+        padding: const EdgeInsets.all(8),
+        shrinkWrap: true,
+        itemCount: widget.createdEvents.length,
+        scrollDirection: Axis.vertical,
+        itemBuilder: (buildContext, index) {
+          return Container(
+            margin: const EdgeInsets.all(8),
+            width: 343,
+            height: 150,
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: const Color.fromARGB(255, 120, 117, 117).withOpacity(.5),
+                  blurRadius: 20.0, // soften the shadow
+                  spreadRadius: 0.0, //extend the shadow
+                  offset: const Offset(
+                    5.0,
+                    8.0,
+                  ),
+                )
+              ],
             ),
-          )
-        ],
-      ),
-      SizedBox(
-        height: 400,
-        child: ListView.builder(
-          controller: _controller,
-          physics: _physics,
-          padding: const EdgeInsets.all(8),
-          shrinkWrap: true,
-          itemCount: widget.createdEvents.length,
-          scrollDirection: Axis.vertical,
-          itemBuilder: (buildContext, index) {
-            return Container(
-              margin: const EdgeInsets.all(8),
-              width: 343,
-              height: 150,
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color.fromARGB(255, 120, 117, 117)
-                        .withOpacity(.5),
-                    blurRadius: 20.0, // soften the shadow
-                    spreadRadius: 0.0, //extend the shadow
-                    offset: const Offset(
-                      5.0,
-                      8.0,
-                    ),
-                  )
-                ],
-              ),
-              child: GestureDetector(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EventPage(
-                      eventId: widget.createdEvents[index].eventId,
-                    ),
+            child: GestureDetector(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EventPage(
+                    eventId: widget.createdEvents[index].eventId,
                   ),
                 ),
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(35), // if you need this
-                    side: BorderSide(
-                      color: Colors.grey.withOpacity(0.2),
-                      width: 1,
-                    ),
+              ),
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  side: BorderSide(
+                    color: Colors.grey.withOpacity(0.2),
+                    width: 1,
                   ),
-                  child: Row(children: [
-                    const Padding(padding: EdgeInsets.all(8)),
-                    Expanded(
-                      child: ClipRRect(
-                      borderRadius:BorderRadius.circular(15.0), //or 15.0
-                      child: Container(
-                        height: 110.0,
-                        width: 90.0,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage(images[index]), // TODO image process
-                            fit: BoxFit.fill
-                      )),
-                      ),
-                    )),
-                    const Padding(padding: EdgeInsets.all(8)),
-                    Expanded(
-                      flex: 2,
-                      child: Container(
-                        padding: const EdgeInsets.only(top: 5),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Padding(padding: EdgeInsets.all(5)),
-                            Text(
-                              widget.createdEvents[index].eventName,
-                              style: const TextStyle(
-                                color: Color.fromARGB(55, 81, 65, 143),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18
-                              )),
-                            const Padding(padding: EdgeInsets.all(30)),
-                            Column(children: [
-                              const Padding( padding: EdgeInsets.all(3)),
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.people_alt_outlined,
-                                    color: Colors.grey
-                                  ),
-                                  Text(" " +
-                                   widget.createdEvents[index]
-                                    .currNumParticipants
-                                    .toString() +
-                                    " people joined",
-                                    style: const TextStyle(
-                                      color: Color.fromARGB(255, 81, 65, 143),
-                                      fontWeight:FontWeight.bold,
-                                      fontSize: 16
-                                    ))
-                              ]),
-                            ])
-                            ])))
-                    ]))));
-                })),
+                ),
+                child: Row(children: [
+                  const Padding(padding: EdgeInsets.all(8)),
+                  Expanded(
+                    flex: 1,
+                    child: EventImage(eventId: widget.createdEvents[index].eventId),
+                  ),
+                  const Padding(padding: EdgeInsets.all(8)),
+                  Expanded(
+                    flex: 2,
+                    child: Container(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Padding(padding: EdgeInsets.all(5)),
+                          Text(
+                            widget.createdEvents[index].eventName,
+                            style: const TextStyle(
+                              color: Color.fromARGB(55, 81, 65, 143),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18
+                            )),
+                          const Padding(padding: EdgeInsets.all(30)),
+                          Column(children: [
+                            const Padding( padding: EdgeInsets.all(3)),
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.people_alt_outlined,
+                                  color: Colors.grey
+                                ),
+                                Text(" " +
+                                 widget.createdEvents[index]
+                                  .currNumParticipants
+                                  .toString() +
+                                  " people joined",
+                                  style: const TextStyle(
+                                    color: Color.fromARGB(255, 81, 65, 143),
+                                    fontWeight:FontWeight.bold,
+                                    fontSize: 16
+                                  ))
+                            ]),
+                          ])
+                          ])))
+                  ]))));
+              }),
         const Padding(padding: EdgeInsets.all(5))
     ]);
   }
@@ -370,111 +315,110 @@ class _ParticipatedEventListState extends State<ParticipatedEvents> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      Row(
-        children: const [
-          Padding(padding: EdgeInsets.all(16)),
-          Align(
-            alignment: Alignment.topLeft,
-            child: Text("Upcoming Events",
-                style: TextStyle(
-                    color: Color(0xff8DFFF2),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 28)),
-          ),
-        ],
-      ),
-      SizedBox(
-            height: 400,
-            child: GridView.builder(
-                controller: _controller,
-                physics: _physics,
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                itemCount: widget.participatedEvents.length,
-                padding: const EdgeInsets.all(8),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                ),
-                itemBuilder: (BuildContext context, int index) {
-                  return Container(
-                      margin: const EdgeInsets.all(6),
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color.fromARGB(255, 120, 117, 117)
-                                .withOpacity(.5),
-                            blurRadius: 20.0, // soften the shadow
-                            spreadRadius: 0.0, //extend the shadow
-                            offset: const Offset(
-                              5.0,
-                              8.0,
+    return Expanded(
+      child: Column(children: [
+        Row(
+          children: const [
+            Padding(padding: EdgeInsets.all(16)),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Text("Upcoming Events",
+                  style: TextStyle(
+                      color: Color(0xff8DFFF2),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 28)),
+            ),
+          ],
+        ),
+        GridView.builder(
+            controller: _controller,
+            physics: _physics,
+            shrinkWrap: true,
+            scrollDirection: Axis.vertical,
+            itemCount: widget.participatedEvents.length,
+            padding: const EdgeInsets.all(8),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+            ),
+            itemBuilder: (BuildContext context, int index) {
+              return Container(
+                  margin: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color.fromARGB(255, 120, 117, 117)
+                            .withOpacity(.5),
+                        blurRadius: 20.0, // soften the shadow
+                        spreadRadius: 0.0, //extend the shadow
+                        offset: const Offset(
+                          5.0,
+                          8.0,
+                        ),
+                      )
+                    ],
+                  ),
+                  child: GestureDetector(
+                      onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const EventPage(eventId: 3),
                             ),
-                          )
-                        ],
-                      ),
-                      child: GestureDetector(
-                          onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const EventPage(eventId: 3),
-                                ),
-                              ),
-                          child: Card(
-                              shape: RoundedRectangleBorder(
+                          ),
+                      child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(25), // if you need this
+                            side: BorderSide(
+                              color: Colors.grey.withOpacity(0.2),
+                              width: 1,
+                            ),
+                          ),
+                          child: Column(children: [
+                            const Padding(padding: EdgeInsets.all(8)),
+                            Row(children: [
+                              const Padding(padding: EdgeInsets.all(8)),
+                              Expanded(
+                                  child: ClipRRect(
                                 borderRadius:
-                                    BorderRadius.circular(25), // if you need this
-                                side: BorderSide(
-                                  color: Colors.grey.withOpacity(0.2),
-                                  width: 1,
+                                    BorderRadius.circular(10.0), //or 15.0
+                                child: Container(
+                                  height: 130,
+                                  width: 50,
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          image: AssetImage(images[
+                                              index]), // TODO: image process
+                                          fit: BoxFit.fill)),
                                 ),
-                              ),
-                              child: Column(children: [
-                                const Padding(padding: EdgeInsets.all(8)),
-                                Row(children: [
-                                  const Padding(padding: EdgeInsets.all(8)),
-                                  Expanded(
-                                      child: ClipRRect(
-                                    borderRadius:
-                                        BorderRadius.circular(10.0), //or 15.0
-                                    child: Container(
-                                      height: 130,
-                                      width: 50,
-                                      decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                              image: AssetImage(images[
-                                                  index]), // TODO: image process
-                                              fit: BoxFit.fill)),
-                                    ),
-                                  )),
-                                  const Padding(padding: EdgeInsets.all(8)),
-                                ]),
-                                const Padding(padding: EdgeInsets.all(8)),
-                                Expanded(
-                                    flex: 2,
-                                    child: Container(
-                                        padding: const EdgeInsets.all(5),
-                                        child: Column(children: [
-                                          Text(
-                                              widget.participatedEvents[index]
-                                                  .eventName,
-                                              style:
-                                                  const TextStyle(
-                                                      color: Color.fromARGB(
-                                                          255, 81, 65, 143),
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 18)),
-                                          Text(
-                                              widget.participatedEvents[index]
-                                                  .startTime,
-                                              style: const TextStyle(
-                                                  color: Colors.grey,
-                                                  fontSize: 16)),
-                                        ])))
-                              ]))));
-                }),
-          )
-    ]);
+                              )),
+                              const Padding(padding: EdgeInsets.all(8)),
+                            ]),
+                            const Padding(padding: EdgeInsets.all(8)),
+                            Expanded(
+                                flex: 2,
+                                child: Container(
+                                    padding: const EdgeInsets.all(5),
+                                    child: Column(children: [
+                                      Text(
+                                          widget.participatedEvents[index]
+                                              .eventName,
+                                          style:
+                                              const TextStyle(
+                                                  color: Color.fromARGB(
+                                                      255, 81, 65, 143),
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18)),
+                                      Text(
+                                          widget.participatedEvents[index]
+                                              .startTime,
+                                          style: const TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 16)),
+                                    ])))
+                          ]))));
+            })
+      ]),
+    );
   }
 }

@@ -20,9 +20,20 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   ViewMode _viewMode = ViewMode.map;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: Drawer(
+        width: MediaQuery.of(context).size.width * 0.8,
+        child: const MyEventPage()
+      ),
+      endDrawer: Drawer(
+        width: MediaQuery.of(context).size.width * 0.8,
+        child: const ProfilePage()
+      ),
       body: Stack(
         children: [
           // render map view or list view based on current view  mode
@@ -33,10 +44,10 @@ class _HomePageState extends State<HomePage> {
                 margin: const EdgeInsets.only(bottom: 20.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: const [
-                    MoreButton(),
-                    PostEventButton(),
-                    MyProfileButton(),
+                  children: [
+                    MoreButton(scaffoldKey: _scaffoldKey),
+                    const PostEventButton(),
+                    MyProfileButton(scaffoldKey: _scaffoldKey),
                   ],
                 ),
               )),
@@ -75,7 +86,8 @@ class _HomePageState extends State<HomePage> {
 }
 
 class MoreButton extends StatelessWidget {
-  const MoreButton({Key? key}) : super(key: key);
+  const MoreButton({Key? key, required this.scaffoldKey}) : super(key: key);
+  final GlobalKey<ScaffoldState> scaffoldKey;
 
   @override
   Widget build(BuildContext context) {
@@ -98,8 +110,7 @@ class MoreButton extends StatelessWidget {
           child: InkWell(
             splashColor: Theme.of(context).focusColor,
             onTap: () {
-              Navigator.of(context)
-                  .push(createRouteFromLeftToRight(const MyEventPage()));
+              scaffoldKey.currentState!.openDrawer();
             },
             child: const Icon(Icons.more_vert),
           ),
@@ -108,24 +119,6 @@ class MoreButton extends StatelessWidget {
     );
   }
 
-  Route createRouteFromLeftToRight(Widget page) {
-    return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => page,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        const begin = Offset(-1.0, 0.0);
-        const end = Offset.zero;
-        const curve = Curves.ease;
-
-        var tween =
-            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-        return SlideTransition(
-          position: animation.drive(tween),
-          child: child,
-        );
-      },
-    );
-  }
 }
 
 class PostEventButton extends StatelessWidget {
@@ -176,7 +169,8 @@ class PostEventButton extends StatelessWidget {
 }
 
 class MyProfileButton extends StatelessWidget {
-  const MyProfileButton({Key? key}) : super(key: key);
+  const MyProfileButton({Key? key, required this.scaffoldKey}) : super(key: key);
+  final GlobalKey<ScaffoldState> scaffoldKey;
 
   @override
   Widget build(BuildContext context) {
@@ -199,36 +193,12 @@ class MyProfileButton extends StatelessWidget {
           child: InkWell(
             splashColor: Theme.of(context).focusColor,
             onTap: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => const ProfilePage()),
-              // );
-              Navigator.of(context)
-                  .push(createRouteFromRightToLeft(const ProfilePage()));
+              scaffoldKey.currentState!.openEndDrawer();
             },
             child: const Icon(Icons.person),
           ),
         ),
       ),
-    );
-  }
-
-  Route createRouteFromRightToLeft(Widget page) {
-    return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => page,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        const begin = Offset(1.0, 0.0);
-        const end = Offset.zero;
-        const curve = Curves.ease;
-
-        var tween =
-            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-        return SlideTransition(
-          position: animation.drive(tween),
-          child: child,
-        );
-      },
     );
   }
 }
