@@ -1,37 +1,10 @@
+/// display the user information and log out button.
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'dart:async';
-import '../../main.dart';
 import '../auth/auth_service.dart';
 import 'package:aroundu/json/user.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
-Future<UseInfo> fetchUser() async {
-  User? user = FirebaseAuth.instance.currentUser;
-  if (user == null) {
-    throw Exception("User has not logged in");
-  }
-
-  String token = await user.getIdToken();
-  final response =
-      await http.get(Uri(host: backendAddress, path: "/user"), headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'Authorization': 'Bearer $token',
-  });
-  if (response.statusCode == 200) {
-    // If the server did return a 200 OK response,
-    // then parse the JSON.
-
-    return UseInfo.fromJson(jsonDecode(response.body)["data"]);
-  } else {
-    // If the server did not return a 200 OK response,
-    // then throw an exception.
-    throw Exception('Failed to load event');
-  }
-}
+import '../event/api_calls.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -42,10 +15,6 @@ class ProfilePage extends StatefulWidget {
 
 class ProfileState extends State<ProfilePage> {
   late Future<UseInfo> _user;
-  final cardtext = ["CREATED EVENTS", "MY EVENTS", "SETTINGS"];
-
-  final ScrollController _controller = ScrollController();
-  final ScrollPhysics _physics = const ClampingScrollPhysics();
 
   @override
   void initState() {
@@ -57,9 +26,8 @@ class ProfileState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Material(
-        // child: SingleChildScrollView(
-        child: Column(children: [
-      Container(
+      child: Column(children: [
+        Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           decoration: const BoxDecoration(
@@ -80,14 +48,14 @@ class ProfileState extends State<ProfilePage> {
               children: [
                 const Padding(padding: EdgeInsets.all(5)),
                 Align(
-                    alignment: Alignment.topLeft,
-                    child: GestureDetector(
-                        onTap: () => Navigator.pop(context),
-                        child: const Icon(
-                          Icons.chevron_left,
-                          size: 36,
-                          color: Color.fromARGB(255, 81, 65, 143),
-                        )))
+                  alignment: Alignment.topLeft,
+                  child: GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: const Icon(
+                        Icons.chevron_left,
+                        size: 36,
+                        color: Color.fromARGB(255, 81, 65, 143),
+                      )))
               ],
             ),
             const SizedBox(height: 4),
@@ -125,56 +93,47 @@ class ProfileState extends State<ProfilePage> {
                   }
                   return const CircularProgressIndicator();
                 }),
-            const Padding(padding: EdgeInsets.all(180)),
+            const Padding(padding: EdgeInsets.all(160)),
             SizedBox(
-                width: 260,
-                height: 50,
-                child: Row(children: [
-                  Expanded(
-                      child: Container(
-                          decoration: BoxDecoration(boxShadow: [
-                            BoxShadow(
-                              color: const Color.fromARGB(255, 120, 117, 117)
-                                  .withOpacity(.5),
-                              blurRadius: 20.0, // soften the shadow
-                              spreadRadius: 0.0, //extend the shadow
-                              offset: const Offset(5.0, 8.0),
-                            )
-                          ]),
-                          child: ClipRRect(
-                              borderRadius:
-                                  BorderRadius.circular(30.0), //or 15.0
-                              child: Container(
-                                  decoration: const BoxDecoration(
-                                      gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      Color.fromARGB(255, 81, 65, 143),
-                                      Color.fromARGB(255, 172, 115, 248)
-                                    ],
-                                  )),
-                                  child: ElevatedButton(
-                                    style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                              Colors.transparent),
-                                      shadowColor: MaterialStateProperty.all(
-                                          Colors.transparent),
-                                    ),
-                                    child: const Center(
-                                        child: Text("Sign out",
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 20))),
-                                    onPressed: () {
-                                      context
-                                          .read<AuthenticationService>()
-                                          .signOut();
-                                    },
-                                  )))))
-                ]))
+              width: 260,
+              height: 50,
+              child: Container(
+                decoration: BoxDecoration(boxShadow: [
+                  BoxShadow(
+                    color: const Color.fromARGB(255, 120, 117, 117)
+                        .withOpacity(.5),
+                    blurRadius: 20.0, // soften the shadow
+                    spreadRadius: 0.0, //extend the shadow
+                    offset: const Offset(5.0, 8.0),
+                  )
+                ]),
+                child: ClipRRect(
+                  borderRadius:BorderRadius.circular(30.0), //or 15.0
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color.fromARGB(255, 81, 65, 143),
+                          Color.fromARGB(255, 172, 115, 248)
+                        ],
+                      )),
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(Colors.transparent),
+                          shadowColor: MaterialStateProperty.all(Colors.transparent),
+                        ),
+                        child: const Center(
+                          child: Text("Sign out",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20))),
+                        onPressed: () {
+                          context.read<AuthenticationService>().signOut();
+                        },
+                      )))))
           ]))
     ]));
   }
