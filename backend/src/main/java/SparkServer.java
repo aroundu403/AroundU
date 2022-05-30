@@ -111,6 +111,9 @@ public class SparkServer {
           String userID = getUserID(request.headers("Authorization"), defaultApp);
           User body = gson.fromJson(request.body(), User.class);
           body.user_id = userID;
+            if (body.user_name == null || body.email == null || body.user_id == null) {
+                return gson.toJson(new OperationResponse(400, "Invalid parameter"));
+            }
           if (!UserController.isUserExist(pool, userID)) {
             if (UserController.addUser(pool, body)) {
               DataResponse resp = new DataResponse(200, "Success", userID);
@@ -215,6 +218,8 @@ public class SparkServer {
               if (curr.compareTo(Timestamp.valueOf(event.start_time)) < 0) {
                 if (EventController.deleteEvent(pool, eventID)) {
                   DataResponse resp = new DataResponse(200, "Success", null);
+                  event.deleted_at = curr.toString();
+                  EventController.updateEvent(pool, event);
                   return gson.toJson(resp);
                 } else {
                   return gson.toJson(new OperationResponse(500, "SQL server error."));
@@ -300,7 +305,8 @@ public class SparkServer {
               Timestamp curr = new Timestamp(System.currentTimeMillis());
               // can only participate if the event isn't ended
               if (curr.compareTo(Timestamp.valueOf(event.end_time)) < 0) {
-                if (ParticipateController.userParticipateEvent(pool, userID, eventID)) {
+                if (ParticipateController.userParticipateEvent(
+                    pool, userID, eventID)) {
                   DataResponse resp = new DataResponse(200, "Success", eventID);
                   return gson.toJson(resp);
                 } else {
@@ -318,7 +324,7 @@ public class SparkServer {
         });
 
     // DELETE /event/guest
-    // Quit a participated event
+    // Quit an participated event
     // please use postman to test, dropbox select delete
     // need to provide event id in request body
     // make sure the user have participated in this event before testing, or you will get error code
@@ -337,7 +343,8 @@ public class SparkServer {
             // check if event have participants before searching it in participate table to avoid
             // errors
             if (event.curr_num_participants > 0
-                && ParticipateController.getEventsByUser(pool, userID).contains(eventID)) {
+                && ParticipateController.getEventsByUser(pool, userID)
+                    .contains(eventID)) {
               Timestamp curr = new Timestamp(System.currentTimeMillis());
               // can only quit if the event isn't ended
               if (curr.compareTo(Timestamp.valueOf(event.end_time)) < 0) {
@@ -510,4 +517,9 @@ public class SparkServer {
     FirebaseToken decodedToken = FirebaseAuth.getInstance(defaultApp).verifyIdToken(token);
     return decodedToken.getUid();
   }
+
+  //  /** Stop the server. */
+  //  public static void stopServer() {
+  //    System.exit(0);
+  //  }
 }
