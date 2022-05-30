@@ -11,33 +11,6 @@ public class UserController {
 
   private static final String TABLE_NAME = "users";
 
-  //    /**
-  //     * Returns a list of all users in the database.
-  //     * @param pool used for database connection
-  //     * @return a list of user object
-  //     * @throws SQLException
-  //     */
-  //    public static ArrayList<User> getUsers(DataSource pool) throws SQLException {
-  //        ArrayList<User> users = new ArrayList<>();
-  //        try (Connection conn = pool.getConnection()) {
-  //            String stmt = String.format(
-  //                    "SELECT user_name, email, description FROM %s",
-  //                    TABLE_NAME);
-  //            try(PreparedStatement getUsersStmt = conn.prepareStatement(stmt)) {
-  //                ResultSet userResults = getUsersStmt.executeQuery();
-  //                while (userResults.next()) {
-  //                    User user = new User();
-  //                    user.user_name = userResults.getString(1);
-  //                    user.email = userResults.getString(2);
-  //                    user.description = userResults.getString(3);
-  //                    users.add(user);
-  //                }
-  //                userResults.close();
-  //                return users;
-  //            }
-  //        }
-  //    }
-
   /**
    * Return one user based on given user_id
    *

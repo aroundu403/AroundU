@@ -159,69 +159,75 @@ class EventCardLayout extends StatefulWidget {
 }
 
 class _EventCardLayoutState extends State<EventCardLayout> {
-  @override
-  Widget build(BuildContext context) {
-    return Row(children: [
-      Expanded(flex: 2, child: EventImage(eventId: widget.eventInfo.eventId)),
-      const SizedBox(width: 4),
-      Expanded(
-          flex: 3,
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+@override
+Widget build(BuildContext context) {
+  return Row(
+    children: [
+    Expanded(
+      flex: 2,
+      child: EventImage(eventId: widget.eventInfo.eventId, boxFit: BoxFit.cover)
+    ),
+    const SizedBox(width: 4),
+    Expanded(
+      flex: 3,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            child: Text(
+              widget.eventInfo.eventName,
+              overflow: TextOverflow.clip,
+              style: const TextStyle(
+                color: Color.fromARGB(255, 81, 65, 143),
+                fontWeight: FontWeight.bold,
+                fontSize: 18)
+            )),
+          Row(children: [
             Container(
-              padding: const EdgeInsets.all(8),
-              child: Text(widget.eventInfo.eventName,
-                  overflow: TextOverflow.clip,
-                  style: const TextStyle(
-                      color: Color.fromARGB(255, 81, 65, 143),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18)),
+              padding: const EdgeInsets.all(3),
+              child: const Icon(Icons.location_pin,
+                  color: Color.fromARGB(255, 81, 65, 143)),
             ),
-            Row(children: [
-              Container(
-                padding: const EdgeInsets.all(3),
-                child: const Icon(Icons.location_pin,
-                    color: Color.fromARGB(255, 81, 65, 143)),
+            Expanded(
+              child: Text(
+                widget.eventInfo.locationName,
+                overflow: TextOverflow.clip,
+                style: const TextStyle(
+                    color: Color.fromARGB(255, 81, 65, 143),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16),
               ),
-              Expanded(
-                child: Text(
-                  widget.eventInfo.locationName,
-                  overflow: TextOverflow.clip,
-                  style: const TextStyle(
-                      color: Color.fromARGB(255, 81, 65, 143),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16),
-                ),
-              )
-            ]),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                const Padding(padding: EdgeInsets.all(5)),
-                SizedBox(
-                    width: 250.0,
-                    child: widget.eventInfo.participantIds.isNotEmpty
-                        ? SizedBox(
-                            width: double.infinity,
-                            height: 40,
-                            child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount:
-                                    widget.eventInfo.participantIds.length,
-                                itemBuilder: (context, index1) {
-                                  return const Align(
-                                    widthFactor: 0.6,
+            )
+          ]),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              const Padding(padding: EdgeInsets.all(5)),
+              SizedBox(
+                  width: 250.0,
+                  child: widget.eventInfo.participantIds.isNotEmpty
+                      ? SizedBox(
+                          width: double.infinity,
+                          height: 40,
+                          child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount:
+                                  widget.eventInfo.participantIds.length,
+                              itemBuilder: (context, index1) {
+                                return const Align(
+                                  widthFactor: 0.6,
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.white,
                                     child: CircleAvatar(
-                                      backgroundColor: Colors.white,
-                                      child: CircleAvatar(
-                                        radius: 18,
-                                        backgroundImage:
-                                            AssetImage("images/tree.jpg"),
-                                      ),
+                                      radius: 18,
+                                      backgroundImage:
+                                          AssetImage("images/tree.jpg"),
                                     ),
-                                  );
-                                }))
-                        : const SizedBox())
+                                  ),
+                                );
+                              }))
+                      : const SizedBox())
               ],
             )
           ]))

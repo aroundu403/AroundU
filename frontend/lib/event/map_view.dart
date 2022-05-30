@@ -31,11 +31,13 @@ class _MapViewState extends State<MapView> {
         SymbolOptions(
           iconImage: 'embassy',
           iconColor: '#006992',
-          iconSize: 2.0,
+          iconSize: 1.6,
           geometry: LatLng(events[i].latitude, events[i].longitude),
           textField: events[i].eventName,
+          textMaxWidth: 10,
+          textSize: 15,
           textColor: '#000000',
-          textOffset: const Offset(0, -1.4),
+          textOffset: const Offset(0, -1.3),
         )
       );
     }

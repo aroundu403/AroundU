@@ -3,97 +3,10 @@ import 'dart:html';
 import 'package:aroundu/component/event_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:sprintf/sprintf.dart';
 import 'dart:async';
-import '../main.dart';
 import 'package:aroundu/json/event.dart';
-
-/// Get the most up-to-date event info given the event id
-/// eventId: the id of the event
-Future<EventInfo> fetchEvent(int id) async {
-  User? user = FirebaseAuth.instance.currentUser;
-  if (user == null) {
-    throw Exception("User has not logged in");
-  }
-
-  String token = await user.getIdToken();
-  final response = await http.get(
-    Uri(
-        host: backendAddress,
-        path: "/event/id",
-        queryParameters: {"eventid": id.toString()}),
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token',
-    },
-  );
-  if (response.statusCode == 200) {
-    return EventInfo.fromJson(jsonDecode(response.body)["data"]);
-  } else {
-    throw Exception('Failed to load event');
-  }
-}
-
-/// Add the user to the event participiant list and return the up-to-date event info
-/// eventId: the id of the event that this user is joining
-/// throws execption when fail to join event or encounter network errors
-Future<EventInfo> joinEvent(int eventId) async {
-  User? user = FirebaseAuth.instance.currentUser;
-  if (user == null) {
-    throw Exception("User has not logged in");
-  }
-
-  String token = await user.getIdToken();
-  final response = await http.post(
-      Uri(
-        host: backendAddress,
-        path: "/event/guest",
-      ),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode({"event_id": eventId}));
-  if (response.statusCode == 200) {
-    return fetchEvent(eventId);
-  } else {
-    throw Exception('Failed to update event.');
-  }
-}
-
-/// remove the user to the event participiant list and return the up-to-date event info
-/// eventId: the id of the event that this user is leaving
-/// throws execption when fail to leave event or encounter network errors
-Future<EventInfo> quitEvent(int eventId) async {
-  User? user = FirebaseAuth.instance.currentUser;
-
-  if (user == null) {
-    throw Exception("User has not logged in");
-  }
-
-  String token = await user.getIdToken();
-  final response = await http.delete(
-      Uri(
-        host: backendAddress,
-        path: "/event/guest",
-      ),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode({"event_id": eventId}));
-  if (response.statusCode == 200) {
-    // After user has joined the event, refesh the event info
-    return await fetchEvent(eventId);
-  } else {
-    throw Exception('Failed to quit event.');
-  }
-}
+import 'api_calls.dart';
 
 class EventPage extends StatefulWidget {
   const EventPage({required this.eventId, Key? key}) : super(key: key);
@@ -164,27 +77,31 @@ class EventState extends State<EventPage> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 var event = snapshot.data!;
-                // Todo add mode full
-                List<String> participants = event.participantIds;
-                User? user = FirebaseAuth.instance.currentUser;
+                if (FirebaseAuth.instance.currentUser!.uid == event.hostId) {
+                  // Todo add mode full
+                  List<String> participants = event.participantIds;
+                  User? user = FirebaseAuth.instance.currentUser;
 
-                var initialState = participants.contains(user?.uid);
-                var buttonMode;
-                //event.currNumParticipants < event.maxParticipants
-                if (initialState) {
-                  buttonMode = EventButtonMode.leave;
-                } else if (event.currNumParticipants >= event.maxParticipants) {
-                  buttonMode = EventButtonMode.full;
+                  var initialState = participants.contains(user?.uid);
+                  var buttonMode;
+                  //event.currNumParticipants < event.maxParticipants
+                  if (initialState) {
+                    buttonMode = EventButtonMode.leave;
+                  } else if (event.currNumParticipants >=
+                      event.maxParticipants) {
+                    buttonMode = EventButtonMode.full;
+                  } else {
+                    buttonMode = EventButtonMode.join;
+                  }
+                  return Align(
+                      alignment: Alignment.bottomCenter,
+                      child: JoinLeaveEventButton(
+                          mode: buttonMode,
+                          eventId: event.eventId,
+                          updateEvent: updateEvent));
                 } else {
-                  buttonMode = EventButtonMode.join;
+                  return const SizedBox();
                 }
-
-                return Align(
-                    alignment: Alignment.bottomCenter,
-                    child: JoinLeaveEventButton(
-                        mode: buttonMode,
-                        eventId: event.eventId,
-                        updateEvent: updateEvent));
               } else {
                 return const SizedBox();
               }
@@ -219,13 +136,6 @@ class _EventDetailState extends State<EventDetailHelper> {
     ]);
   }
 
-  // final List<String> participants = [
-  //   "images/scenary.jpg",
-  //   "images/tree.jpg",
-  //   "images/scenary.jpg",
-  //   "images/scenary.jpg",
-  //   "images/tree.jpg",
-  // ];
   @override
   Widget build(BuildContext context) {
     var purpleBoldFont = const TextStyle(
@@ -318,7 +228,8 @@ class _EventDetailState extends State<EventDetailHelper> {
           Container(
               height: 200,
               alignment: Alignment.center,
-              child: EventImage(eventId: event.eventId)),
+              child:
+                  EventImage(eventId: event.eventId, boxFit: BoxFit.contain)),
           const SizedBox(height: 20),
           // start time and end time widget
           Row(
@@ -434,14 +345,6 @@ class JoinLeaveEventButtonState extends State<JoinLeaveEventButton> {
     eventId = widget.eventId;
     updateEvent = widget.updateEvent;
   }
-  // const JoinLeaveEventButton(
-  //     {Key? key,
-  //     required this.mode,
-  //     required this.updateEvent,
-  //     required this.eventId})
-  //     : super(key: key);
-
-  // EventButtonMode mode;
 
   @override
   Widget build(BuildContext context) {

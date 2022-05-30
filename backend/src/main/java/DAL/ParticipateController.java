@@ -153,4 +153,32 @@ public class ParticipateController {
       return false;
     }
   }
+
+  /**
+   * Check a user is already in an event
+   *
+   * @param pool used for database connection
+   * @param user_id the unique representation of a user
+   * @param event_id the unique representation of a user
+   * @return true if that a user is not joined to an event yet, returns false otherwise
+   */
+  public static boolean checkUserJoinedEvent(DataSource pool, String user_id, long event_id) {
+    int isJoined = 0;
+    try (Connection conn = pool.getConnection()) {
+      String stmt =
+          String.format("SELECT COUNT(*) FROM %s WHERE event_id = ? AND user_id = ?;", TABLE_NAME);
+      try (PreparedStatement getCountStmt = conn.prepareStatement(stmt)) {
+        getCountStmt.setLong(1, event_id);
+        getCountStmt.setString(2, user_id);
+        ResultSet countResults = getCountStmt.executeQuery();
+        while (countResults.next()) {
+          isJoined = countResults.getInt(1);
+        }
+        countResults.close();
+      }
+      return isJoined == 0;
+    } catch (SQLException e) {
+      return false;
+    }
+  }
 }
