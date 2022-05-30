@@ -39,10 +39,10 @@ class MyEventState extends State<MyEventPage> {
     ));
 
     return Container(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        decoration: const BoxDecoration(
+            gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
           colors: [
@@ -50,9 +50,8 @@ class MyEventState extends State<MyEventPage> {
             Color.fromARGB(255, 92, 74, 210),
             Color.fromARGB(210, 112, 188, 236),
           ],
-      )),
-      child: ListView(
-        children: [
+        )),
+        child: ListView(children: [
           const Padding(padding: EdgeInsets.all(10)),
           // Display my events with title 
           Column(
@@ -61,14 +60,12 @@ class MyEventState extends State<MyEventPage> {
                 alignment: Alignment.topLeft,
                 child: Container(
                   padding: const EdgeInsets.only(left: 20, top: 10),
-                  child: const Text(
-                    "My Events",
-                    style: TextStyle(
-                      fontFamily: 'Inter',
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 40
-                  )),
+                  child: const Text("My Events",
+                      style: TextStyle(
+                          fontFamily: 'Inter',
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 40)),
                 ),
               ),
               FutureBuilder<List<EventInfo>>(
@@ -238,46 +235,34 @@ class ParticipatedEvents extends StatelessWidget {
 
   String formatDateTime(String time) {
     DateTime dateTime = DateTime.parse(time);
-    return sprintf("%02i-%02i %02i:%02i", [dateTime.month, dateTime.day, dateTime.hour, dateTime.minute]);
+    return sprintf("%02i-%02i %02i:%02i",
+        [dateTime.month, dateTime.day, dateTime.hour, dateTime.minute]);
   }
 
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      scrollDirection: Axis.vertical,
-      itemCount: participatedEvents.length,
-      padding: const EdgeInsets.all(8),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-      ),
-      itemBuilder: (BuildContext context, int index) {
-        return Container(
-          margin: const EdgeInsets.all(6),
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: const Color.fromARGB(255, 120, 117, 117).withOpacity(.5),
-                blurRadius: 20.0, // soften the shadow
-                spreadRadius: 0.0, //extend the shadow
-                offset: const Offset(5.0,8.0),
-              )
-            ],
-          ),
-          child: GestureDetector(
-            onTap: () => Navigator.push(context,
-              MaterialPageRoute(builder: (context) =>
-                  EventPage(eventId: participatedEvents[index].eventId),
-              ),
-            ),
-            child: Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-                side: BorderSide(
-                  color: Colors.grey.withOpacity(0.2),
-                  width: 1,
-                ),
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
+        itemCount: participatedEvents.length,
+        padding: const EdgeInsets.all(8),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+        ),
+        itemBuilder: (BuildContext context, int index) {
+          return Container(
+              margin: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color.fromARGB(255, 120, 117, 117)
+                        .withOpacity(.5),
+                    blurRadius: 20.0, // soften the shadow
+                    spreadRadius: 0.0, //extend the shadow
+                    offset: const Offset(5.0, 8.0),
+                  )
+                ],
               ),
               child: Container(
                 padding: const EdgeInsets.all(10),
@@ -309,7 +294,7 @@ class ParticipatedEvents extends StatelessWidget {
                         fontSize: 14
                   )))
                 ]),
-              ))));
+              ));
       });
   }
 }
