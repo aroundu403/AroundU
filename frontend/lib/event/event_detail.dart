@@ -77,7 +77,7 @@ class EventState extends State<EventPage> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 var event = snapshot.data!;
-                if (FirebaseAuth.instance.currentUser!.uid == event.hostId) {
+                if (FirebaseAuth.instance.currentUser!.uid != event.hostId) {
                   // Todo add mode full
                   List<String> participants = event.participantIds;
                   User? user = FirebaseAuth.instance.currentUser;
