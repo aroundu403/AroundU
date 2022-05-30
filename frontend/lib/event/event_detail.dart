@@ -2,11 +2,8 @@
 import 'package:aroundu/component/event_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:sprintf/sprintf.dart';
 import 'dart:async';
-import '../main.dart';
 import 'package:aroundu/json/event.dart';
 import 'api_calls.dart';
 
@@ -79,17 +76,21 @@ class EventState extends State<EventPage> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 var event = snapshot.data!;
-                // Todo add mode full
-                var buttonMode =
-                    event.currNumParticipants < event.maxParticipants
-                        ? EventButtonMode.join
-                        : EventButtonMode.leave;
-                return Align(
-                    alignment: Alignment.bottomCenter,
-                    child: JoinLeaveEventButton(
-                        mode: buttonMode,
-                        eventId: event.eventId,
-                        updateEvent: updateEvent));
+                if (FirebaseAuth.instance.currentUser!.uid == event.hostId) {
+                  // Todo add mode full
+                  var buttonMode =
+                      event.currNumParticipants < event.maxParticipants
+                          ? EventButtonMode.join
+                          : EventButtonMode.leave;
+                  return Align(
+                      alignment: Alignment.bottomCenter,
+                      child: JoinLeaveEventButton(
+                          mode: buttonMode,
+                          eventId: event.eventId,
+                          updateEvent: updateEvent));
+                } else {
+                  return const SizedBox();
+                }
               } else {
                 return const SizedBox();
               }

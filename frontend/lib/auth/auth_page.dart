@@ -459,7 +459,7 @@ class _AuthGateState extends State<AuthGate> {
   Future<void> _sychronizeUserInfo(User user, String name, String email) async {
     String token = await user.getIdToken();
     if (token.isNotEmpty) {
-      final response = await http.post(
+      await http.post(
         Uri(
           scheme: "https",
           host: backendAddress,
