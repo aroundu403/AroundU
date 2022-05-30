@@ -48,7 +48,10 @@ dependencies:
   image_picker: ^0.8.5+3
   dotted_border: ^2.0.0+2
   flutter_typeahead: ^4.0.0
-  flutter_datetime_picker: ^1.5.1
+  flutter_datetime_picker:
+    git:
+      url: https://github.com/Realank/flutter_datetime_picker.git
+      ref: master
   sprintf: "^6.0.0"
   fluttertoast: ^8.0.9
   flutter_launcher_icons: ^0.9.2
