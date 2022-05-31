@@ -193,11 +193,12 @@ Widget build(BuildContext context) {
             Expanded(
               child: Text(
                 widget.eventInfo.locationName,
-                overflow: TextOverflow.clip,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
                 style: const TextStyle(
                     color: Color.fromARGB(255, 81, 65, 143),
                     fontWeight: FontWeight.bold,
-                    fontSize: 16),
+                    fontSize: 14),
               ),
             )
           ]),
@@ -206,11 +207,11 @@ Widget build(BuildContext context) {
             children: [
               const Padding(padding: EdgeInsets.all(5)),
               SizedBox(
-                  width: 250.0,
+                  width: 100.0,
                   child: widget.eventInfo.participantIds.isNotEmpty
                       ? SizedBox(
                           width: double.infinity,
-                          height: 40,
+                          height: 36,
                           child: ListView.builder(
                               scrollDirection: Axis.horizontal,
                               itemCount: min(widget.eventInfo.participantIds.length, 3),
@@ -220,9 +221,9 @@ Widget build(BuildContext context) {
                                   child: CircleAvatar(
                                     backgroundColor: Colors.white,
                                     child: CircleAvatar(
-                                      radius: 18,
+                                      radius: 16,
                                       backgroundImage:
-                                          AssetImage("images/tree.jpg"),
+                                        AssetImage("images/icon.png"),
                                     ),
                                   ),
                                 );

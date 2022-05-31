@@ -187,16 +187,16 @@ class MyEvents extends StatelessWidget {
                               child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Padding(padding: EdgeInsets.all(5)),
+                                    const Padding(padding: EdgeInsets.all(2)),
                                     Text(createdEvents[index].eventName,
                                         style: TextStyle(
                                             color: Theme.of(context)
                                                 .backgroundColor,
                                             fontWeight: FontWeight.bold,
                                             fontSize: 18)),
-                                    const Padding(padding: EdgeInsets.all(27)),
+                                    const Expanded(child: SizedBox()),
                                     Column(children: [
-                                      const Padding(padding: EdgeInsets.all(3)),
+                                      const Padding(padding: EdgeInsets.only(left: 3)),
                                       Row(children: [
                                         const Icon(Icons.people_alt_outlined,
                                             color: Colors.grey),
@@ -209,7 +209,7 @@ class MyEvents extends StatelessWidget {
                                             style: TextStyle(
                                                 color: Theme.of(context).backgroundColor,
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: 16))
+                                                fontSize: 14))
                                       ]),
                                     ])
                                   ]))
@@ -276,7 +276,7 @@ class ParticipatedEvents extends StatelessWidget {
                     padding: const EdgeInsets.all(10),
                     child: Column(children: [
                       Expanded(
-                          flex: 6,
+                          flex: 5,
                           child: EventImage(
                               eventId: participatedEvents[index].eventId,
                               boxFit: BoxFit.cover)),
@@ -287,7 +287,7 @@ class ParticipatedEvents extends StatelessWidget {
                               style: const TextStyle(
                                   color: Color.fromARGB(255, 81, 65, 143),
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 16))),
+                                  fontSize: 14))),
                       const Padding(padding: EdgeInsets.all(2)),
                       Expanded(
                           flex: 1,
@@ -295,7 +295,7 @@ class ParticipatedEvents extends StatelessWidget {
                               formatDateTime(
                                   participatedEvents[index].startTime),
                               style: const TextStyle(
-                                  color: Colors.grey, fontSize: 14)))
+                                  color: Colors.grey, fontSize: 12)))
                     ]),
                   ),
                 ),

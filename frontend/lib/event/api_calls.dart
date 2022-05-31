@@ -9,7 +9,11 @@ import 'dart:convert';
 // fetch the list of events from the backend API
 Future<List<EventInfo>> fetchEvents() async {
   final response = await http.get(
-    Uri(host: backendAddress, path: "/event/list"),
+    Uri(
+      scheme: 'https', 
+      host: backendAddress, 
+      path: "/event/list"
+    ),
   );
 
   if (response.statusCode == 200) {
@@ -33,6 +37,7 @@ Future<List<EventInfo>> fetchUserParticipatedEvent() async {
   String token = await user.getIdToken();
   final response = await http.get(
     Uri(
+      scheme: 'https', 
       host: backendAddress,
       path: "/event/guest",
     ),
@@ -63,6 +68,7 @@ Future<List<EventInfo>> fetchUserCreatedEvent() async {
   String token = await user.getIdToken();
   final response = await http.get(
     Uri(
+      scheme: 'https', 
       host: backendAddress,
       path: "/event/created",
     ),
@@ -94,9 +100,11 @@ Future<EventInfo> fetchEvent(int id) async {
   String token = await user.getIdToken();
   final response = await http.get(
     Uri(
-        host: backendAddress,
-        path: "/event/id",
-        queryParameters: {"eventid": id.toString()}),
+      scheme: 'https', 
+      host: backendAddress,
+      path: "/event/id",
+      queryParameters: {"eventid": id.toString()}
+    ),
     headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -122,6 +130,7 @@ Future<void> joinEvent(int eventId) async {
   String token = await user.getIdToken();
   final response = await http.post(
       Uri(
+        scheme: 'https', 
         host: backendAddress,
         path: "/event/guest",
       ),
@@ -149,16 +158,17 @@ Future<void> quitEvent(int eventId) async {
 
   String token = await user.getIdToken();
   final response = await http.delete(
-      Uri(
-        host: backendAddress,
-        path: "/event/guest",
-      ),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode({"event_id": eventId}));
+    Uri(
+      scheme: 'https', 
+      host: backendAddress,
+      path: "/event/guest",
+    ),
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    },
+    body: jsonEncode({"event_id": eventId}));
   if (response.statusCode == 200) {
     return;
   } else {
@@ -174,8 +184,13 @@ Future<UseInfo> fetchUser() async {
   }
 
   String token = await user.getIdToken();
-  final response =
-      await http.get(Uri(host: backendAddress, path: "/user"), headers: {
+  final response = await http.get(
+    Uri(
+      scheme: 'https', 
+      host: backendAddress, 
+      path: "/user"
+    ), 
+    headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
     'Authorization': 'Bearer $token',
