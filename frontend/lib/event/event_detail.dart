@@ -1,4 +1,5 @@
 /// Display the event detail information on a single page
+import 'dart:html';
 import 'package:aroundu/component/event_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -42,32 +43,32 @@ class EventState extends State<EventPage> {
                 children: [
                   const Padding(padding: EdgeInsets.all(5)),
                   Align(
-                    alignment: Alignment.topLeft,
-                    child: GestureDetector(
-                        onTap: () => Navigator.pop(context),
-                        child: const Icon(
-                          Icons.chevron_left,
-                          size: 36,
-                          color: Color.fromARGB(255, 81, 65, 143),
-                        )))
+                      alignment: Alignment.topLeft,
+                      child: GestureDetector(
+                          onTap: () => Navigator.pop(context),
+                          child: const Icon(
+                            Icons.chevron_left,
+                            size: 36,
+                            color: Color.fromARGB(255, 81, 65, 143),
+                          )))
                 ],
               ),
               const SizedBox(height: 4),
               FutureBuilder<EventInfo>(
-                future: _event,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return EventDetailHelper(eventInfo: snapshot.data!);
-                  } else if (snapshot.hasError) {
-                    return const Center(
-                        child: Text('Event not found',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 81, 65, 143),
-                                fontStyle: FontStyle.italic,
-                                fontSize: 20)));
-                  }
-                  return const CircularProgressIndicator();
-                }),
+                  future: _event,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return EventDetailHelper(eventInfo: snapshot.data!);
+                    } else if (snapshot.hasError) {
+                      return const Center(
+                          child: Text('Event not found',
+                              style: TextStyle(
+                                  color: Color.fromARGB(255, 81, 65, 143),
+                                  fontStyle: FontStyle.italic,
+                                  fontSize: 20)));
+                    }
+                    return const CircularProgressIndicator();
+                  }),
             ],
           ),
         ),
@@ -76,12 +77,22 @@ class EventState extends State<EventPage> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 var event = snapshot.data!;
-                if (FirebaseAuth.instance.currentUser!.uid == event.hostId) {
+                if (FirebaseAuth.instance.currentUser!.uid != event.hostId) {
                   // Todo add mode full
-                  var buttonMode =
-                      event.currNumParticipants < event.maxParticipants
-                          ? EventButtonMode.join
-                          : EventButtonMode.leave;
+                  List<String> participants = event.participantIds;
+                  User? user = FirebaseAuth.instance.currentUser;
+
+                  var initialState = participants.contains(user?.uid);
+                  var buttonMode;
+                  //event.currNumParticipants < event.maxParticipants
+                  if (initialState) {
+                    buttonMode = EventButtonMode.leave;
+                  } else if (event.currNumParticipants >=
+                      event.maxParticipants) {
+                    buttonMode = EventButtonMode.full;
+                  } else {
+                    buttonMode = EventButtonMode.join;
+                  }
                   return Align(
                       alignment: Alignment.bottomCenter,
                       child: JoinLeaveEventButton(
@@ -215,10 +226,10 @@ class _EventDetailState extends State<EventDetailHelper> {
           const SizedBox(height: 20),
           // Event images
           Container(
-            height: 200,
-            alignment: Alignment.center,
-            child: EventImage(eventId: event.eventId, boxFit: BoxFit.contain)
-          ),
+              height: 200,
+              alignment: Alignment.center,
+              child:
+                  EventImage(eventId: event.eventId, boxFit: BoxFit.contain)),
           const SizedBox(height: 20),
           // start time and end time widget
           Row(
@@ -310,17 +321,30 @@ class _EventDetailState extends State<EventDetailHelper> {
 
 enum EventButtonMode { join, leave, full }
 
-class JoinLeaveEventButton extends StatelessWidget {
+class JoinLeaveEventButton extends StatefulWidget {
   const JoinLeaveEventButton(
-      {Key? key,
-      required this.mode,
+      {required this.mode,
       required this.updateEvent,
-      required this.eventId})
+      required this.eventId,
+      Key? key})
       : super(key: key);
-
   final EventButtonMode mode;
   final int eventId;
   final Function updateEvent;
+  @override
+  JoinLeaveEventButtonState createState() => JoinLeaveEventButtonState();
+}
+
+class JoinLeaveEventButtonState extends State<JoinLeaveEventButton> {
+  late EventButtonMode mode;
+  late int eventId;
+  late Function updateEvent;
+  void initState() {
+    super.initState();
+    mode = widget.mode;
+    eventId = widget.eventId;
+    updateEvent = widget.updateEvent;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -405,8 +429,14 @@ class JoinLeaveEventButton extends StatelessWidget {
                                   onPressed: () {
                                     if (mode == EventButtonMode.join) {
                                       updateEvent(joinEvent(eventId));
+                                      setState(() {
+                                        mode = EventButtonMode.leave;
+                                      });
                                     } else {
                                       updateEvent(quitEvent(eventId));
+                                      setState(() {
+                                        mode = EventButtonMode.join;
+                                      });
                                     }
                                   },
                                 ))),

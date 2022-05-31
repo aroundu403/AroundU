@@ -140,6 +140,8 @@ public class SparkServer {
           String eventID = request.queryParams("eventid");
           if (EventController.isEventExist(pool, Long.parseLong(eventID))) {
             Event event = EventController.getEventByID(pool, Long.parseLong(eventID));
+            event.participant_ids =
+                ParticipateController.getUsersByEvent(pool, Long.parseLong(eventID));
             DataResponse resp = new DataResponse(200, "Success", event);
             return gson.toJson(resp);
           } else {
@@ -162,6 +164,7 @@ public class SparkServer {
           if (body.start_time.compareTo(body.end_time) < 0) {
             body.host_id = userID;
             long eventID = EventController.createEvent(pool, body);
+            ParticipateController.userParticipateEvent(pool, userID, eventID);
             DataResponse resp = new DataResponse(200, "Success", eventID);
             return gson.toJson(resp);
           } else {
@@ -264,7 +267,6 @@ public class SparkServer {
 
     */
 
-    // need to add later:
     // GET /event/guest
     // show the "my event" list
     get(
