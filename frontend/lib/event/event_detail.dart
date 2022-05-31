@@ -1,4 +1,6 @@
 /// Display the event detail information on a single page
+import 'dart:math';
+
 import 'package:aroundu/component/event_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -166,7 +168,7 @@ class _EventDetailState extends State<EventDetailHelper> {
                   height: 25,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: event.currNumParticipants <= 3 ? event.currNumParticipants : 3,
+                    itemCount: min(event.currNumParticipants, 3),
                     itemBuilder: (context, index) {
                       return const Align(
                         widthFactor: 0.6,
@@ -176,7 +178,7 @@ class _EventDetailState extends State<EventDetailHelper> {
                         ),
                       );
               }))),
-              TextButton(
+              event.currNumParticipants > 3 ? TextButton(
                 onPressed: () {
                   setState(() {showMore = !showMore;});
                 },
@@ -193,7 +195,10 @@ class _EventDetailState extends State<EventDetailHelper> {
                       fontStyle: FontStyle.italic,
                       decoration: TextDecoration.underline,
                       fontSize: 15
-              )))]
+              )))
+              :
+              const SizedBox();
+            ]
         ) : const SizedBox()
       ],
     );

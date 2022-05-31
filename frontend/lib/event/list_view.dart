@@ -4,6 +4,7 @@ import 'package:aroundu/json/event.dart';
 import 'package:flutter/material.dart';
 import 'api_calls.dart';
 import 'event_detail.dart';
+import 'dart:math';
 
 // ignore: must_be_immutable
 class ListViewHome extends StatefulWidget {
@@ -212,8 +213,7 @@ Widget build(BuildContext context) {
                           height: 40,
                           child: ListView.builder(
                               scrollDirection: Axis.horizontal,
-                              itemCount:
-                                  widget.eventInfo.participantIds.length,
+                              itemCount: min(widget.eventInfo.participantIds.length, 3),
                               itemBuilder: (context, index1) {
                                 return const Align(
                                   widthFactor: 0.6,
