@@ -109,8 +109,6 @@ flutter build web
 firebase deploy
 ```
 
-## How to deploy to iOS:
-Coming soon...
 
 ## Develoer Hints:
 ### CORS error when running local application:
