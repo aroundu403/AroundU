@@ -60,7 +60,7 @@ class EventState extends State<EventPage> {
                   future: _event,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      return EventDetailHelper(eventInfo: snapshot.data!);
+                      return Expanded(child: EventDetailHelper(eventInfo: snapshot.data!));
                     } else if (snapshot.hasError) {
                       return const Center(
                           child: Text('Event not found',
@@ -320,6 +320,7 @@ class _EventDetailState extends State<EventDetailHelper> {
             ],
           ),
           const Padding(padding: EdgeInsets.all(15)),
+          const SizedBox(height:100)
         ]),
       ),
     );
