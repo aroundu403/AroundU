@@ -3,6 +3,9 @@
 .idea/
 out/
 
+# Visual Studio Code Files
+.vscode/
+
 # Mac
 .DS_Store
 
