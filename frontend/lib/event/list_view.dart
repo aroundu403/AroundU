@@ -223,7 +223,7 @@ Widget build(BuildContext context) {
                                     child: CircleAvatar(
                                       radius: 16,
                                       backgroundImage:
-                                        AssetImage("images/icon.png"),
+                                        AssetImage("images/avatar.jpg"),
                                     ),
                                   ),
                                 );
