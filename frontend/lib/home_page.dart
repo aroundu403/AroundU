@@ -20,7 +20,14 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   ViewMode _viewMode = ViewMode.map;
+  bool _enableMapControl = true;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  void setControl(bool value) {
+    setState(() {
+      _enableMapControl = value;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,16 +35,23 @@ class _HomePageState extends State<HomePage> {
       key: _scaffoldKey,
       drawer: Drawer(
         width: MediaQuery.of(context).size.width * 0.8,
-        child: const MyEventPage()
+        child: const MyEventPage(),
+        
       ),
+      onDrawerChanged: (isOpen) {
+        setControl(!isOpen);
+      },
       endDrawer: Drawer(
         width: MediaQuery.of(context).size.width * 0.8,
         child: const ProfilePage()
       ),
+      onEndDrawerChanged: ((isOpened) {
+        setControl(!isOpened);
+      }),
       body: Stack(
         children: [
           // render map view or list view based on current view  mode
-          _viewMode == ViewMode.map ? const MapView() : const ListViewHome(),
+          _viewMode == ViewMode.map ? MapView(enableControl: _enableMapControl) : const ListViewHome(),
           Align(
               alignment: Alignment.bottomCenter,
               child: Container(

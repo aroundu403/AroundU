@@ -162,9 +162,20 @@ class _EventInputsState extends State<EventInputs> {
 
       if (response.statusCode == 200) {
         int eventId = jsonDecode(response.body)["data"];
-        await _imageUploadState.currentState!.uploadFile(eventId);
+        if(!kIsWeb) {
+          await _imageUploadState.currentState!.uploadFile(eventId);
+        }
         // return to the home page after image upload
         Navigator.pop(context);
+      } else {
+        Fluttertoast.showToast(
+          msg: "Error in creating event",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          backgroundColor: Colors.black.withAlpha(150),
+          timeInSecForIosWeb: 3,
+          fontSize: 20.0
+        );
       }
     } else {
       // warm the user about invalid input with short toast.

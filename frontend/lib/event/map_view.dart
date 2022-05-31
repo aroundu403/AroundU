@@ -12,8 +12,8 @@ import 'api_calls.dart';
 const styleString = 'mapbox://styles/johnwang66/cl2y95qa3000l15p6c38ppu7v';
 
 class MapView extends StatefulWidget {
-  const MapView({ Key? key }) : super(key: key);
-
+  const MapView({ Key? key, required this.enableControl }) : super(key: key);
+  final bool enableControl;
   @override
   State<MapView> createState() => _MapViewState();
 }
@@ -61,7 +61,6 @@ class _MapViewState extends State<MapView> {
 
   @override
   Widget build(BuildContext context) {
-
     return MapboxMap(
         accessToken: dotenv.env['mapBoxAccessToken']!,
         styleString: styleString,
@@ -78,6 +77,8 @@ class _MapViewState extends State<MapView> {
 
         onMapCreated: _onMapCreate,
         onStyleLoadedCallback: _onStyleLoadedCallback,
+        dragEnabled: widget.enableControl,
+        zoomGesturesEnabled: widget.enableControl,
       );
   }
 
