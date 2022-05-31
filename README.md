@@ -31,10 +31,10 @@
 
 **Documentation**
 - User Manual
-  - The detailed user manual is in [User Documentation](./UserManual.md)
+  - The detailed user manual is in [User Manual](./UserManual.md)
 - Development Guidelines: 
   - The detailed onboaring document is in `/frontend` and `/backend`. Refer to those README document for setup, build, test,
-and deploy application. For technical documentation, please refer to our Notion documents regarding [API](https://www.notion.so/API-Doc-3249a636b9d94522b2d2e3ead52f0872) and [Database](https://www.notion.so/Database-Doc-8ecade5f05394ab9a7dba1c80fa6cbc6)
+and deploy application, or checkout [Developer Guideline](./DeveloperGuidelines.md) . For technical documentation, please refer to our Notion documents regarding [API](https://www.notion.so/API-Doc-3249a636b9d94522b2d2e3ead52f0872) and [Database](https://www.notion.so/Database-Doc-8ecade5f05394ab9a7dba1c80fa6cbc6)
 doc.
 
 **Project Description:**
