@@ -88,7 +88,7 @@ class MyEventState extends State<MyEventPage> {
           // display the events signed up with title
           Column(
             children: [
-              const Padding(padding: EdgeInsets.all(16)),
+              const Padding(padding: EdgeInsets.all(2)),
               Align(
                 alignment: Alignment.topLeft,
                 child: Container(
@@ -98,7 +98,7 @@ class MyEventState extends State<MyEventPage> {
                           fontFamily: 'Inter',
                           color: Color(0xff8DFFF2),
                           fontWeight: FontWeight.bold,
-                          fontSize: 40)),
+                          fontSize: 36)),
                 ),
               ),
               FutureBuilder<List<EventInfo>>(
@@ -187,14 +187,14 @@ class MyEvents extends StatelessWidget {
                               child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const SizedBox(height: 2),
+                                    const Padding(padding: EdgeInsets.all(5)),
                                     Text(createdEvents[index].eventName,
                                         style: TextStyle(
                                             color: Theme.of(context)
                                                 .backgroundColor,
                                             fontWeight: FontWeight.bold,
                                             fontSize: 18)),
-                                    const Padding(padding: EdgeInsets.all(25)),
+                                    const Padding(padding: EdgeInsets.all(27)),
                                     Column(children: [
                                       const Padding(padding: EdgeInsets.all(3)),
                                       Row(children: [

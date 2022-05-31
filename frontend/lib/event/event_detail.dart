@@ -341,7 +341,6 @@ class JoinLeaveEventButtonState extends State<JoinLeaveEventButton> {
   late EventButtonMode mode;
   late int eventId;
   late Function updateEvent;
-
   @override
   void initState() {
     super.initState();
