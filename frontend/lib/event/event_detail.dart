@@ -78,13 +78,11 @@ class EventState extends State<EventPage> {
               if (snapshot.hasData) {
                 var event = snapshot.data!;
                 if (FirebaseAuth.instance.currentUser!.uid != event.hostId) {
-                  // Todo add mode full
                   List<String> participants = event.participantIds;
                   User? user = FirebaseAuth.instance.currentUser;
 
                   var initialState = participants.contains(user?.uid);
                   var buttonMode;
-                  //event.currNumParticipants < event.maxParticipants
                   if (initialState) {
                     buttonMode = EventButtonMode.leave;
                   } else if (event.currNumParticipants >=
@@ -339,6 +337,7 @@ class JoinLeaveEventButtonState extends State<JoinLeaveEventButton> {
   late EventButtonMode mode;
   late int eventId;
   late Function updateEvent;
+  @override
   void initState() {
     super.initState();
     mode = widget.mode;
