@@ -2,6 +2,7 @@
 /// Create event page allows user to create an event by providing the event infomation such as
 /// event title, desription, location, and time.
 import 'dart:convert';
+import 'package:aroundu/home_page.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:aroundu/component/image_upload.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -168,7 +169,11 @@ class _EventInputsState extends State<EventInputs> {
           await _imageUploadState.currentState!.uploadFile(eventId);
         }
         // return to the home page after image upload
-        Navigator.pop(context);
+        Navigator.push(
+          context, 
+          MaterialPageRoute(
+            builder: (context) => const HomePage())
+          );
       } else {
         Fluttertoast.showToast(
           msg: "Error in creating event",
