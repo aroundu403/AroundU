@@ -197,7 +197,7 @@ class _EventDetailState extends State<EventDetailHelper> {
                       fontSize: 15
               )))
               :
-              const SizedBox();
+              const SizedBox()
             ]
         ) : const SizedBox()
       ],
