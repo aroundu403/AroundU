@@ -15,6 +15,7 @@
 
 ![Fimga Design](./figma.png)
 
+
 **Team Members:**
 | Name | Role | 
 | --- | ----------- | 
@@ -50,12 +51,15 @@ sense of authenticity and trust, which is commonalty lacking in today's social m
 
 1. Register and validate user account: User can create an account via Email
 2. Create an event or activity: User able to create/post an event by filling out some require info, like event title,
-   time, size, public/private, and location. etc.
+   time, size, and location. etc.
 3. Join or leave an event or activity: User should be able to join or leave a specific selected event or activity.
-4. Manage events/activities: DAO.Event initiator is able to edit the event details, like change time and event size.
-5. Interactive map-based interface: Display the events/activities in an interactive map-based interface. Allowing the
+4. Interactive map-based interface: Display the events/activities in an interactive map-based interface. Allowing the
    user to interactive with the map element to preform verity of task like see, found, and join specific event or
    activity.
+To be added:
+5. Manage events/activities: Event initiator is able to edit the event details, like change time and event size .
+
+Check out most up-to-date web version of AroundU at [https://aroundu-403.web.app/#/](https://aroundu-403.web.app/#/)
 
 **Prototype Use case**
 
@@ -105,5 +109,5 @@ progress. He contributed to our project by developing the team vision not just t
 
 ## Developer Instructions:
 
-See `/backend` and `/frontend` directory for details on required installations, setups, and running steps.
+See `/backend` and `/frontend` directory for details on required installations, setups, and running steps, or checkout [Developer Guideline](./DeveloperGuidelines.md)
 
