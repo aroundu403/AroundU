@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -24,10 +26,16 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Enable camera access to upload event photos</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Your location is beneficial for finding events around you</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>YYour location is beneficial for finding events around you</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>We need your microphone to take video from camera</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Enable photo library to upload event photos</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -47,13 +55,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>CADisableMinimumFrameDurationOnPhone</key>
-	<true/>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Enable photo library to upload event photos</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Enable camera access to upload event photos</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>We need your microphone to take video from camera</string>
 </dict>
 </plist>
