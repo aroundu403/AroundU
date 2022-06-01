@@ -9,15 +9,17 @@ class PlaceApiProvider {
 
   // get api key from env config file
   static String apiKey = dotenv.env['apiKeyMap']!;
-  static String googleAPIHost = "maps.googleapis.com";
+  // we need this proxy server to add cors header to the response returned by Google Place API.
+  static String corsProxy = "cors-anywhere.herokuapp.com";
+  static String googleAPIHost = "/https://maps.googleapis.com/";
 
   // Get list of auto-complete suggestions of places based on user input
   Future<List<AddressSuggestion>> fetchSuggestions(String input) async {
     final response = await http.get(
       Uri(
         scheme: "https",
-        host: googleAPIHost,
-        path: "maps/api/place/autocomplete/json",
+        host: corsProxy,
+        path: googleAPIHost + "maps/api/place/autocomplete/json",
         queryParameters: {
           "input": input,
           "key": apiKey,
@@ -25,7 +27,8 @@ class PlaceApiProvider {
           "region": "us",
           "longitdue": "-122.303200",
           "latitude": "47.655548",
-        }));
+        }),
+      headers: {"X-Requested-With": "XMLHttpRequest"});
 
     if (response.statusCode == 200) {
       final result = json.decode(response.body);
@@ -49,13 +52,15 @@ class PlaceApiProvider {
     final response = await http.get(
       Uri(
         scheme: "https",
-        host: googleAPIHost,
-        path: "maps/api/place/details/json",
+        host: corsProxy,
+        path: googleAPIHost + "maps/api/place/details/json",
         queryParameters: {
           "place_id": placeId,
           "key": apiKey,
         }
-    ));
+      ),
+      headers: {"X-Requested-With": "XMLHttpRequest"}
+    );
 
     if (response.statusCode == 200) {
       final result = json.decode(response.body);
