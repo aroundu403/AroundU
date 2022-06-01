@@ -1,5 +1,6 @@
 /// This is a helper data provider class that fetches data from Google Map Place API
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../json/place.dart';
@@ -11,15 +12,18 @@ class PlaceApiProvider {
   static String apiKey = dotenv.env['apiKeyMap']!;
   // we need this proxy server to add cors header to the response returned by Google Place API.
   static String corsProxy = "cors-anywhere.herokuapp.com";
-  static String googleAPIHost = "/https://maps.googleapis.com/";
+  static String googleAPIHost = "maps.googleapis.com";
+
+  final String host = kIsWeb ? corsProxy : googleAPIHost;
+  final String pathPrefix = kIsWeb ? "/https://" + googleAPIHost : "";
 
   // Get list of auto-complete suggestions of places based on user input
   Future<List<AddressSuggestion>> fetchSuggestions(String input) async {
     final response = await http.get(
       Uri(
         scheme: "https",
-        host: corsProxy,
-        path: googleAPIHost + "maps/api/place/autocomplete/json",
+        host: host,
+        path: pathPrefix + "/maps/api/place/autocomplete/json",
         queryParameters: {
           "input": input,
           "key": apiKey,
@@ -52,8 +56,8 @@ class PlaceApiProvider {
     final response = await http.get(
       Uri(
         scheme: "https",
-        host: corsProxy,
-        path: googleAPIHost + "maps/api/place/details/json",
+        host: host,
+        path: pathPrefix + "/maps/api/place/details/json",
         queryParameters: {
           "place_id": placeId,
           "key": apiKey,
