@@ -369,7 +369,7 @@ Sample result:
 ### Adding new tests
 
 Although we mainly used Postman for testing, you can still add integration-test under `src/integration-test/java` to
-test out the connection with the database. Such test should be named with the format `*IT.java`. Sample integration testing is `UserControllerIT.java`.
+test out the connection with the database. Such test should be named with the format `*IT.java`. Sample integration testing is `ApiIT.java`.
 
 Notice that these integration tests can only test the interactions between our server and the database. If you want to
 test the APIs by simulating the frontend request and checking the backend responses, you should use Postman to test,
