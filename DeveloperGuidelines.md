@@ -2,14 +2,16 @@
 
 # Frontend
 
-This is the AroundU Flutter frontend where users can explore events from multiple platforms. </br>
+This is the AroundU **Flutter** frontend where users can explore events from multiple platforms. </br>
 Learn more about our UI design
 in [Figma](https://www.figma.com/file/L12QAFCSRn0pIq9oDNmzXi/AroundU-(Copy)?node-id=0%3A1)
 
 ## How to install AroundU
-Currently, we have built and released the web version of AroundU. 
+Currently, we have built and released the web version of AroundU.
+
 You can access the most up-to-date web version of AroundU
-at [https://aroundu-403.web.app/#/](https://aroundu-403.web.app/#/) </br>
+at [https://aroundu-403.web.app/#/](https://aroundu-403.web.app/#/)
+
 We are planning to support public iOS version in the future. Stay Tuned!
 
 ## Project structure /fronted
@@ -37,10 +39,11 @@ building from source code. Double think before you go into the setup hell**
 - Install Flutter and its development dependencies. Follow
   the [official guide](https://docs.flutter.dev/get-started/install?gclid=Cj0KCQjwmuiTBhDoARIsAPiv6L-IlgpgVr44lmg_KoBgytkVF59rI3wHkyRr18sYWGarML2UWXBlGOsaAhdtEALw_wcB&gclsrc=aw.ds)
 - **Put the secret API strings into a `env` file in `/frontend`. The application will need those secret strings to access
-  dependencies. Contact John (wangj616@uw.edu) to get the secret strings.**
+  dependencies. Contact John (johnjinghuawang@gmail.com) to get the secret strings.**
 - Make sure your GCP account has access to the `aroundu-403` project
 - Login your GCP account in your gcloud cli
 - Install the Vscode Flutter plugin so you have more development support
+- Get a private key from Mapbox and add to GoogleServices-Info.plist so you can download the Mapbox SDK for iOS.
 - Run `firebase init` to setup additional Firebase support (e.g. emulators and debuggers)
 - Run `flutter pub get` to install all the Flutter dependencies
 - Run `flutter run` to spin up the Flutter project.
@@ -170,18 +173,17 @@ fluttercors --enable
     - [Connecting to Cloud SQL database](https://github.com/GoogleCloudPlatform/java-docs-samples/blob/main/cloud-sql/mysql/servlet/README.md)
   
 - Put the environment variables into your bash file. The backend will need those secrets to access external
-  dependencies. Contact John (wangj616@uw.edu) to get the secrets.
-  - For Windows, put the environment variables in the "Environment Variables" setting.
+  dependencies.
+  - Contact John(johnjinghuawang@gmail.com) for secret strings if you are interested in futher developing this project.
+  - For Windows, put the environment variables in the "Environment Variables" setting and setup environment variable to the path of your Google_Credential JSON file.
 - Make sure you have access to our Google Cloud Project and have the GOOGLE_APPLICATION_CREDENTIAL on your local machine.
 - Run maven command listed below to compile
-    - There is no additional step, once the build is successfully, you should be able to spin up the
-      SparkServer
 
 ### How to spin up the SparkServer
 
 1. Add environment variable such as database password, which should be set up in previous step. Again, contact @John if
    you don't know them
-2. run SparkServer (preferably using Intellij 'Run SparkServer.main()' feature)
+2. Run SparkServer (preferably using Intellij 'Run SparkServer.main()' feature)
     1. Once the server is running, Postman is used to test relevant data access and transfer
 
 ### How to use Maven
@@ -368,10 +370,7 @@ Sample result:
 
 ### Adding new tests
 
-Although we mainly used Postman for testing, you can still add integration-test under `src/integration-test/java` to
-test out the connection with the database. Such test should be named with the format `*IT.java`. Sample integration testing is `UserControllerIT.java`.
+Although we mainly used Postman for testing, we still have integration-test under `src/integration-test/java` to
+test out the basic APIs. If more tests are need, they should be added to ApiIT.java`. You can find sample tests in there.
 
-Notice that these integration tests can only test the interactions between our server and the database. If you want to
-test the APIs by simulating the frontend request and checking the backend responses, you should use Postman to test,
-detailed instructions above.
-
+If you want to use Postman to test, detailed instructions are listed above.

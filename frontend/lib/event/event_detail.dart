@@ -123,7 +123,6 @@ class EventDetailHelper extends StatefulWidget {
 }
 
 class _EventDetailState extends State<EventDetailHelper> {
-  final image = "images/scenary.jpg";
   bool showMore = false;
 
   String formatDateTime(String time) {
@@ -276,7 +275,7 @@ class _EventDetailState extends State<EventDetailHelper> {
                         radius: 8,
                         child: CircleAvatar(
                           radius: 20,
-                          backgroundImage: AssetImage("images/tree.jpg"),
+                          backgroundImage: AssetImage("images/avatar.jpg"),
                         ),
                       );
                     }),
@@ -284,6 +283,19 @@ class _EventDetailState extends State<EventDetailHelper> {
                 : const SizedBox(),
           showMore ? const SizedBox() : const SizedBox(height: 10),
           // event address
+          Row(
+            children: [
+              const Align(
+                  alignment: Alignment.topLeft,
+                  child: Icon(Icons.location_on_outlined,
+                      color: Color.fromARGB(255, 81, 65, 143))),
+              const SizedBox(width: 10),
+              Expanded(
+                  child: Text(event.locationName,
+                      style: purpleBoldFont, overflow: TextOverflow.clip)),
+            ],
+          ),
+          const SizedBox(height: 10),
           Row(
             children: [
               const Align(

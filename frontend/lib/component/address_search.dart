@@ -1,5 +1,6 @@
 /// This is a helper data provider class that fetches data from Google Map Place API
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../json/place.dart';
@@ -9,15 +10,20 @@ class PlaceApiProvider {
 
   // get api key from env config file
   static String apiKey = dotenv.env['apiKeyMap']!;
+  // we need this proxy server to add cors header to the response returned by Google Place API.
+  static String corsProxy = "boiling-bayou-80564.herokuapp.com";
   static String googleAPIHost = "maps.googleapis.com";
+
+  final String host = kIsWeb ? corsProxy : googleAPIHost;
+  final String pathPrefix = kIsWeb ? "/https://" + googleAPIHost : "";
 
   // Get list of auto-complete suggestions of places based on user input
   Future<List<AddressSuggestion>> fetchSuggestions(String input) async {
     final response = await http.get(
       Uri(
         scheme: "https",
-        host: googleAPIHost,
-        path: "maps/api/place/autocomplete/json",
+        host: host,
+        path: pathPrefix + "/maps/api/place/autocomplete/json",
         queryParameters: {
           "input": input,
           "key": apiKey,
@@ -25,7 +31,8 @@ class PlaceApiProvider {
           "region": "us",
           "longitdue": "-122.303200",
           "latitude": "47.655548",
-        }));
+        }),
+      headers: {"X-Requested-With": "XMLHttpRequest"});
 
     if (response.statusCode == 200) {
       final result = json.decode(response.body);
@@ -49,13 +56,15 @@ class PlaceApiProvider {
     final response = await http.get(
       Uri(
         scheme: "https",
-        host: googleAPIHost,
-        path: "maps/api/place/details/json",
+        host: host,
+        path: pathPrefix + "/maps/api/place/details/json",
         queryParameters: {
           "place_id": placeId,
           "key": apiKey,
         }
-    ));
+      ),
+      headers: {"X-Requested-With": "XMLHttpRequest"}
+    );
 
     if (response.statusCode == 200) {
       final result = json.decode(response.body);

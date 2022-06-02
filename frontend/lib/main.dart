@@ -70,7 +70,7 @@ class MyApp extends StatelessWidget {
             lazy: false),
       ],
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'AroundU',
         theme: theme,
         home: const AuthWrapper(),
       ),
