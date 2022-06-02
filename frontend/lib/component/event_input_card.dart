@@ -142,6 +142,7 @@ class DateTimePicker extends StatelessWidget {
         Expanded(
           flex: 6,
           child: TextFormField(
+            readOnly: true,
             keyboardType: TextInputType.none,
             autofocus: true,
             controller: dateController,
@@ -172,6 +173,7 @@ class DateTimePicker extends StatelessWidget {
         Expanded(
           flex: 4,
           child: TextFormField(
+            readOnly: true,
             keyboardType: TextInputType.none,
             autofocus: true,
             controller: timeController,
