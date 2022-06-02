@@ -45,7 +45,14 @@
 - Put the environment variables into your bash file. The backend will need those secrets to access external
   dependencies. Contact John (wangj616@uw.edu) to get the secrets.
   - For Windows, put the environment variables in the "Environment Variables" setting.
-- Make sure you have access to our Google Cloud Project and have the GOOGLE_APPLICATION_CREDENTIAL on your local machine.
+- Make sure you have access to our Google Cloud Project and have your Google Credential on your local machine by one of the following method:
+    1. Credentials file pointed to by the GOOGLE_APPLICATION_CREDENTIALS environment variable
+    2. Credentials provided by the Google Cloud SDK.
+        - `gcloud auth application-default login` for user account credentials.
+        - `gcloud auth application-default login --impersonate-service-account` for impersonated service account credentials.
+    3. Google App Engine built-in credentials
+    4. Google Cloud Shell built-in credentials
+    5. Google Compute Engine built-in credentials 
 - Run maven command listed below to compile
     - There is no additional step, once the build is successfully, you should be able to spin up the
       SparkServer
