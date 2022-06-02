@@ -176,7 +176,12 @@ fluttercors --enable
   dependencies.
   - Contact John(johnjinghuawang@gmail.com) for secret strings if you are interested in futher developing this project.
   - For Windows, put the environment variables in the "Environment Variables" setting and setup environment variable to the path of your Google_Credential JSON file.
-- Make sure you have access to our Google Cloud Project and have the GOOGLE_APPLICATION_CREDENTIAL on your local machine.
+- Make sure you have access to our Google Cloud Project and have Goggle Credential on your local machine by one of the following methods:   
+    1. Credentials file pointed to by the GOOGLE_APPLICATION_CREDENTIALS environment variable
+    2. Credentials provided by the Google Cloud SDK `gcloud auth application-default login` command
+    3. Google App Engine built-in credentials
+    4. Google Cloud Shell built-in credentials
+    5. Google Compute Engine built-in credentials
 - Run maven command listed below to compile
 
 ### How to spin up the SparkServer
