@@ -217,10 +217,8 @@ public class EventController {
       String stmt =
           String.format("SELECT event_id FROM %s WHERE start_time BETWEEN ? and ?;", TABLE_NAME);
       try (PreparedStatement getEventsStmt = conn.prepareStatement(stmt)) {
-        Calendar c = Calendar.getInstance();
         TimeZone tz = TimeZone.getTimeZone("America/Los_Angeles");
-        c.setTimeZone(tz);
-        c.setTime(new Date()); // Now use today date.
+        Calendar c = Calendar.getInstance(tz);
         String start_date = SIMPLE_DATE_FORMAT.format(c.getTime());
         c.add(Calendar.DATE, nDay); // Adding n days
         String end_date = SIMPLE_DATE_FORMAT.format(c.getTime());
