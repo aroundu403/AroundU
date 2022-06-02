@@ -220,15 +220,12 @@ public class EventController {
         Calendar c = Calendar.getInstance();
         TimeZone tz = TimeZone.getTimeZone("America/Los_Angeles");
         c.setTimeZone(tz);
-        // System.out.print("时区：" + c.getTimeZone().getID() + "  ");
         c.setTime(new Date()); // Now use today date.
         String start_date = SIMPLE_DATE_FORMAT.format(c.getTime());
         c.add(Calendar.DATE, nDay); // Adding n days
         String end_date = SIMPLE_DATE_FORMAT.format(c.getTime());
 
         getEventsStmt.setString(1, start_date);
-        // System.out.println("Start date" + start_date);
-        // System.out.println(end_date);
         getEventsStmt.setString(2, end_date);
         ResultSet eventResult = getEventsStmt.executeQuery();
 
