@@ -16,6 +16,21 @@
 ![Fimga Design](./figma.png)
 
 
+**Project Summary**:
+
+> A cross-platform application for college students to post and find events within the university community.
+
+Check out most up-to-date web version of AroundU at [https://aroundu-403.web.app/#/](https://aroundu-403.web.app/#/)
+
+**Project Description:**
+
+Our goal is to allow students to easily find events or activities around them. Students can build connection or
+friendship with other through those events. With that idea, we believe that an interactive map-based interface would be
+a good approach to increase authenticity, and encourage user to attend events around them. As almost all in-person
+events or activity are naturally associate with a location, it is more intuitive for the user to found what events are
+available in a map. Besides, map can also be a media that connect the virtual contents to the reality, giving the user a
+sense of authenticity and trust, which is commonalty lacking in today's social media.
+
 **Team Members:**
 | Name | Role | 
 | --- | ----------- | 
@@ -26,42 +41,36 @@
 | Melody Zhang | Frontend Developer | 
 | Vandy Zhang | Frontend Developer |
 
-**Project Summary**:
-
-> A platform for college student to post and find events within the university community.
-
-**Documentation**
-- User Manual
-  - The detailed user manual is in [User Manual](./UserManual.md)
-- Development Guidelines: 
-  - The detailed onboaring document is in `/frontend` and `/backend`. Refer to those README document for setup, build, test,
-and deploy application, or checkout [Developer Guideline](./DeveloperGuidelines.md) . For technical documentation, please refer to our Notion documents regarding [API](https://www.notion.so/API-Doc-3249a636b9d94522b2d2e3ead52f0872) and [Database](https://www.notion.so/Database-Doc-8ecade5f05394ab9a7dba1c80fa6cbc6)
-doc.
-
-**Project Description:**
-
-Our goal is to allow user(students) more easy to find events or activities around them, and build connection or
-friendship with other through those events. With that idea, we believe that an interactive map-based interface would be
-a good approach to communicate with the user, and encourage user to attend events around them. As almost all in-person
-events or activity are naturally associate with a location, it is more intuitive for the user to found what events are
-available in a map. Besides, map can also be a media that connect the virtual contents to the reality, giving the user a
-sense of authenticity and trust, which is commonalty lacking in today's social media.
-
 **Main features:**
 
-1. Register and validate user account: User can create an account via Email
-2. Create an event or activity: User able to create/post an event by filling out some require info, like event title,
+1. Register user account: User can create an account with email.
+2. Create an event or activity: User able to create/post an event by filling out event information, like event title,
    time, size, and location. etc.
-3. Join or leave an event or activity: User should be able to join or leave a specific selected event or activity.
+3. Join or leave an event or activity: User is able to join or leave a event or activity and the event host can know who is coming.
 4. Interactive map-based interface: Display the events/activities in an interactive map-based interface. Allowing the
    user to interactive with the map element to preform verity of task like see, found, and join specific event or
    activity.
    
 To be added:
 
-5. Manage events/activities: Event initiator is able to edit the event details, like change time and event size .
+5. Manage events/activities: Event creator is able to edit the event details, like change time and event size .
 
-Check out most up-to-date web version of AroundU at [https://aroundu-403.web.app/#/](https://aroundu-403.web.app/#/)
+**Documentation**
+- [User Manual](./UserManual.md)
+- [Developer Guideline](./DeveloperGuidelines.md) 
+  - For technical documentation, please refer to our Notion documents regarding [API](https://www.notion.so/API-Doc-3249a636b9d94522b2d2e3ead52f0872) and [Database](https://www.notion.so/Database-Doc-8ecade5f05394ab9a7dba1c80fa6cbc6)
+doc.
+
+## Repository Layout
+
+1. `/report`: all the weekly status report
+2. `/backend`: major components in backend service folder. For details, please checkout backend/README.md
+    1. Data Access Object (DAO): model database entities
+    2. Data Transfer Object (DTO): model HTTP request and response entities
+    3. Data Transfer Layer (DTL): controls data access from database
+    4. `SparkServer`: APIs with database connections
+3. `/frontend`: frontend Flutter folder
+
 
 **Prototype Use case**
 
@@ -85,15 +94,6 @@ Check out most up-to-date web version of AroundU at [https://aroundu-403.web.app
     4. Each event has detailed information including location, time, size, description, etc
     5. We implemented a join event API, which will update the selected event in our database.
 
-## Repository Layout
-
-1. `/report`: all the weekly status report
-2. `/backend`: major components in backend service folder. For details, please checkout backend/README.md
-    1. Data Access Object (DAO): model database entities
-    2. Data Transfer Object (DTO): model HTTP request and response entities
-    3. Data Transfer Layer (DTL): controls data access from database
-    4. `SparkServer`: APIs with database connections
-3. `/frontend`: frontend Flutter folder
 
 ## Contribution Policy
 
@@ -108,8 +108,4 @@ situation.
 
 Side note: George is our product manager who is mainly responsive to writing documentation and coordinating project
 progress. He contributed to our project by developing the team vision not just the code.
-
-## Developer Instructions:
-
-See `/backend` and `/frontend` directory for details on required installations, setups, and running steps, or checkout [Developer Guideline](./DeveloperGuidelines.md)
 
