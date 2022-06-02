@@ -37,10 +37,11 @@ building from source code. Double think before you go into the setup hell**
 - Install Flutter and its development dependencies. Follow
   the [official guide](https://docs.flutter.dev/get-started/install?gclid=Cj0KCQjwmuiTBhDoARIsAPiv6L-IlgpgVr44lmg_KoBgytkVF59rI3wHkyRr18sYWGarML2UWXBlGOsaAhdtEALw_wcB&gclsrc=aw.ds)
 - **Put the secret API strings into a `env` file in `/frontend`. The application will need those secret strings to access
-  dependencies. Contact John (wangj616@uw.edu) to get the secret strings.**
+  dependencies. Contact John (johnjinghuawang@gmail.com) to get the secret strings.**
 - Make sure your GCP account has access to the `aroundu-403` project
 - Login your GCP account in your gcloud cli
 - Install the Vscode Flutter plugin so you have more development support
+- Get a private key from Mapbox and add to GoogleServices-Info.plist so you can download the Mapbox SDK for iOS.
 - Run `firebase init` to setup additional Firebase support (e.g. emulators and debuggers)
 - Run `flutter pub get` to install all the Flutter dependencies
 - Run `flutter run` to spin up the Flutter project.
