@@ -11,7 +11,7 @@ class PlaceApiProvider {
   // get api key from env config file
   static String apiKey = dotenv.env['apiKeyMap']!;
   // we need this proxy server to add cors header to the response returned by Google Place API.
-  static String corsProxy = "cors-anywhere.herokuapp.com";
+  static String corsProxy = "boiling-bayou-80564.herokuapp.com";
   static String googleAPIHost = "maps.googleapis.com";
 
   final String host = kIsWeb ? corsProxy : googleAPIHost;
