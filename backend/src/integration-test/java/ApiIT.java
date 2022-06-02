@@ -165,7 +165,7 @@ public class ApiIT {
         .post("event/guest")
         .then()
         .assertThat()
-        .body(containsString("Success"));
+        .body(containsString("This user is already in the event."));
   }
 
   @Test
