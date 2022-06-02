@@ -2,14 +2,16 @@
 
 # Frontend
 
-This is the AroundU Flutter frontend where users can explore events from multiple platforms. </br>
+This is the AroundU **Flutter** frontend where users can explore events from multiple platforms. </br>
 Learn more about our UI design
 in [Figma](https://www.figma.com/file/L12QAFCSRn0pIq9oDNmzXi/AroundU-(Copy)?node-id=0%3A1)
 
 ## How to install AroundU
-Currently, we have built and released the web version of AroundU. 
+Currently, we have built and released the web version of AroundU.
+
 You can access the most up-to-date web version of AroundU
-at [https://aroundu-403.web.app/#/](https://aroundu-403.web.app/#/) </br>
+at [https://aroundu-403.web.app/#/](https://aroundu-403.web.app/#/)
+
 We are planning to support public iOS version in the future. Stay Tuned!
 
 ## Project structure /fronted
@@ -171,18 +173,17 @@ fluttercors --enable
     - [Connecting to Cloud SQL database](https://github.com/GoogleCloudPlatform/java-docs-samples/blob/main/cloud-sql/mysql/servlet/README.md)
   
 - Put the environment variables into your bash file. The backend will need those secrets to access external
-  dependencies. Contact John (wangj616@uw.edu) to get the secrets.
-  - For Windows, put the environment variables in the "Environment Variables" setting.
+  dependencies.
+  - Contact John(johnjinghuawang@gmail.com) for secret strings if you are interested in futher developing this project.
+  - For Windows, put the environment variables in the "Environment Variables" setting and setup environment variable to the path of your Google_Credential JSON file.
 - Make sure you have access to our Google Cloud Project and have the GOOGLE_APPLICATION_CREDENTIAL on your local machine.
 - Run maven command listed below to compile
-    - There is no additional step, once the build is successfully, you should be able to spin up the
-      SparkServer
 
 ### How to spin up the SparkServer
 
 1. Add environment variable such as database password, which should be set up in previous step. Again, contact @John if
    you don't know them
-2. run SparkServer (preferably using Intellij 'Run SparkServer.main()' feature)
+2. Run SparkServer (preferably using Intellij 'Run SparkServer.main()' feature)
     1. Once the server is running, Postman is used to test relevant data access and transfer
 
 ### How to use Maven
