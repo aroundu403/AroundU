@@ -217,8 +217,8 @@ public class EventController {
       String stmt =
           String.format("SELECT event_id FROM %s WHERE start_time BETWEEN ? and ?;", TABLE_NAME);
       try (PreparedStatement getEventsStmt = conn.prepareStatement(stmt)) {
-        TimeZone tz = TimeZone.getTimeZone("America/Los_Angeles");
-        Calendar c = Calendar.getInstance(tz);
+        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        c.add(Calendar.HOUR, -8);
         String start_date = SIMPLE_DATE_FORMAT.format(c.getTime());
         c.add(Calendar.DATE, nDay); // Adding n days
         String end_date = SIMPLE_DATE_FORMAT.format(c.getTime());
