@@ -197,7 +197,7 @@ Run the following commands in `/backend`
 1. `mvn install`
    Installs the packaged code to the local Maven repository.
 
-2. `mvn complie`
+2. `mvn compile`
    Compiles the source code, converts the .java files to .class and stores the classes in target/classes folder.
 
 3. `mvn verify -Psurefire`
